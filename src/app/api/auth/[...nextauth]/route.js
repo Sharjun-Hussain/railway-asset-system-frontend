@@ -16,19 +16,23 @@ export const authOptions = {
                 console.log('Received credentials:', credentials);
 
                 try {
+                    // This is correct.
+                    // credentials.user is the JSON string
+                    // credentials.accessToken is the token string
                     const user = JSON.parse(credentials.user);
+                    const accessToken = credentials.accessToken;
 
-                    // This is the object that will be passed as the `user` parameter to the `jwt` callback.
+                    if (!user || !accessToken) {
+                        throw new Error("Invalid user or token data received from login page.");
+                    }
+
+                    // This maps your API response fields
                     const userPayload = {
-                        id: user.id.toString(),
+                        id: user._id.toString(),
                         email: user.email,
-                        firstName: user.customerProfile?.firstName,
-                        lastName: user.customerProfile?.lastName,
-                        mobileNumber: user.customerProfile?.mobileNumber,
-                        accountType: user.accountType,
-                        // IMPORTANT: We are attaching the tokens from the credentials to this object.
-                        accessToken: credentials.accessToken,
-                        refreshToken: credentials.refreshToken,
+                        name: user.name,
+                        roles: user.roles,
+                        accessToken: accessToken, // Pass the token to the jwt callback
                     };
 
                     console.log('Successfully authorized. Returning user payload:', userPayload);
@@ -36,43 +40,42 @@ export const authOptions = {
 
                 } catch (error) {
                     console.error('Error in authorize callback:', error);
-                    return null; // Returning null will reject the sign-in.
+                    return null;
                 }
             }
         })
     ],
     secret: process.env.NEXTAUTH_SECRET,
-    debug: false, // Set to false to avoid noisy default logs and focus on our custom ones.
+    debug: false,
     callbacks: {
         async jwt({ token, user, account }) {
             console.log('--- 2. JWT CALLBACK ---');
-            // The `user` and `account` parameters are only available on the initial sign-in.
             console.log('Received - token:', token);
             console.log('Received - user:', user);
             console.log('Received - account:', account);
 
-            // This block runs on initial sign-in to persist data to the token.
+            // This block runs on initial sign-in
             if (user) {
                 console.log('Initial sign-in: `user` object is present.');
-                // For credentials, `user` is the object returned from `authorize`.
-                // For OAuth, `user` is the profile data from the provider.
+                
+                // This is also correct.
+                // It saves your user data into the 'token.user' object
                 token.user = {
                     id: user.id,
                     email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    accountType: user.accountType,
-                    mobileNumber: user.mobileNumber
+                    name: user.name,
+                    roles: user.roles,
                 };
+                
+                // This is also correct.
+                // It saves your API token into 'token.accessToken'
+                if (user.accessToken) { 
+                    console.log('Saving accessToken from credentials into the token.');
+                    token.accessToken = user.accessToken;
+                }
             }
 
-            // Handle access token for Credentials provider
-            if (user && user.accessToken) {
-                console.log('Saving accessToken from credentials into the token.');
-                token.accessToken = user.accessToken;
-            }
-
-            // Handle access token for OAuth providers
+            // Handle OAuth
             if (account && account.access_token) {
                 console.log('Saving access_token from OAuth provider into the token.');
                 token.accessToken = account.access_token;
@@ -87,11 +90,11 @@ export const authOptions = {
             console.log('--- 3. SESSION CALLBACK ---');
             console.log('Received token from JWT callback:', token);
 
-            // The token contains all the data we saved in the `jwt` callback.
-            // We now send the properties we want to the client-side session object.
+            // This is also correct.
+            // It passes the data from the JWT token to the client-side session.
             if (token) {
-                session.user = token.user;
-                session.accessToken = token.accessToken;
+                session.user = token.user; // { id, email, name, roles }
+                session.accessToken = token.accessToken; // Your API JWT
                 session.provider = token.provider;
             }
 

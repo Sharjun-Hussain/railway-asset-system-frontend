@@ -1,29 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-// Mock next-auth signIn function
-const signIn = async (provider, { email, password }) => {
-  console.log("Mock signIn called with:", { email, password });
-  // Simulate a network delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Simulate a successful login for a specific password, otherwise fail.
-  if (password === "password") {
-    return { ok: true, error: null };
-  } else {
-    return { ok: false, error: "Invalid credentials" };
-  }
-};
+import { signIn } from "next-auth/react";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -34,6 +21,8 @@ const loginSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [IsSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -48,30 +37,71 @@ export default function LoginPage() {
     },
   });
 
-  const onSubmit = async (data) => {
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
+  const callbackUrl = useCallback(() => {
+    return searchParams.get("callbackUrl") || "/dashboard";
+  }, [searchParams]);
 
-      if (result?.error) {
-        setError("root", {
-          type: "manual",
-          message: "Invalid email or password. Please try again.",
+  const onSubmit = useCallback(
+    async (values) => {
+      setIsSubmitting(true);
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: values.email,
+              password: values.password,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Login failed");
+        }
+
+        if (data) {
+          // **THE ONLY CHANGE IS HERE:**
+          // Changed `data.token` to `data.accessToken` to match your new API response.
+          const result = await signIn("credentials", {
+            redirect: false,
+            user: JSON.stringify(data),
+            accessToken: data.accessToken, // <-- THIS LINE IS UPDATED
+            callbackUrl: callbackUrl(),
+          });
+
+          if (result?.error) {
+            throw new Error(result.error);
+          }
+
+          if (result?.ok) {
+            toast.success("Welcome back!", {
+              description: "You're now being redirected.",
+            });
+            router.push(result.url || callbackUrl());
+          }
+        } else {
+          throw new Error(data.message || "Login failed");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        toast.error("Login Failed", {
+          description:
+            error.message ||
+            "Please check your email and password and try again.",
         });
-        toast.error("Login Failed: Invalid credentials.");
-      } else if (result?.ok) {
-        toast.success("Login Successful! Redirecting...");
-        router.push("/dashboard");
-        router.refresh();
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.error("Login submission error:", error);
-      toast.error("An unexpected error occurred. Please try again.");
-    }
-  };
+    },
+    [router, searchParams, callbackUrl]
+  );
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -175,7 +205,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            <Button disabled={isSubmitting} type="submit">
+            <Button disabled={isSubmitting} type="submit" className="w-full">
               {isSubmitting ? "Verifying..." : "Sign In"}
             </Button>
             <p className="text-sm text-center text-gray-600 dark:text-gray-400">

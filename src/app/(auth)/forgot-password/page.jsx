@@ -10,18 +10,15 @@ import axios from "axios";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Info, MailCheck } from "lucide-react"; // Added MailCheck for success state
+import { Info, MailCheck } from "lucide-react";
 
-// 1. Define schema for validation, just like in your LoginPage
 const forgotPasswordSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
 });
 
 export default function ForgotPasswordPage() {
-  // 2. State to show a success message instead of the form
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // 3. Set up react-hook-form
   const {
     register,
     handleSubmit,
@@ -34,34 +31,35 @@ export default function ForgotPasswordPage() {
     },
   });
 
-  // 4. onSubmit handler with robust error handling
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        "http://128.199.31.7/api/v1/forgot-password",
-        { email: data.email },
-        { withCredentials: true }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/forgot-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: data.email }),
+        }
       );
 
       if (res.status === 200) {
-        toast.success(res.data.message || "Password reset link sent!", {
+        toast.success(res.data || "Password reset link sent!", {
           icon: <Info size={18} className="me-2" />,
           richColors: true,
           closeButton: true,
         });
-        setIsSubmitted(true); // Trigger the success UI
+        setIsSubmitted(true);
       } else {
-        // Handle other non-error statuses if needed
-        throw new Error(res.data.message || "An unknown error occurred.");
+        throw new Error(res.data || "An unknown error occurred.");
       }
     } catch (error) {
       console.error("Forgot password error:", error);
-      // Get error message from Axios response
       const errorMessage =
         error.response?.data?.message ||
         "Failed to send reset link. Please try again.";
 
-      // Set form-level error, just like in your LoginPage
       setError("root", {
         type: "manual",
         message: errorMessage,

@@ -16,9 +16,7 @@ export const authOptions = {
                 console.log('Received credentials:', credentials);
 
                 try {
-                    // This is correct.
-                    // credentials.user is the JSON string
-                    // credentials.accessToken is the token string
+                    
                     const user = JSON.parse(credentials.user);
                     const accessToken = credentials.accessToken;
 
@@ -26,13 +24,13 @@ export const authOptions = {
                         throw new Error("Invalid user or token data received from login page.");
                     }
 
-                    // This maps your API response fields
+                   
                     const userPayload = {
                         id: user._id.toString(),
                         email: user.email,
                         name: user.name,
                         roles: user.roles,
-                        accessToken: accessToken, // Pass the token to the jwt callback
+                        accessToken: accessToken, 
                     };
 
                     console.log('Successfully authorized. Returning user payload:', userPayload);
@@ -54,12 +52,11 @@ export const authOptions = {
             console.log('Received - user:', user);
             console.log('Received - account:', account);
 
-            // This block runs on initial sign-in
+           
             if (user) {
                 console.log('Initial sign-in: `user` object is present.');
                 
-                // This is also correct.
-                // It saves your user data into the 'token.user' object
+               
                 token.user = {
                     id: user.id,
                     email: user.email,
@@ -67,8 +64,7 @@ export const authOptions = {
                     roles: user.roles,
                 };
                 
-                // This is also correct.
-                // It saves your API token into 'token.accessToken'
+               
                 if (user.accessToken) { 
                     console.log('Saving accessToken from credentials into the token.');
                     token.accessToken = user.accessToken;
@@ -90,11 +86,10 @@ export const authOptions = {
             console.log('--- 3. SESSION CALLBACK ---');
             console.log('Received token from JWT callback:', token);
 
-            // This is also correct.
-            // It passes the data from the JWT token to the client-side session.
+          
             if (token) {
-                session.user = token.user; // { id, email, name, roles }
-                session.accessToken = token.accessToken; // Your API JWT
+                session.user = token.user; 
+                session.accessToken = token.accessToken; 
                 session.provider = token.provider;
             }
 

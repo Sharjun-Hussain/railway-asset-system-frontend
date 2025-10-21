@@ -67,12 +67,10 @@ export default function LoginPage() {
         }
 
         if (data) {
-          // **THE ONLY CHANGE IS HERE:**
-          // Changed `data.token` to `data.accessToken` to match your new API response.
           const result = await signIn("credentials", {
             redirect: false,
             user: JSON.stringify(data),
-            accessToken: data.accessToken, // <-- THIS LINE IS UPDATED
+            accessToken: data.accessToken,
             callbackUrl: callbackUrl(),
           });
 

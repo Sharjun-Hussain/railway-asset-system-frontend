@@ -77,7 +77,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="flex w-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
         {/* Left Panel: Branding */}
-        <div className="hidden md:block md:w-1/2 bg-slate-800 p-12 text-white flex flex-col justify-between">
+        <div className=" md:block md:w-1/2 bg-slate-800 p-12 text-white flex flex-col justify-between">
           <div>
             <svg
               className="w-16 h-16 mb-6 text-slate-300"

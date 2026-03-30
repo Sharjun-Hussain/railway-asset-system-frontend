@@ -1,5 +1,5 @@
-// components/layout/Sidebar.tsx
-import Link from "next/link";
+import Link from "react-hook-form";
+import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   Package,
@@ -7,19 +7,56 @@ import {
   Users,
   Building,
   Settings,
+  History,
+  ShieldCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function Sidebar({ isCollapsed }) {
+  const { data: session } = useSession();
+  const permissions = session?.user?.roles?.flatMap(role => 
+    role.permissions.map(p => `${p.module}.${p.name}`)
+  ) || [];
+
+  const isSuperAdmin = session?.user?.roles?.some(r => r.name === "Super Admin");
+
   const navItems = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "Assets", href: "/assets", icon: Package },
-    { name: "Warehouses", href: "/warehouses", icon: Warehouse },
-    { name: "Branches", href: "/branches", icon: Building },
-    { name: "Users", href: "/users", icon: Users },
-    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Dashboard", href: "/", icon: LayoutDashboard, show: true },
+    { 
+      name: "Products", 
+      href: "/products", 
+      icon: Package, 
+      show: isSuperAdmin || permissions.includes("product.view") 
+    },
+    { 
+      name: "Inventory", 
+      href: "/inventory", 
+      icon: Warehouse, 
+      show: isSuperAdmin || permissions.includes("stock.view") 
+    },
+    { 
+      name: "Divisions", 
+      href: "/divisions", 
+      icon: Building, 
+      show: isSuperAdmin || permissions.includes("location.view") 
+    },
+    { 
+      name: "Transactions", 
+      href: "/transactions", 
+      icon: History, 
+      show: isSuperAdmin || permissions.includes("stock.view") 
+    },
+    { 
+      name: "RBAC Admin", 
+      href: "/admin/rbac", 
+      icon: ShieldCheck, 
+      show: isSuperAdmin || permissions.includes("rbac.view") 
+    },
+    { name: "Settings", href: "/settings", icon: Settings, show: true },
   ];
+
+  const visibleItems = navItems.filter(item => item.show);
 
   return (
     <div
@@ -31,13 +68,13 @@ export function Sidebar({ isCollapsed }) {
       <div className="flex flex-col h-full">
         <div className="flex items-center h-16 border-b px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Package className="h-6 w-6" /> {/* Replace with SL Railway Logo */}
-            {!isCollapsed && <span className="">SLR Assets</span>}
+            <Package className="h-6 w-6 text-slate-700" />
+            {!isCollapsed && <span className="text-slate-800">SLR CSAMS</span>}
           </Link>
         </div>
         <nav className="flex-1 overflow-auto py-4 px-4">
           <ul className="space-y-2">
-            {navItems.map((item) => (
+            {visibleItems.map((item) => (
               <li key={item.name}>
                 <Button
                   asChild
@@ -62,3 +99,4 @@ export function Sidebar({ isCollapsed }) {
     </div>
   );
 }
+

@@ -122,24 +122,24 @@ export default function LoginPage() {
               ></path>
             </svg>
             <h1 className="text-3xl font-bold tracking-tight">
-              Department Portal
+              SL Railway Asset Management
             </h1>
             <p className="mt-2 text-slate-300">
-              Please enter your credentials to access the system securely.
+              Centralized Smart Asset Management System (CSAMS)
             </p>
           </div>
           <div className="text-sm text-slate-400">
-            &copy; 2024 Official Government Department
+            &copy; 2026 Sri Lankan Railway Department
           </div>
         </div>
 
         {/* Right Panel: Login Form */}
         <div className="w-full p-8 md:w-1/2">
           <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white">
-            System Login
+            Portal Login
           </h2>
           <p className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
-            Authorized access only
+            Authorized Personnel Access Only
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">

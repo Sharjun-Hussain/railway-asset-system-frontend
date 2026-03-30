@@ -1,4 +1,4 @@
-import Link from "react-hook-form";
+import Link from "next/link";
 import { useSession } from "next-auth/react";
 import {
   LayoutDashboard,

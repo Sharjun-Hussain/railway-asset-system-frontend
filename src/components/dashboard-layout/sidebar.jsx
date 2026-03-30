@@ -39,8 +39,21 @@ export function Sidebar({ isCollapsed }) {
       name: "Divisions", 
       href: "/divisions", 
       icon: Building, 
-      show: isSuperAdmin || permissions.includes("location.view") 
+      show: isSuperAdmin || permissions.includes("division.view") 
     },
+    { 
+      name: "Stations", 
+      href: "/stations", 
+      icon: Building, 
+      show: isSuperAdmin || permissions.includes("station.view") 
+    },
+    { 
+      name: "Warehouses", 
+      href: "/warehouses", 
+      icon: Warehouse, 
+      show: isSuperAdmin || permissions.includes("warehouse.view") 
+    },
+
     { 
       name: "Transactions", 
       href: "/transactions", 

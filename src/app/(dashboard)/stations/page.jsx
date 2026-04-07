@@ -93,7 +93,7 @@ export default function StationsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card className="border-none shadow-sm bg-primary text-white overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
              <Train className="h-20 w-20" />
@@ -149,7 +149,7 @@ export default function StationsPage() {
             <h3 className="text-2xl font-black text-slate-800">6.2% </h3>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
       {/* Filter Section */}
       <div className="space-y-4">
@@ -182,9 +182,7 @@ export default function StationsPage() {
                   </SelectContent>
                 </Select>
              </div>
-             <Button variant="outline" className="h-12 w-12 shrink-0 rounded-xl bg-white border-slate-200">
-                <LayoutGrid className="h-5 w-5 text-slate-500" />
-             </Button>
+           
           </div>
         </div>
 

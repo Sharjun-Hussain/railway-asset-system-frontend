@@ -38,9 +38,7 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
               Asset Command Center
-              <Badge variant="secondary" className="text-xs font-bold py-0.5 px-2 rounded-md border-border bg-white shadow-sm">
-                Live Operations
-              </Badge>
+             
             </h1>
             <p className="text-muted-foreground text-sm font-medium mt-1">
               System monitoring and AI-assisted asset management.
@@ -48,15 +46,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            className="rounded-xl shadow-sm bg-white dark:bg-slate-950 font-bold border-border h-11 px-6 flex gap-2"
-          >
-            <Bell className="h-4 w-4" />
-            Notification Feed
-          </Button>
-        </div>
+       
       </div>
 
       {/* Asset Metrics (Top Stats) */}

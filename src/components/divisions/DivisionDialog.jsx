@@ -23,8 +23,6 @@ import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import axios from "axios"
 
-const REGIONS = ["Colombo", "Kandy", "Jaffna", "Galle", "Anuradhapura", "Trincomalee", "Batticaloa"]
-
 export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -97,22 +95,13 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="region">Region / Province</Label>
-              <Select 
-                value={formData.region} 
-                onValueChange={(value) => setFormData({ ...formData, region: value })}
+              <Input
+                id="region"
+                placeholder="e.g. Western Province"
+                value={formData.region}
+                onChange={(e) => setFormData({ ...formData, region: e.target.value })}
                 required
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a region" />
-                </SelectTrigger>
-                <SelectContent>
-                  {REGIONS.map((region) => (
-                    <SelectItem key={region} value={region}>
-                      {region}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              />
             </div>
             
             <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">

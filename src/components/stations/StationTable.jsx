@@ -139,8 +139,6 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-44">
-                      <DropdownMenuLabel className="text-xs text-muted-foreground">Station Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
                       <DropdownMenuItem className="cursor-pointer" onClick={() => onEdit(station)}>
                         <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Station
                       </DropdownMenuItem>

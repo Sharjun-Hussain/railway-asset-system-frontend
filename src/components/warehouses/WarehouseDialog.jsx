@@ -105,11 +105,11 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-                <Label htmlFor="warehouse_name" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Warehouse Name</Label>
+                <Label htmlFor="warehouse_name">Warehouse Name</Label>
                 <Input
                     id="warehouse_name"
                     placeholder="e.g. Mechanical Store A"
-                    className="h-11 rounded-xl bg-slate-50 border-slate-200"
+                    className=""
                     value={formData.warehouse_name}
                     onChange={(e) => setFormData({ ...formData, warehouse_name: e.target.value })}
                     required
@@ -118,12 +118,12 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
             
             <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="warehouse_type" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Type</Label>
+                  <Label htmlFor="warehouse_type" className="">Type</Label>
                   <Select 
                     value={formData.warehouse_type} 
                     onValueChange={(value) => setFormData({ ...formData, warehouse_type: value })}
                   >
-                    <SelectTrigger className="h-11 rounded-xl bg-slate-50 border-slate-200">
+                    <SelectTrigger className={"w-full"}>
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -137,13 +137,13 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="stationId" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Station</Label>
+                  <Label htmlFor="stationId">Station</Label>
                   <Select 
                     value={formData.stationId} 
                     onValueChange={(value) => setFormData({ ...formData, stationId: value })}
                     required
                   >
-                    <SelectTrigger className="h-11 rounded-xl bg-slate-50 border-slate-200">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select station" />
                     </SelectTrigger>
                     <SelectContent>
@@ -158,11 +158,11 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="description" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Description</Label>
+              <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
                 placeholder="Optional details about this warehouse..."
-                className="rounded-xl bg-slate-50 border-slate-200 min-h-[80px]"
+                className=""
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
@@ -180,10 +180,10 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
             </div>
           </div>
           <DialogFooter className="gap-2">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="rounded-xl font-bold">
+            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)} className="font-bold">
               Cancel
             </Button>
-            <Button type="submit" disabled={loading} className="bg-primary hover:bg-primary/90 rounded-xl font-bold px-6 shadow-lg shadow-primary/20">
+            <Button type="submit" disabled={loading} className="bg-primary hover:bg-primary/90 font-bold px-6 shadow-lg shadow-primary/20">
               {loading ? "Saving..." : isEdit ? "Save Changes" : "Register Warehouse"}
             </Button>
           </DialogFooter>

@@ -69,121 +69,142 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="flex w-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
-        {/* Left Panel: Branding (Copied directly from your LoginPage) */}
-        <div className=" md:block md:w-1/2 bg-slate-800 p-12 text-white flex flex-col justify-between">
-          <div>
-            <svg
-              className="w-16 h-16 mb-6 text-slate-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="1.5"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z"
-              ></path>
-            </svg>
-            <h1 className="text-3xl font-bold tracking-tight">
-              Department Portal
+    <div className="flex items-center justify-center min-h-screen bg-background p-4 sm:p-6 md:p-8">
+      <div className="flex w-full max-w-5xl mx-auto overflow-hidden bg-card rounded-2xl shadow-xl border border-border">
+        {/* Left Panel: Branding & Visual */}
+        <div className="hidden md:flex md:w-5/12 relative bg-primary p-12 text-white flex-col justify-between overflow-hidden">
+          {/* Background Image with Overlay */}
+          <div 
+            className="absolute inset-0 z-0 bg-cover bg-center brightness-[0.4]"
+            style={{ 
+              backgroundImage: "url('/Assets/login-bg-1.jpg')",
+            }}
+          />
+          <div className="absolute inset-0 z-10 bg-primary/60 backdrop-blur-[1px]" />
+          
+          <div className="relative z-20">
+            <div className="p-3 w-fit rounded-xl bg-white/10 border border-white/20 mb-8">
+              <svg
+                className="w-10 h-10 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z"
+                ></path>
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight leading-tight">
+              SL Railway Asset Management
             </h1>
-            <p className="mt-2 text-slate-300">Recover your account access.</p>
+            <p className="mt-4 text-slate-100/80 font-medium">
+              Recover your account access safely.
+            </p>
           </div>
-          <div className="text-sm text-slate-400">
-            &copy; 2024 Official Government Department
+
+          <div className="relative z-20 mt-auto">
+            <div className="text-xs text-white/40 pt-4 border-t border-white/10">
+              &copy; 2026 Sri Lankan Railway Department. All rights reserved.
+            </div>
           </div>
         </div>
 
         {/* Right Panel: Form */}
-        <div className="w-full p-8 md:w-1/2">
-          {/* 5. Conditional UI: Show success message or the form */}
-          {isSubmitted ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <MailCheck className="w-16 h-16 text-green-500" />
-              <h2 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-white">
-                Check Your Email
-              </h2>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                We've sent a password reset link to the email address you
-                provided (if it exists in our system).
-              </p>
-              <Button asChild variant="outline" className="w-full mt-6">
-                {/* Assuming your login page is at the root "/" */}
-                <Link href="/">Back to Login</Link>
-              </Button>
-            </div>
-          ) : (
-            <>
-              <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-white">
-                Forgot Password
-              </h2>
-              <p className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
-                Enter your registered email to get a reset link.
-              </p>
-
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="mt-8 space-y-6"
-              >
-                {/* 6. Root error display (from setError) */}
-                {errors.root && (
-                  <div className="p-3 text-sm text-center text-red-800 bg-red-100 rounded-md dark:bg-red-900 dark:text-red-300">
-                    {errors.root.message}
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Label
-                    htmlFor="email"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Official Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    placeholder="user@department.gov"
-                    type="email"
-                    className={`${
-                      errors.email ? "border-red-500 focus:border-red-500" : ""
-                    }`}
-                    {...register("email")}
-                  />
-                  {/* 7. Field-level error display (from Zod) */}
-                  {errors.email && (
-                    <p className="text-xs text-red-500 dark:text-red-400">
-                      {errors.email.message}
-                    </p>
-                  )}
+        <div className="w-full p-8 md:p-14 md:w-7/12 bg-card">
+          <div className="max-w-sm mx-auto">
+            {isSubmitted ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="p-4 rounded-full bg-green-50 text-green-600 mb-6">
+                  <MailCheck className="w-12 h-12" />
                 </div>
-
-                {/* 8. Submitting state for the button */}
-                <Button
-                  disabled={isSubmitting}
-                  type="submit"
-                  className="w-full"
-                >
-                  {isSubmitting ? "Sending..." : "Send Reset Link"}
-                </Button>
-
-                <p className="text-sm text-center text-gray-600 dark:text-gray-400">
-                  Remembered your password?{" "}
-                  {/* Assuming your login page is at the root "/" */}
-                  <Link
-                    href="/"
-                    className="font-medium text-slate-600 hover:underline dark:text-slate-400"
-                  >
-                    Back to Login
-                  </Link>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  Check Your Email
+                </h2>
+                <p className="mt-4 text-muted-foreground font-medium">
+                  We've sent a password reset link to your official email address. Please check your inbox.
                 </p>
-              </form>
-            </>
-          )}
+                <Button asChild variant="outline" className="w-full mt-10 h-11 rounded-xl font-semibold border-slate-200">
+                  <Link href="/">Back to Portal Login</Link>
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="md:hidden flex justify-center mb-8">
+                   <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z" />
+                      </svg>
+                   </div>
+                </div>
+                
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  Forgot Password
+                </h2>
+                <p className="mt-2 text-muted-foreground font-medium">
+                  Enter your official email to receive a reset link.
+                </p>
+
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
+                  {errors.root && (
+                    <div className="p-4 text-sm text-center text-red-800 bg-red-50 border border-red-100 rounded-xl">
+                      {errors.root.message}
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-0.5"
+                    >
+                      Official Email Address
+                    </Label>
+                    <Input
+                      id="email"
+                      placeholder="user@department.gov"
+                      type="email"
+                      className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
+                        errors.email ? "border-red-500 focus:ring-red-500" : ""
+                      }`}
+                      {...register("email")}
+                    />
+                    {errors.email && (
+                      <p className="text-xs font-medium text-red-500 ml-0.5">
+                        {errors.email.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    disabled={isSubmitting}
+                    type="submit"
+                    className="w-full h-11 bg-primary hover:bg-primary/95 text-white font-semibold rounded-xl shadow-md transition-all duration-100 active:scale-[0.99]"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Reset Link"}
+                  </Button>
+
+                  <div className="pt-2">
+                    <p className="text-sm text-center text-muted-foreground font-medium">
+                      Remembered your password?{" "}
+                      <Link
+                        href="/"
+                        className="font-semibold text-slate-900 hover:text-primary dark:text-white transition-colors"
+                      >
+                        Back to Login
+                      </Link>
+                    </p>
+                  </div>
+                </form>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
+
   );
 }

@@ -72,7 +72,7 @@ export function UnifiedSidebar() {
              <Package className="h-6 w-6" />
           </div>
           <div className="whitespace-nowrap">
-              <span className="font-bold text-xl text-primary uppercase tracking-tight">
+              <span className="font-bold text-xl text-primary tracking-tight">
                   SLR <span className="text-muted-foreground font-medium">CSAMS</span>
               </span>
           </div>
@@ -80,10 +80,10 @@ export function UnifiedSidebar() {
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 space-y-8 scrollbar-hide">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 space-y-8 scrollbar-tiny">
         {navigationGroups.map((group) => (
           <div key={group.name} className="space-y-1">
-             <h3 className="px-4 text-[11px] font-bold tracking-widest text-muted-foreground uppercase mb-4 opacity-100">
+             <h3 className="px-4 text-xs font-bold text-muted-foreground mb-4 opacity-100">
                {group.name}
              </h3>
             
@@ -127,10 +127,10 @@ export function UnifiedSidebar() {
           </div>
           
           <div className="flex-1 min-w-0 transition-all duration-300 overflow-hidden">
-              <p className="text-xs font-bold truncate text-foreground leading-none mb-1">
+              <p className="text-sm font-bold truncate text-foreground leading-none mb-1">
               {session?.user?.name || "Harper Nelson"}
               </p>
-              <p className="text-[10px] text-muted-foreground truncate uppercase font-medium">
+              <p className="text-xs text-muted-foreground truncate font-medium">
               Admin Manager
               </p>
           </div>

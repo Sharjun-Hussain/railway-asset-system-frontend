@@ -97,22 +97,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Infrastructure Quick Access */}
-          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-primary text-white relative">
-            <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
-            <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12 scale-150">
-               <Train size={80} strokeWidth={1.5} />
-            </div>
-            <CardContent className="p-8 relative z-10">
-              <h3 className="text-xl font-bold leading-tight">Sync Infrastructure Data</h3>
-              <p className="mt-2 text-white/70 text-sm font-medium leading-relaxed">
-                Connect your field tablets to the central neural engine for real-time asset updates.
-              </p>
-              <Button className="mt-8 w-full bg-white text-primary hover:bg-slate-100 font-bold rounded-xl h-11 border-none shadow-lg">
-                Initiate Handshake
-              </Button>
-            </CardContent>
-          </Card>
+          
 
           {/* Quick Links Group */}
           <div className="grid grid-cols-2 gap-4">

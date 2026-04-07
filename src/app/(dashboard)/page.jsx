@@ -38,8 +38,8 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
               Asset Command Center
-              <Badge variant="secondary" className="text-[10px] uppercase font-bold py-0.5 px-1.5 rounded-md border-border bg-white shadow-sm">
-                Live Ops
+              <Badge variant="secondary" className="text-xs font-bold py-0.5 px-2 rounded-md border-border bg-white shadow-sm">
+                Live Operations
               </Badge>
             </h1>
             <p className="text-muted-foreground text-sm font-medium mt-1">
@@ -88,15 +88,15 @@ export default function DashboardPage() {
                {QUICK_REPORTS.map((report) => (
                  <div key={report.id} className="p-4 rounded-xl border border-border/50 bg-white/50 dark:bg-slate-900/50 hover:border-primary/30 transition-all cursor-pointer group">
                    <div className="flex items-start justify-between mb-2">
-                      <Badge className={`text-[10px] font-bold py-0 px-1.5 rounded bg-${report.color}-500/10 text-${report.color}-600 dark:text-${report.color}-400 border border-${report.color}-500/20`}>
+                      <Badge className={`text-xs font-bold py-0.5 px-2 rounded bg-${report.color}-500/10 text-${report.color}-600 dark:text-${report.color}-400 border border-${report.color}-500/20`}>
                         {report.type}
                       </Badge>
-                      <span className="text-[10px] font-medium text-muted-foreground">{report.time}</span>
+                      <span className="text-xs font-medium text-muted-foreground">{report.time}</span>
                    </div>
                    <h4 className="text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{report.title}</h4>
                    <div className="flex items-center gap-1.5 pt-1">
                       <div className={`h-1.5 w-1.5 rounded-full bg-${report.color}-500`} />
-                      <span className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider">{report.status}</span>
+                      <span className="text-xs font-bold text-muted-foreground/70">{report.status}</span>
                    </div>
                  </div>
                ))}
@@ -130,13 +130,13 @@ export default function DashboardPage() {
                 <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
                    <Box size={18} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">Inventory</span>
+                <span className="text-sm font-bold text-muted-foreground group-hover:text-foreground">Inventory</span>
              </Link>
              <Link href="/stations" className="p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-primary/40 transition-all flex flex-col gap-3 group">
                 <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
                    <MapPin size={18} />
                 </div>
-                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">Stations</span>
+                <span className="text-sm font-bold text-muted-foreground group-hover:text-foreground">Stations</span>
              </Link>
           </div>
         </div>

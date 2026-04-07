@@ -82,13 +82,13 @@ export function AIChat() {
               <CardTitle className="text-lg font-bold tracking-tight">Railway AI Assistant</CardTitle>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">Neural Engine Online</span>
+                <span className="text-xs font-bold text-muted-foreground/70">Neural Engine Online</span>
               </div>
             </div>
           </div>
-          <Badge variant="outline" className="rounded-lg bg-white/50 dark:bg-slate-950 font-bold border-border/50 px-2 py-1 flex gap-1.5 items-center">
+          <Badge variant="outline" className="rounded-lg bg-white/50 dark:bg-slate-950 font-bold border-border/50 px-2.5 py-1 flex gap-1.5 items-center">
             <Sparkles size={12} className="text-primary" />
-            V4.2 Core
+            Core v4.2
           </Badge>
         </div>
       </CardHeader>
@@ -120,7 +120,7 @@ export function AIChat() {
                 }`}>
                   {msg.content}
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground/60 mt-2 px-1">
+                <span className="text-xs font-bold text-muted-foreground/60 mt-2 px-1">
                   {msg.timestamp}
                 </span>
               </div>
@@ -161,15 +161,15 @@ export function AIChat() {
             </Button>
           </form>
           
-          <div className="flex items-center justify-center gap-4 pt-1">
-             <div className="flex items-center gap-1.5 opacity-40">
-                <History size={10} className="text-muted-foreground" />
-                <span className="text-[9px] font-bold uppercase tracking-widest">History Log Full</span>
+          <div className="flex items-center justify-center gap-6 pt-1">
+             <div className="flex items-center gap-1.5 opacity-60">
+                <History size={12} className="text-muted-foreground" />
+                <span className="text-xs font-bold">History Log Full</span>
              </div>
              <div className="w-1 h-1 rounded-full bg-slate-300" />
-             <div className="flex items-center gap-1.5 opacity-40">
-                <Sparkles size={10} className="text-muted-foreground" />
-                <span className="text-[9px] font-bold uppercase tracking-widest">Enterprise Mode</span>
+             <div className="flex items-center gap-1.5 opacity-60">
+                <Sparkles size={12} className="text-muted-foreground" />
+                <span className="text-xs font-bold">Enterprise Mode</span>
              </div>
           </div>
         </div>

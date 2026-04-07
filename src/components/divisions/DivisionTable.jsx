@@ -27,7 +27,7 @@ import {
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import axios from "axios"
+import apiClient from "@/lib/api"
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -47,7 +47,7 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
     if (!deleteId) return
     setIsDeleting(true)
     try {
-      await axios.delete(`/api/divisions/${deleteId}`)
+      await apiClient.delete(`/divisions/${deleteId}`)
       toast.success("Division deleted successfully")
       onDeleteSuccess?.()
     } catch (error) {

@@ -20,7 +20,7 @@ import {
   SelectValue 
 } from "@/components/ui/select"
 import { toast } from "sonner"
-import axios from "axios"
+import apiClient from "@/lib/api"
 
 export function StationDialog({ open, onOpenChange, station, onSuccess }) {
   const [loading, setLoading] = useState(false)
@@ -37,7 +37,7 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
   useEffect(() => {
     const fetchDivisions = async () => {
       try {
-        const response = await axios.get("/api/divisions")
+        const response = await apiClient.get("/divisions")
         setDivisions(response.data.data || [])
       } catch (err) {
         console.error("Failed to load divisions:", err)
@@ -70,10 +70,10 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
 
     try {
       if (isEdit) {
-        await axios.put(`/api/stations/${station._id}`, formData)
+        await apiClient.put(`/stations/${station._id}`, formData)
         toast.success("Station updated successfully")
       } else {
-        await axios.post("/api/stations", formData)
+        await apiClient.post("/stations", formData)
         toast.success("Station created successfully")
       }
       onSuccess?.()

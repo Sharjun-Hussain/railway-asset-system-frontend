@@ -17,7 +17,7 @@ import { StationTable } from "@/components/stations/StationTable"
 import { StationDialog } from "@/components/stations/StationDialog"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import axios from "axios"
+import apiClient from "@/lib/api"
 import { toast } from "sonner"
 import { 
   Select, 
@@ -40,8 +40,8 @@ export default function StationsPage() {
     setLoading(true)
     try {
       const [stationsRes, divisionsRes] = await Promise.all([
-        axios.get("/api/stations"),
-        axios.get("/api/divisions")
+        apiClient.get("/stations"),
+        apiClient.get("/divisions")
       ])
       setStations(stationsRes.data.data || [])
       setDivisions(divisionsRes.data.data || [])

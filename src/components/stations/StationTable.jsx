@@ -28,7 +28,7 @@ import {
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
-import axios from "axios"
+import apiClient from "@/lib/api"
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -48,7 +48,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
     if (!deleteId) return
     setIsDeleting(true)
     try {
-      await axios.delete(`/api/stations/${deleteId}`)
+      await apiClient.delete(`/stations/${deleteId}`)
       toast.success("Station deleted successfully")
       onDeleteSuccess?.()
     } catch (error) {

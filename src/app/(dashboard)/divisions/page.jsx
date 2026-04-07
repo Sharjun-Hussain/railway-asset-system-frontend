@@ -15,7 +15,7 @@ import {
 import { DivisionTable } from "@/components/divisions/DivisionTable"
 import { DivisionDialog } from "@/components/divisions/DivisionDialog"
 import { Card, CardContent } from "@/components/ui/card"
-import axios from "axios"
+import apiClient from "@/lib/api"
 import { toast } from "sonner"
 
 export default function DivisionsPage() {
@@ -28,7 +28,7 @@ export default function DivisionsPage() {
   const fetchDivisions = async () => {
     setLoading(true)
     try {
-      const response = await axios.get("/api/divisions")
+      const response = await apiClient.get("/divisions")
       // backend returns { success: true, count: X, data: [...] }
       setDivisions(response.data.data || [])
     } catch (error) {

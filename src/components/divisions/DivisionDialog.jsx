@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
-import axios from "axios"
+import apiClient from "@/lib/api"
 
 export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
   const [loading, setLoading] = useState(false)
@@ -55,10 +55,10 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
 
     try {
       if (isEdit) {
-        await axios.put(`/api/divisions/${division._id}`, formData)
+        await apiClient.put(`/divisions/${division._id}`, formData)
         toast.success("Division updated successfully")
       } else {
-        await axios.post("/api/divisions", formData)
+        await apiClient.post("/divisions", formData)
         toast.success("Division created successfully")
       }
       onSuccess?.()

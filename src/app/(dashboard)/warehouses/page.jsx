@@ -153,7 +153,7 @@ export default function WarehousesPage() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Search warehouse name..."
-              className="pl-11 h-12 bg-white border-slate-200 rounded-xl focus:ring-primary shadow-sm font-medium"
+              className="pl-11  bg-white border-slate-200  focus:ring-primary shadow-sm font-medium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -162,13 +162,13 @@ export default function WarehousesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             <div className="w-[180px]">
               <Select value={stationFilter} onValueChange={setStationFilter}>
-                <SelectTrigger className="h-11 rounded-xl bg-white border-slate-200 font-bold text-slate-700">
+                <SelectTrigger className="w-full bg-white border-slate-200 text-slate-700">
                   <SelectValue placeholder="All Stations" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-slate-100 shadow-xl">
-                  <SelectItem value="all" className="font-bold">All Stations</SelectItem>
+                  <SelectItem value="all" className="">All Stations</SelectItem>
                   {stations.map((station) => (
-                    <SelectItem key={station._id} value={station._id} className="font-bold">
+                    <SelectItem key={station._id} value={station._id} className="">
                       {station.station_name}
                     </SelectItem>
                   ))}
@@ -178,11 +178,11 @@ export default function WarehousesPage() {
 
             <div className="w-[180px]">
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="h-11 rounded-xl bg-white border-slate-200 font-bold text-slate-700">
+                <SelectTrigger className="  bg-white border-slate-200  text-slate-700 w-full">
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-slate-100 shadow-xl">
-                  <SelectItem value="all" className="font-bold">All Types</SelectItem>
+                  <SelectItem value="all" className="">All Types</SelectItem>
                   {WAREHOUSE_TYPES.map((type) => (
                     <SelectItem key={type} value={type} className="font-bold">
                       {type}

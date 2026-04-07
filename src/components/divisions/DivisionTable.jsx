@@ -127,10 +127,10 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-40">
                       <DropdownMenuItem className="cursor-pointer" onClick={() => onEdit(division)}>
-                        <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit
+                        <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Division
                       </DropdownMenuItem>
                       <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={() => setDeleteId(division._id)}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete Division
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

@@ -131,11 +131,11 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-40 rounded-xl shadow-lg border-slate-100">
-                      <DropdownMenuItem className="cursor-pointer font-bold text-sm" onClick={() => onEdit(warehouse)}>
-                        <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit
+                      <DropdownMenuItem className="cursor-pointer text-sm" onClick={() => onEdit(warehouse)}>
+                        <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Warehouse
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 font-bold text-sm" onClick={() => setDeleteId(warehouse._id)}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                      <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 text-sm" onClick={() => setDeleteId(warehouse._id)}>
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete Warehouse
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

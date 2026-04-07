@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import apiClient from "@/lib/api"
+import { Badge } from "@/components/ui/badge"
 
 export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
   const [deleteId, setDeleteId] = useState(null)
@@ -58,6 +59,7 @@ export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50">
               <TableHead className="w-[80px] font-bold text-slate-500">#</TableHead>
               <TableHead className="font-bold text-slate-500">Category Name</TableHead>
+              <TableHead className="font-bold text-slate-500">Status</TableHead>
               <TableHead className="font-bold text-slate-500">Created At</TableHead>
               <TableHead className="text-right font-bold text-slate-500">Actions</TableHead>
             </TableRow>
@@ -77,6 +79,17 @@ export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
                   </TableCell>
                   <TableCell className="font-bold text-slate-700">
                     {category.category_name}
+                  </TableCell>
+                  <TableCell>
+                    {category.is_active !== false ? (
+                      <Badge className="bg-emerald-50 text-emerald-600 hover:bg-emerald-50 border-emerald-100 font-bold text-[10px] uppercase">
+                        Active
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-slate-50 text-slate-400 hover:bg-slate-50 border-slate-200 font-bold text-[10px] uppercase">
+                        Inactive
+                      </Badge>
+                    )}
                   </TableCell>
                   <TableCell className="text-slate-500 text-sm">
                     {new Date(category.createdAt).toLocaleDateString()}

@@ -94,8 +94,11 @@ export default function CategoriesPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Total Categories</p>
-                <h3 className="text-4xl font-black text-slate-800">{categories.length}</h3>
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Active Categories</p>
+                <div className="flex items-baseline gap-2">
+                  <h3 className="text-4xl font-black text-slate-800">{categories.filter(c => c.is_active !== false).length}</h3>
+                  <span className="text-slate-400 text-sm font-bold">/ {categories.length} total</span>
+                </div>
               </div>
               <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100">
                 <LayoutDashboard className="h-6 w-6" />
@@ -107,8 +110,11 @@ export default function CategoriesPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Total Sub-Categories</p>
-                <h3 className="text-4xl font-black text-slate-800">{subCategories.length}</h3>
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Active Sub-Categories</p>
+                <div className="flex items-baseline gap-2">
+                  <h3 className="text-4xl font-black text-slate-800">{subCategories.filter(s => s.is_active !== false).length}</h3>
+                  <span className="text-slate-400 text-sm font-bold">/ {subCategories.length} total</span>
+                </div>
               </div>
               <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100">
                 <Layers className="h-6 w-6" />

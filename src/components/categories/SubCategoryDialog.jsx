@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-
+import { Switch } from "@/components/ui/switch"
 import {
   Select,
   SelectContent,
@@ -28,6 +28,7 @@ export function SubCategoryDialog({ open, onOpenChange, subCategory, categories,
   const [formData, setFormData] = useState({
     sub_category_name: "",
     categoryId: "",
+    is_active: true,
   })
 
   const isEdit = !!subCategory
@@ -37,11 +38,13 @@ export function SubCategoryDialog({ open, onOpenChange, subCategory, categories,
       setFormData({
         sub_category_name: subCategory.sub_category_name || "",
         categoryId: subCategory.categoryId?._id || subCategory.categoryId || "",
+        is_active: subCategory.is_active !== false,
       })
     } else {
       setFormData({
         sub_category_name: "",
         categoryId: "",
+        is_active: true,
       })
     }
   }, [subCategory, open])
@@ -110,6 +113,18 @@ export function SubCategoryDialog({ open, onOpenChange, subCategory, categories,
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="flex items-center justify-between rounded-xl border border-slate-200 p-4 transition-colors hover:bg-slate-50">
+              <div className="space-y-0.5">
+                <Label htmlFor="status">Operational Status</Label>
+                <p className="text-xs text-muted-foreground">Set if this sub-category is currently active.</p>
+              </div>
+              <Switch
+                id="status"
+                checked={formData.is_active}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+              />
             </div>
           </div>
           <DialogFooter>

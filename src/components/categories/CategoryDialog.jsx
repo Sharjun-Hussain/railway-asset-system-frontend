@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import apiClient from "@/lib/api"
 
@@ -19,6 +20,7 @@ export function CategoryDialog({ open, onOpenChange, category, onSuccess }) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     category_name: "",
+    is_active: true,
   })
 
   const isEdit = !!category
@@ -27,10 +29,12 @@ export function CategoryDialog({ open, onOpenChange, category, onSuccess }) {
     if (category) {
       setFormData({
         category_name: category.category_name || "",
+        is_active: category.is_active !== false,
       })
     } else {
       setFormData({
         category_name: "",
+        is_active: true,
       })
     }
   }, [category, open])
@@ -79,6 +83,18 @@ export function CategoryDialog({ open, onOpenChange, category, onSuccess }) {
                 value={formData.category_name}
                 onChange={(e) => setFormData({ ...formData, category_name: e.target.value })}
                 required
+              />
+            </div>
+
+            <div className="flex items-center justify-between rounded-xl border border-slate-200 p-4 transition-colors hover:bg-slate-50">
+              <div className="space-y-0.5">
+                <Label htmlFor="status">Operational Status</Label>
+                <p className="text-xs text-muted-foreground">Set if this category is currently active.</p>
+              </div>
+              <Switch
+                id="status"
+                checked={formData.is_active}
+                onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
               />
             </div>
           </div>

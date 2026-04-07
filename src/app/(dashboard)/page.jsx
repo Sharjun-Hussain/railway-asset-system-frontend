@@ -1,160 +1,145 @@
 "use client";
 
-import { SummaryCard } from "@/components/dashboard/SummaryCard";
-import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
+import { AssetMetrics } from "@/components/dashboard/AssetMetrics";
+import { AIChat } from "@/components/dashboard/AIChat";
 import {
-  Users,
-  DollarSign,
-  ShoppingCart,
-  RotateCcw,
-  Plus,
-  Calendar,
-  Search,
-  Settings,
+  Train,
+  Activity,
+  Wrench,
+  AlertTriangle,
+  History,
+  LayoutDashboard,
+  Bell,
+  Box,
+  MapPin,
+  Clock,
+  ArrowRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function DashboardPage() {
-  const stats = [
-    {
-      title: "Total customers",
-      value: "567,899",
-      trend: "2.5%",
-      trendType: "up",
-      icon: Users,
-    },
-    {
-      title: "Total revenue",
-      value: "$3,465 M",
-      trend: "0.5%",
-      trendType: "up",
-      icon: DollarSign,
-    },
-    {
-      title: "Total orders",
-      value: "1,136 M",
-      trend: "0.2%",
-      trendType: "down",
-      icon: ShoppingCart,
-    },
-    {
-      title: "Total returns",
-      value: "1,789",
-      trend: "0.12%",
-      trendType: "up",
-      icon: RotateCcw,
-    },
-  ];
-
-  const countries = [
-    { name: "Poland", value: "19%", flag: "🇵🇱" },
-    { name: "Austria", value: "15%", flag: "🇦🇹" },
-    { name: "Spain", value: "13%", flag: "🇪🇸" },
-    { name: "Romania", value: "12%", flag: "🇷🇴" },
-    { name: "France", value: "11%", flag: "🇫🇷" },
-    { name: "Italy", value: "11%", flag: "🇮🇹" },
-    { name: "Germany", value: "10%", flag: "🇩🇪" },
-    { name: "Ukraine", value: "9%", flag: "🇺🇦" },
+  const QUICK_REPORTS = [
+    { id: 1, type: "Maintenance", title: "Engine #4521 - Service Completed", status: "Done", time: "2h ago", color: "green" },
+    { id: 2, type: "Arrival", title: "Gampaha Station - Track Sync", status: "Syncing", time: "15m ago", color: "blue" },
+    { id: 3, type: "Alert", title: "Signal Failure - Colombo Fort", status: "Critical", time: "Just now", color: "red" },
   ];
 
   return (
-    <div className="space-y-10 animate-fade-in">
+    <div className="space-y-8 min-h-screen bg-background/50">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Dashboard
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Welcome back, here's what's happening today.
-          </p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2 border-b border-border/50">
+        <div className="flex items-center gap-4">
+          <div className="p-3.5 h-12 w-12 rounded-2xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
+            <LayoutDashboard size={24} />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
+              Asset Command Center
+              <Badge variant="secondary" className="text-[10px] uppercase font-bold py-0.5 px-1.5 rounded-md border-border bg-white shadow-sm">
+                Live Ops
+              </Badge>
+            </h1>
+            <p className="text-muted-foreground text-sm font-medium mt-1">
+              System monitoring and AI-assisted asset management.
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-4 py-2 border bg-white rounded-xl shadow-sm text-sm font-medium text-muted-foreground">
-            <Calendar className="h-4 w-4" />
-            Time period: <span className="text-foreground">Last 30 days</span>
-          </div>
+        <div className="flex items-center gap-2">
           <Button
             variant="outline"
-            size="icon"
-            className="rounded-xl shadow-sm bg-white"
+            className="rounded-xl shadow-sm bg-white dark:bg-slate-950 font-bold border-border h-11 px-6 flex gap-2"
           >
-            <Search className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-xl shadow-sm bg-white"
-          >
-            <Settings className="h-4 w-4" />
+            <Bell className="h-4 w-4" />
+            Notification Feed
           </Button>
         </div>
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-        {stats.map((stat) => (
-          <SummaryCard key={stat.title} {...stat} />
-        ))}
-        <Button
-          variant="outline"
-          className="h-full min-h-[140px] border-dashed border-2 rounded-2xl flex flex-col items-center justify-center gap-2 group hover:border-primary hover:bg-primary/5 transition-all"
-        >
-          <div className="p-2 rounded-lg bg-secondary text-muted-foreground group-hover:bg-primary group-hover:text-white transition-colors">
-            <Plus className="h-5 w-5" />
-          </div>
-          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            Add data
-          </span>
-        </Button>
-      </div>
+      {/* Asset Metrics (Top Stats) */}
+      <AssetMetrics />
 
-      {/* Charts Section */}
-      <DashboardCharts />
+      {/* Main Bento Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+        {/* Left Span: AI Chat (The Core Interaction) */}
+        <div className="lg:col-span-4">
+          <AIChat />
+        </div>
 
-      {/* Bottom Section: Country Sales & Map Placeholder */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="lg:col-span-1 border-none shadow-sm rounded-2xl overflow-hidden bg-white">
-          <CardHeader>
-            <CardTitle className="text-lg font-bold">
-              Sales by countries
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {countries.map((country) => (
-              <div key={country.name} className="flex items-center gap-3">
-                <span className="text-lg">{country.flag}</span>
-                <span className="text-sm font-bold text-foreground flex-1">
-                  {country.name}
-                </span>
-                <span className="text-sm font-bold text-muted-foreground">
-                  {country.value}
-                </span>
+        {/* Right Span: Live Feed & Quick Navigation */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Quick Reports Card */}
+          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
+            <CardHeader className="pb-3 border-b border-border/50">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-bold flex items-center gap-2">
+                  <History className="h-4 w-4 text-primary" />
+                  Live Activity
+                </CardTitle>
+                <div className="p-1 rounded-full bg-primary/5">
+                   <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+                </div>
               </div>
-            ))}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="p-4 space-y-4">
+               {QUICK_REPORTS.map((report) => (
+                 <div key={report.id} className="p-4 rounded-xl border border-border/50 bg-white/50 dark:bg-slate-900/50 hover:border-primary/30 transition-all cursor-pointer group">
+                   <div className="flex items-start justify-between mb-2">
+                      <Badge className={`text-[10px] font-bold py-0 px-1.5 rounded bg-${report.color}-500/10 text-${report.color}-600 dark:text-${report.color}-400 border border-${report.color}-500/20`}>
+                        {report.type}
+                      </Badge>
+                      <span className="text-[10px] font-medium text-muted-foreground">{report.time}</span>
+                   </div>
+                   <h4 className="text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{report.title}</h4>
+                   <div className="flex items-center gap-1.5 pt-1">
+                      <div className={`h-1.5 w-1.5 rounded-full bg-${report.color}-500`} />
+                      <span className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider">{report.status}</span>
+                   </div>
+                 </div>
+               ))}
+               <Button variant="ghost" className="w-full h-10 rounded-xl font-bold text-xs gap-2 group">
+                 View Full Activity Logs
+                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+               </Button>
+            </CardContent>
+          </Card>
 
-        <Card className="lg:col-span-2 border-none shadow-sm rounded-2xl overflow-hidden bg-white flex items-center justify-center p-10">
-          <div className="text-center space-y-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-              <Users className="h-8 w-8 text-primary" />
+          {/* Infrastructure Quick Access */}
+          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-primary text-white relative">
+            <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
+            <div className="absolute top-0 right-0 p-8 opacity-20 rotate-12 scale-150">
+               <Train size={80} strokeWidth={1.5} />
             </div>
-            <div>
-              <h3 className="text-lg font-bold">Geographic Distribution</h3>
-              <p className="text-sm text-muted-foreground max-w-md">
-                Detailed world map visualization would be here, showing user
-                density and sales volume by region.
+            <CardContent className="p-8 relative z-10">
+              <h3 className="text-xl font-bold leading-tight">Sync Infrastructure Data</h3>
+              <p className="mt-2 text-white/70 text-sm font-medium leading-relaxed">
+                Connect your field tablets to the central neural engine for real-time asset updates.
               </p>
-            </div>
-            <Button variant="secondary" className="rounded-xl">
-              View world map
-            </Button>
+              <Button className="mt-8 w-full bg-white text-primary hover:bg-slate-100 font-bold rounded-xl h-11 border-none shadow-lg">
+                Initiate Handshake
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Quick Links Group */}
+          <div className="grid grid-cols-2 gap-4">
+             <Link href="/inventory" className="p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-primary/40 transition-all flex flex-col gap-3 group">
+                <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
+                   <Box size={18} />
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">Inventory</span>
+             </Link>
+             <Link href="/stations" className="p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-primary/40 transition-all flex flex-col gap-3 group">
+                <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
+                   <MapPin size={18} />
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">Stations</span>
+             </Link>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

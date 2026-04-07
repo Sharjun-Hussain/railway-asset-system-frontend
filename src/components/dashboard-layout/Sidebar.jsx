@@ -27,8 +27,8 @@ const navigationGroups = [
   {
     name: "INVENTORY",
     items: [
-      { name: "Asset Catalog", href: "/products", icon: Package },
-      { name: "Asset Categories", href: "/categories", icon: LayoutDashboard },
+      { name: "Assets", href: "/products", icon: Package },
+      { name: "Categories", href: "/categories", icon: LayoutDashboard },
       { name: "Stock Inventory", href: "/inventory", icon: Warehouse },
     ]
   },

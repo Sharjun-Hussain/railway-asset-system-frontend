@@ -63,9 +63,9 @@ export default function StockInventoryPage() {
   }, [fetchData])
 
   const filteredStocks = stocks.filter(s => 
-    s.assetId?.asset_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.assetId?.qr_code?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.warehouseId?.warehouse_name.toLowerCase().includes(searchQuery.toLowerCase())
+    (s.assetId?.asset_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (s.assetId?.qr_code || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (s.warehouseId?.warehouse_name || "").toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   const lowStockCount = stocks.filter(s => s.quantity <= (s.min_level || 0)).length

@@ -98,8 +98,8 @@ export default function AssetsPage() {
   }
 
   const filteredAssets = assets.filter(a => 
-    a.asset_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    a.qr_code?.toLowerCase().includes(searchQuery.toLowerCase())
+    (a.asset_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (a.qr_code || "").toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
@@ -181,25 +181,27 @@ export default function AssetsPage() {
           </Button>
         </div>
 
-        <div className="rounded-2xl border bg-white overflow-hidden shadow-sm">
+        {loading ? (
+          <div className="flex items-center justify-center p-12 bg-white rounded-xl border border-slate-100 shadow-sm">
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+              <p className="text-sm text-muted-foreground font-medium">Synchronizing SAMS asset database...</p>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-slate-100 bg-white shadow-sm overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b">
-                <TableHead className="w-[120px] font-bold text-slate-500 py-5 uppercase tracking-tighter">Asset Code</TableHead>
-                <TableHead className="font-bold text-slate-500 uppercase tracking-tighter">Asset Description</TableHead>
-                <TableHead className="font-bold text-slate-500 uppercase tracking-tighter">Classification</TableHead>
-                <TableHead className="font-bold text-slate-500 uppercase tracking-tighter">Unit</TableHead>
-                <TableHead className="text-right font-bold text-slate-500 uppercase tracking-tighter">Actions</TableHead>
+                <TableHead className="w-[120px] font-bold">Asset Code</TableHead>
+                <TableHead className="font-bold  ">Asset Description</TableHead>
+                <TableHead className="font-bold ">Classification</TableHead>
+                <TableHead className="font-bold ">Unit</TableHead>
+                <TableHead className="text-right font-bold ">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center text-slate-400 font-medium">
-                    Loading asset catalog...
-                  </TableCell>
-                </TableRow>
-              ) : filteredAssets.length === 0 ? (
+              {filteredAssets.length === 0 && !loading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="h-40 text-center text-slate-400 font-medium">
                     No active asset definitions found.
@@ -207,32 +209,34 @@ export default function AssetsPage() {
                 </TableRow>
               ) : (
                 filteredAssets.map((asset) => (
-                  <TableRow key={asset._id} className="hover:bg-slate-50/30 transition-colors border-b last:border-0 group">
-                    <TableCell className="font-mono text-xs font-bold text-slate-400 py-4">
-                      {asset.qr_code || "N/A"}
+                  <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
+                    <TableCell className="">
+                        <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 font-mono">
+                            {asset.qr_code || "N/A"}
+                        </Badge>
                     </TableCell>
-                    <TableCell className="font-bold text-slate-700 min-w-[200px]">
+                    <TableCell className="font-semibold text-slate-700 min-w-[200px]">
                       {asset.asset_name}
                       {asset.description && (
-                        <p className="text-[10px] font-medium text-slate-400 mt-0.5 line-clamp-1 max-w-[300px]">
+                        <p className="text-[10px] font-medium text-slate-500 mt-0.5 line-clamp-1 max-w-[300px]">
                             {asset.description}
                         </p>
                       )}
                     </TableCell>
                     <TableCell>
                        <div className="flex flex-col gap-1">
-                          <Badge variant="outline" className="w-fit bg-slate-50 text-slate-600 border-slate-200 text-[10px] font-bold py-0">
+                          <span className="text-slate-600 font-medium text-xs">
                             {asset.categoryId?.category_name}
-                          </Badge>
-                          <span className="text-[10px] text-slate-400 font-medium ml-1">
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium italic">
                             {asset.subCategoryId?.sub_category_name || "Uncategorized"}
                           </span>
                        </div>
                     </TableCell>
                     <TableCell>
-                      <Badge className="bg-indigo-50 text-indigo-600 hover:bg-indigo-50 border-none font-bold text-[10px] uppercase">
+                      <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider">
                         {asset.unit}
-                      </Badge>
+                      </div>
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -260,6 +264,7 @@ export default function AssetsPage() {
             </TableBody>
           </Table>
         </div>
+        )}
       </div>
 
       {/* Confirmation Dialogs */}

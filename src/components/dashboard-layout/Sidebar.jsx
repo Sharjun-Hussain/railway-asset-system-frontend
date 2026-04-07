@@ -10,21 +10,11 @@ import {
   History, 
   ShieldCheck, 
   Settings,
-  ChevronLeft,
-  ChevronRight,
-  Moon,
-  LogOut,
-  Ticket
+  LogOut
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { useSession, signOut } from "next-auth/react"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider
-} from "@/components/ui/tooltip"
+import { signOut } from "next-auth/react"
 
 const navigationGroups = [
   {
@@ -32,7 +22,6 @@ const navigationGroups = [
     items: [
       { name: "Dashboard", href: "/", icon: LayoutDashboard },
       { name: "Transactions", href: "/transactions", icon: History },
-      { name: "Tickets", href: "/tickets", icon: Ticket },
     ]
   },
   {

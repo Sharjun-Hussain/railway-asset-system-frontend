@@ -99,10 +99,10 @@ export default function StationsPage() {
              <Train className="h-20 w-20" />
           </div>
           <CardContent className="p-6 relative z-10">
-            <p className="text-primary-foreground/80 font-bold uppercase tracking-wider text-[10px] mb-1">Total Stations</p>
+            <p className="text-primary-foreground/80 font-semibold text-sm mb-1">Total Stations</p>
             <div className="flex items-end gap-3">
                <h3 className="text-4xl font-black">{stations.length}</h3>
-               <div className="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full mb-1">
+               <div className="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full mb-1 font-medium">
                   <TrendingUp className="h-3 w-3" /> +2
                </div>
             </div>
@@ -117,7 +117,7 @@ export default function StationsPage() {
                </div>
                <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Divisions</Badge>
             </div>
-            <p className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] mb-1">Unique Divisions</p>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">Unique Divisions</p>
             <h3 className="text-2xl font-black text-slate-800">
                {divisions.length}
             </h3>
@@ -132,7 +132,7 @@ export default function StationsPage() {
                </div>
                <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Scope</Badge>
             </div>
-            <p className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] mb-1">Coverage</p>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">Coverage</p>
             <h3 className="text-2xl font-black text-slate-800">National</h3>
           </CardContent>
         </Card>
@@ -145,7 +145,7 @@ export default function StationsPage() {
                </div>
                <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Growth</Badge>
             </div>
-            <p className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] mb-1">New Stations</p>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">New Stations</p>
             <h3 className="text-2xl font-black text-slate-800">6.2% </h3>
           </CardContent>
         </Card>

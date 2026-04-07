@@ -80,10 +80,10 @@ export default function DivisionsPage() {
              <Building className="h-24 w-24" />
           </div>
           <CardContent className="p-6 relative z-10">
-            <p className="text-primary-foreground/80 font-bold uppercase tracking-wider text-[10px] mb-1">Total Divisions</p>
+            <p className="text-primary-foreground/80 font-semibold text-sm mb-1">Total Divisions</p>
             <div className="flex items-end gap-3">
                <h3 className="text-4xl font-black">{divisions.length}</h3>
-               <div className="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full mb-1">
+               <div className="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full mb-1 font-medium">
                   <TrendingUp className="h-3 w-3" /> +1 new
                </div>
             </div>
@@ -98,7 +98,7 @@ export default function DivisionsPage() {
                </div>
                <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Regions</Badge>
             </div>
-            <p className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] mb-1">Active Regions</p>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">Active Regions</p>
             <h3 className="text-2xl font-black text-slate-800">
               {[...new Set(divisions.map(d => d.region))].length}
             </h3>
@@ -113,7 +113,7 @@ export default function DivisionsPage() {
                </div>
                <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Status</Badge>
             </div>
-            <p className="text-muted-foreground font-bold uppercase tracking-wider text-[10px] mb-1">System Capacity</p>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">System Capacity</p>
             <h3 className="text-2xl font-black text-slate-800">100% Active</h3>
           </CardContent>
         </Card>

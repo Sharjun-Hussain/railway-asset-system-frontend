@@ -96,11 +96,11 @@ export default function DivisionsPage() {
                <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
                   <MapPin className="h-5 w-5" />
                </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Regions</Badge>
+               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Active Divisions</Badge>
             </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">Active Regions</p>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">Active Divisions</p>
             <h3 className="text-2xl font-black text-slate-800">
-              {[...new Set(divisions.map(d => d.region))].length}
+          {divisions.filter((d => d.is_active === true)).length}
             </h3>
           </CardContent>
         </Card>
@@ -108,15 +108,19 @@ export default function DivisionsPage() {
         <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-               <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
-                  <LayoutGrid className="h-5 w-5" />
+               <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
+                  <MapPin className="h-5 w-5" />
                </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Status</Badge>
+               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Inactive Divisions</Badge>
             </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">System Capacity</p>
-            <h3 className="text-2xl font-black text-slate-800">100% Active</h3>
+            <p className="text-muted-foreground font-semibold text-sm mb-1">Inactive Divisions</p>
+            <h3 className="text-2xl font-black text-slate-800">
+          {divisions.filter((d => d.is_active === false)).length}
+            </h3>
           </CardContent>
         </Card>
+
+       
       </div>
 
       {/* Table Section */}
@@ -131,9 +135,9 @@ export default function DivisionsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-12 w-12 rounded-xl bg-white border-slate-200">
+          {/* <Button variant="outline" className="h-12 w-12 rounded-xl bg-white border-slate-200">
              <LayoutGrid className="h-5 w-5 text-slate-500" />
-          </Button>
+          </Button> */}
         </div>
 
         <DivisionTable 

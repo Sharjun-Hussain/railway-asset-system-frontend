@@ -150,12 +150,12 @@ export default function StationsPage() {
 
       {/* Filter Section */}
       <div className="space-y-4">
-        <div className="flex flex-col md:flex-row items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-          <div className="relative flex-1 w-full">
+        <div className="flex flex-row items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+          <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Search by name or station code..."
-              className="pl-11  bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm w-full"
+              className="pl-11 bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

@@ -148,12 +148,12 @@ export default function WarehousesPage() {
 
       {/* Filter Section */}
       <div className="space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
+        <div className="flex flex-row items-center gap-4">
+          <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Search warehouse name..."
-              className="pl-11  bg-white border-slate-200 w-full flex-1 focus:ring-primary shadow-sm font-medium"
+              className="pl-11 bg-white border-slate-200 focus:ring-primary shadow-sm font-medium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -184,7 +184,7 @@ export default function WarehousesPage() {
                 <SelectContent className="rounded-xl border-slate-100 shadow-xl">
                   <SelectItem value="all" className="">All Types</SelectItem>
                   {WAREHOUSE_TYPES.map((type) => (
-                    <SelectItem key={type} value={type} className="font-bold">
+                    <SelectItem key={type} value={type} className="">
                       {type}
                     </SelectItem>
                   ))}

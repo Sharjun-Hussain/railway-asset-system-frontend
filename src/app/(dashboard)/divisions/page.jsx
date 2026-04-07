@@ -136,12 +136,12 @@ export default function DivisionsPage() {
 
       {/* Table Section */}
       <div className="space-y-4">
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
+        <div className="flex flex-row items-center gap-4">
+          <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Filter by name or region..."
-              className="pl-11  bg-white border-slate-200 focus:ring-primary shadow-sm"
+              className="pl-11 bg-white border-slate-200 focus:ring-primary shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

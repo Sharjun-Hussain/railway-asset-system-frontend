@@ -155,7 +155,7 @@ export default function StationsPage() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Search by name or station code..."
-              className="pl-11 h-12 bg-slate-50/50 border-slate-200 rounded-xl focus:ring-primary shadow-sm w-full"
+              className="pl-11  bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -163,7 +163,7 @@ export default function StationsPage() {
           <div className="flex items-center gap-4 w-full md:w-auto">
              <div className="w-full md:w-[200px]">
                 <Select value={selectedDivisionId} onValueChange={setSelectedDivisionId}>
-                  <SelectTrigger className="h-12 rounded-xl bg-white border-slate-200">
+                  <SelectTrigger className="w-full bg-white border-slate-200">
                     <div className="flex items-center gap-2">
                         <Filter className="h-4 w-4 text-slate-400" />
                         <SelectValue placeholder="All Divisions" />

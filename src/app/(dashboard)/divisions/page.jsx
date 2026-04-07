@@ -141,7 +141,7 @@ export default function DivisionsPage() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Filter by name or region..."
-              className="pl-11 h-12 bg-white border-slate-200 rounded-xl focus:ring-primary shadow-sm"
+              className="pl-11  bg-white border-slate-200 focus:ring-primary shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

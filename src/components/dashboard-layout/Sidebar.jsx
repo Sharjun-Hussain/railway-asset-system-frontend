@@ -140,7 +140,7 @@ export function Sidebar({ session }) {
               variant="ghost" 
               size="icon"
               className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 transition-all"
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/login' })}
               title="Log out"
           >
               <LogOut className="h-4 w-4" />

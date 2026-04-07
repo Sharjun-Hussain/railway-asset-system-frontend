@@ -38,7 +38,7 @@ export default function LoginPage() {
   });
 
   const callbackUrl = useCallback(() => {
-    return searchParams.get("callbackUrl") || "/dashboard";
+    return searchParams.get("callbackUrl") || "/";
   }, [searchParams]);
 
   const onSubmit = useCallback(

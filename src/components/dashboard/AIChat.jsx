@@ -64,10 +64,10 @@ export function AIChat() {
   };
 
   const QUICK_ACTIONS = [
-    { label: "Status Report", icon: Terminal },
-    { label: "Alerts Log", icon: AlertCircle },
-    { label: "Find Asset", icon: Search },
-    { label: "System Health", icon: Cpu }
+    // { label: "Status Report", icon: Terminal },
+    // { label: "Alerts Log", icon: AlertCircle },
+    // { label: "Find Asset", icon: Search },
+    // { label: "System Health", icon: Cpu }
   ];
 
   return (
@@ -81,15 +81,12 @@ export function AIChat() {
             <div>
               <CardTitle className="text-lg font-bold tracking-tight">Railway AI Assistant</CardTitle>
               <div className="flex items-center gap-1.5 mt-0.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-bold text-muted-foreground/70">Neural Engine Online</span>
+                {/* <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs font-bold text-muted-foreground/70">Neural Engine Online</span> */}
               </div>
             </div>
           </div>
-          <Badge variant="outline" className="rounded-lg bg-white/50 dark:bg-slate-950 font-bold border-border/50 px-2.5 py-1 flex gap-1.5 items-center">
-            <Sparkles size={12} className="text-primary" />
-            Core v4.2
-          </Badge>
+         
         </div>
       </CardHeader>
 
@@ -97,7 +94,7 @@ export function AIChat() {
         {/* Messages Container */}
         <div 
           ref={scrollRef}
-          className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide"
+          className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-tiny"
         >
           {messages.map((msg) => (
             <div 
@@ -130,7 +127,7 @@ export function AIChat() {
 
         {/* Quick Actions & Input Area */}
         <div className="p-6 border-t border-border/50 bg-secondary/5 space-y-4">
-          <div className="flex gap-2 p-1 overflow-x-auto scrollbar-hide no-scrollbar::-webkit-scrollbar">
+          <div className="flex gap-2 p-1 overflow-x-auto scrollbar-tiny">
             {QUICK_ACTIONS.map((action) => (
               <Button 
                 key={action.label}
@@ -161,17 +158,7 @@ export function AIChat() {
             </Button>
           </form>
           
-          <div className="flex items-center justify-center gap-6 pt-1">
-             <div className="flex items-center gap-1.5 opacity-60">
-                <History size={12} className="text-muted-foreground" />
-                <span className="text-xs font-bold">History Log Full</span>
-             </div>
-             <div className="w-1 h-1 rounded-full bg-slate-300" />
-             <div className="flex items-center gap-1.5 opacity-60">
-                <Sparkles size={12} className="text-muted-foreground" />
-                <span className="text-xs font-bold">Enterprise Mode</span>
-             </div>
-          </div>
+         
         </div>
       </CardContent>
     </Card>

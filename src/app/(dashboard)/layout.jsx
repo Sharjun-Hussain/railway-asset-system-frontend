@@ -1,11 +1,11 @@
 "use client";
-import { UnifiedSidebar } from "@/components/dashboard-layout/UnifiedSidebar"
+import { Sidebar } from "@/components/dashboard-layout/Sidebar"
 
 export default function DashboardLayout({ children }) {
   return (
     <div className="flex min-h-screen w-full bg-[#FAFBFF]">
       {/* Unified Sidebar (Fixed) */}
-      <UnifiedSidebar />
+      <Sidebar />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col ml-64 transition-all">

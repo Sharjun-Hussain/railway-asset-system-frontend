@@ -59,7 +59,7 @@ const navigationGroups = [
   }
 ]
 
-export function UnifiedSidebar() {
+export function Sidebar() {
   const pathname = usePathname()
   const { data: session } = useSession()
 

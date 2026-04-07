@@ -68,7 +68,7 @@ export default function CategoriesPage() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Asset Classification</h1>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Asset Categories</h1>
           <p className="text-slate-500 font-medium">Manage main categories and sub-categories for centralized inventory.</p>
         </div>
         <Button 

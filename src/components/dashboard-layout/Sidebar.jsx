@@ -119,42 +119,33 @@ export function Sidebar({ session }) {
       </div>
 
       {/* Footer / Profile */}
-      <div className="p-4 border-t space-y-4 overflow-hidden">
-        <div className="flex items-center gap-3 px-1 transition-all duration-300">
-          <div className="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shrink-0 shadow-sm">
-             <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${session?.user?.full_name || "SLR User"}`} alt="User" />
-          </div>
-          
-          <div className="flex-1 min-w-0 transition-all duration-300 overflow-hidden">
-              <p className="text-sm font-bold truncate text-foreground leading-none mb-1">
-              {session?.user?.full_name || "Guest User"}
-              </p>
-              <p className="text-xs text-muted-foreground truncate font-medium">
-              {session?.user?.roles?.[0]?.name || session?.user?.roles?.[0] || "Staff Profile"}
-              </p>
-          </div>
-        </div>
-        
-        <div className="flex items-center justify-between px-2 text-muted-foreground bg-secondary/30 py-2 rounded-lg opacity-100 h-10">
-            <div className="flex items-center gap-2 text-xs font-medium whitespace-nowrap">
-                <Moon className="h-4 w-4" />
-                Dark mode
+      <div className="p-4 border-t mt-auto overflow-hidden">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shrink-0 shadow-sm">
+               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${session?.user?.full_name || "SLR User"}`} alt="User" />
             </div>
-            <div className="w-9 h-5 bg-slate-200 rounded-full relative p-0.5 cursor-pointer">
-                <div className="w-4 h-4 bg-white rounded-full shadow-sm" />
+            
+            <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold truncate text-foreground leading-none mb-1">
+                {session?.user?.full_name || "Guest User"}
+                </p>
+                <p className="text-[10px] text-muted-foreground truncate font-medium uppercase tracking-wider">
+                {session?.user?.roles?.[0]?.name || session?.user?.roles?.[0] || "Staff Profile"}
+                </p>
             </div>
-        </div>
+          </div>
 
-        <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-destructive gap-3 px-2 rounded-xl transition-all overflow-hidden"
-            onClick={() => signOut()}
-        >
-            <LogOut className="h-4 w-4 shrink-0" />
-            <span className="whitespace-nowrap font-semibold">
-                Log out
-            </span>
-        </Button>
+          <Button 
+              variant="ghost" 
+              size="icon"
+              className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 transition-all"
+              onClick={() => signOut()}
+              title="Log out"
+          >
+              <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </aside>
   )

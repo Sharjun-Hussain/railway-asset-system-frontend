@@ -1,11 +1,14 @@
-"use client";
 import { Sidebar } from "@/components/dashboard-layout/Sidebar"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
 
-export default function DashboardLayout({ children }) {
+export default async function DashboardLayout({ children }) {
+  const session = await getServerSession(authOptions)
+
   return (
     <div className="flex min-h-screen w-full bg-[#FAFBFF]">
       {/* Unified Sidebar (Fixed) */}
-      <Sidebar />
+      <Sidebar session={session} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col ml-64 transition-all">

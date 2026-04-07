@@ -59,9 +59,8 @@ const navigationGroups = [
   }
 ]
 
-export function Sidebar() {
+export function Sidebar({ session }) {
   const pathname = usePathname()
-  const { data: session } = useSession()
 
   return (
     <aside className="fixed left-0 top-0 h-screen bg-white border-r z-50 flex flex-col w-64 shadow-sm overflow-x-hidden">

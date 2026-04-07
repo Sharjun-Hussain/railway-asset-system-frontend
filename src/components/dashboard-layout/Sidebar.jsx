@@ -122,15 +122,15 @@ export function Sidebar({ session }) {
       <div className="p-4 border-t space-y-4 overflow-hidden">
         <div className="flex items-center gap-3 px-1 transition-all duration-300">
           <div className="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shrink-0 shadow-sm">
-             <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${session?.user?.name || "Harper"}`} alt="User" />
+             <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${session?.user?.full_name || "SLR User"}`} alt="User" />
           </div>
           
           <div className="flex-1 min-w-0 transition-all duration-300 overflow-hidden">
               <p className="text-sm font-bold truncate text-foreground leading-none mb-1">
-              {session?.user?.name || "Harper Nelson"}
+              {session?.user?.full_name || "Guest User"}
               </p>
               <p className="text-xs text-muted-foreground truncate font-medium">
-              Admin Manager
+              {session?.user?.roles?.[0]?.name || session?.user?.roles?.[0] || "Staff Profile"}
               </p>
           </div>
         </div>

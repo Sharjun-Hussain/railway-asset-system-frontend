@@ -1,25 +1,25 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from "react"
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreHorizontal, 
-  FileEdit, 
-  Trash2, 
-  Package, 
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  FileEdit,
+  Trash2,
+  Package,
   Info,
   Layers,
   LayoutDashboard
 } from "lucide-react"
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -44,14 +44,23 @@ import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import { ProductDialog } from "@/components/products/ProductDialog"
 import apiClient from "@/lib/api"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select"
 
 
 export default function AssetsPage() {
   const [assets, setAssets] = useState([])
   const [categories, setCategories] = useState([])
+
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  
+  const [selectedCategory, setSelectedCategory] = useState("ALL")
+
   // Dialog States
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedAsset, setSelectedAsset] = useState(null)
@@ -61,13 +70,16 @@ export default function AssetsPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [assetRes, catRes] = await Promise.all([
+      const [assetRes, catRes, subCatRes, unitRes] = await Promise.all([
         apiClient.get("/assets"),
-        apiClient.get("/categories")
+        apiClient.get("/categories"),
+
+
       ])
-      
+
       setAssets(Array.isArray(assetRes.data) ? assetRes.data : [])
       setCategories(Array.isArray(catRes.data) ? catRes.data : [])
+
     } catch (error) {
       console.error("Error fetching assets:", error)
       toast.error("Failed to load asset catalog")
@@ -97,10 +109,15 @@ export default function AssetsPage() {
     }
   }
 
-  const filteredAssets = assets.filter(a => 
-    (a.asset_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (a.qr_code || "").toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredAssets = assets.filter(a => {
+    const matchesSearch =
+      (a.asset_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (a.qr_code || "").toLowerCase().includes(searchQuery.toLowerCase())
+
+    const matchesCategory = selectedCategory === "ALL" || a.categoryId === selectedCategory || a.categoryId?._id === selectedCategory
+
+    return matchesSearch && matchesCategory
+  })
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-10">
@@ -110,7 +127,7 @@ export default function AssetsPage() {
           <h1 className="text-3xl font-black text-slate-800 tracking-tight">Asset Inventory Catalog</h1>
           <p className="text-slate-500 font-medium tracking-tight">Manage standardized asset definitions for the Smart Asset Management System.</p>
         </div>
-        <Button 
+        <Button
           className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold px-6 h-11 rounded-xl"
           onClick={() => {
             setSelectedAsset(null)
@@ -166,19 +183,32 @@ export default function AssetsPage() {
 
       {/* Master Table Section */}
       <div className="space-y-4">
-        <div className="flex flex-row items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-          <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+        <div className="flex flex-col md:flex-row items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+          <div className="relative flex-1 w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Search assets by name or master code..."
-              className="pl-11 h-12 bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm"
+              className="pl-9 h-10 bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" className="h-12 w-12 rounded-xl bg-white border-slate-200 shadow-sm shrink-0">
-            <Filter className="h-5 w-5 text-slate-500" />
-          </Button>
+
+          <div className="w-full md:w-[220px]">
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-full bg-white border-slate-200 shadow-sm">
+                <SelectValue placeholder="All Categories" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">All Categories</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category._id} value={category._id}>
+                    {category.category_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {loading ? (
@@ -190,86 +220,86 @@ export default function AssetsPage() {
           </div>
         ) : (
           <div className="rounded-xl border border-slate-100 bg-white shadow-sm overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b">
-                <TableHead className="w-[120px] font-bold">QR Code</TableHead>
-                <TableHead className="font-bold  ">Description</TableHead>
-                <TableHead className="font-bold ">Category</TableHead>
-                <TableHead className="font-bold ">Sub Category</TableHead>
-                <TableHead className="font-bold ">Unit</TableHead>
-                <TableHead className="text-right font-bold ">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredAssets.length === 0 && !loading ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="h-40 text-center text-slate-400 font-medium">
-                    No active asset definitions found.
-                  </TableCell>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b">
+                  <TableHead className="w-[120px] font-bold">QR Code</TableHead>
+                  <TableHead className="font-bold  ">Description</TableHead>
+                  <TableHead className="font-bold ">Category</TableHead>
+                  <TableHead className="font-bold ">Sub Category</TableHead>
+                  <TableHead className="font-bold ">Unit</TableHead>
+                  <TableHead className="text-right font-bold ">Actions</TableHead>
                 </TableRow>
-              ) : (
-                filteredAssets.map((asset) => (
-                  <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
-                    <TableCell className="">
+              </TableHeader>
+              <TableBody>
+                {filteredAssets.length === 0 && !loading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-40 text-center text-slate-400 font-medium">
+                      No active asset definitions found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredAssets.map((asset) => (
+                    <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
+                      <TableCell className="">
                         <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 font-mono">
-                            {asset.qr_code || "N/A"} 
+                          {asset.qr_code || "N/A"}
 
                         </Badge>
-                    </TableCell>
-                    <TableCell className="font-semibold text-slate-700 min-w-[200px]">
-                      {asset.asset_name}
-                      {asset.description && (
-                        <p className="text-[10px] font-medium text-slate-500 mt-0.5 line-clamp-1 max-w-[300px]">
+                      </TableCell>
+                      <TableCell className="font-semibold text-slate-700 min-w-[200px]">
+                        {asset.asset_name}
+                        {asset.description && (
+                          <p className="text-[10px] font-medium text-slate-500 mt-0.5 line-clamp-1 max-w-[300px]">
                             {asset.description}
-                        </p>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                       <div className="flex flex-col gap-1">
+                          </p>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
                           <span className="text-slate-600 font-medium text-xs">
-                        <Badge variant="secondary">{asset.categoryId?.category_name}</Badge>
+                            <Badge variant="secondary">{asset.categoryId?.category_name}</Badge>
                           </span>
-                       </div>
-                    </TableCell>
-                     <TableCell>
-                       <div className="flex flex-col gap-1">
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
                           <span className="text-slate-600 font-medium text-xs">
                             <Badge variant="secondary">{asset.subCategoryId?.sub_category_name}</Badge>
                           </span>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider">
-                        {asset.unit}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-44 rounded-xl shadow-lg border-slate-100">
-                          <DropdownMenuItem className="cursor-pointer  text-sm" onClick={() => {
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider">
+                          {asset.unit}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-44 rounded-xl shadow-lg border-slate-100">
+                            <DropdownMenuItem className="cursor-pointer  text-sm" onClick={() => {
                               setSelectedAsset(asset)
                               setDialogOpen(true)
-                          }}>
-                            <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Asset
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 text-sm" onClick={() => setDeleteId(asset._id)}>
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete 
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
+                            }}>
+                              <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Asset
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 text-sm" onClick={() => setDeleteId(asset._id)}>
+                              <Trash2 className="mr-2 h-4 w-4" /> Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </div>
 
@@ -279,17 +309,17 @@ export default function AssetsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-black text-slate-800">Remove Asset Definition?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 font-medium pt-2">
-              This action strictly removes the <span className="font-bold text-slate-700">centralized definition</span>. 
+              This action strictly removes the <span className="font-bold text-slate-700">centralized definition</span>.
               Existing inventory records for this item must be cleared before removal.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-4">
             <AlertDialogCancel disabled={deleting} className="rounded-xl border-slate-200 font-bold text-slate-600">Cancel</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault()
                 handleDelete()
-              }} 
+              }}
               className="bg-red-600 hover:bg-red-700 rounded-xl font-bold px-6 shadow-lg shadow-red-200"
               disabled={deleting}
             >
@@ -299,7 +329,7 @@ export default function AssetsPage() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <ProductDialog 
+      <ProductDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         asset={selectedAsset}

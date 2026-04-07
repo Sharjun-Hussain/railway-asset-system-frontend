@@ -104,15 +104,33 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
               />
             </div>
             
-            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <div className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+              formData.is_active 
+                ? "bg-emerald-50/50 border-emerald-200 border-solid" 
+                : "bg-slate-50 border-slate-200 border-dashed"
+            }`}>
                <div className="space-y-0.5">
-                  <Label htmlFor="is_active" className="text-sm font-bold">Active Status</Label>
-                  <p className="text-xs text-muted-foreground font-medium">Enable or disable this division across the system.</p>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="is_active" className="text-sm font-bold">Active Status</Label>
+                    <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter ${
+                      formData.is_active 
+                        ? "bg-emerald-500 text-white" 
+                        : "bg-slate-400 text-white"
+                    }`}>
+                      {formData.is_active ? "Live" : "Disabled"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-medium">
+                    {formData.is_active 
+                      ? "This division is visible and active globally." 
+                      : "This division is hidden and restricted."}
+                  </p>
                </div>
                <Switch 
                   id="is_active" 
                   checked={formData.is_active} 
                   onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                  className="data-[state=checked]:bg-emerald-500"
                />
             </div>
           </div>

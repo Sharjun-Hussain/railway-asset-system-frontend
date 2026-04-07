@@ -97,51 +97,40 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
           <TableBody>
             {divisions.map((division) => (
               <TableRow key={division._id} className="hover:bg-slate-50/50 transition-colors">
-                <TableCell className="font-semibold py-4">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-primary" />
-                    {division.division_name}
+                <TableCell className="font-semibold py-3 border-b-0">
+                  <div className="flex items-center gap-2.5">
+                    <div className={`h-2 w-2 rounded-full shadow-sm ${division.is_active ? "bg-emerald-500" : "bg-slate-300"}`} />
+                    <span className="text-slate-700">{division.division_name}</span>
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1.5 text-muted-foreground font-medium">
-                    <MapPin className="h-3.5 w-3.5" />
-                    {division.region}
-                  </div>
+                <TableCell className="text-slate-600 font-medium">
+                  {division.region}
+                </TableCell>
+                <TableCell className="text-slate-500 text-xs">
+                  {new Date(division.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1.5 text-slate-500 text-xs">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {new Date(division.createdAt).toLocaleDateString()}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge 
-                    variant="outline" 
-                    className={division.is_active 
-                      ? "bg-emerald-50 text-emerald-700 border-emerald-100 font-bold uppercase text-[10px]"
-                      : "bg-slate-50 text-slate-500 border-slate-100 font-bold uppercase text-[10px]"
-                    }
-                  >
+                  <div className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                    division.is_active 
+                      ? "bg-emerald-50 text-emerald-700" 
+                      : "bg-slate-100 text-slate-500"
+                  }`}>
                     {division.is_active ? "Active" : "Inactive"}
-                  </Badge>
+                  </div>
                 </TableCell>
                 <TableCell className="text-right px-6">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon" className="h-8 w-8 hover:bg-slate-100 rounded-lg">
                         <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-44">
-                      <DropdownMenuLabel className="text-xs text-muted-foreground">Division Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
+                    <DropdownMenuContent align="end" className="w-40">
                       <DropdownMenuItem className="cursor-pointer" onClick={() => onEdit(division)}>
-                        <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Division
+                        <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50" onClick={() => setDeleteId(division._id)}>
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete Division
+                      <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600" onClick={() => setDeleteId(division._id)}>
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

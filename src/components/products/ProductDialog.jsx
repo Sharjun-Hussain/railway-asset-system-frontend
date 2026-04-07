@@ -26,11 +26,11 @@ import apiClient from "@/lib/api"
 
 const UNITS = ["pcs", "kg", "meters", "liters", "units", "sets"]
 
-export function ProductDialog({ open, onOpenChange, product, categories, onSuccess }) {
+export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess }) {
   const [loading, setLoading] = useState(false)
   const [subCategories, setSubCategories] = useState([])
   const [formData, setFormData] = useState({
-    product_name: "",
+    asset_name: "",
     qr_code: "",
     unit: "pcs",
     categoryId: "",
@@ -38,21 +38,21 @@ export function ProductDialog({ open, onOpenChange, product, categories, onSucce
     description: "",
   })
 
-  const isEdit = !!product
+  const isEdit = !!asset
 
   useEffect(() => {
-    if (product) {
+    if (asset) {
       setFormData({
-        product_name: product.product_name || "",
-        qr_code: product.qr_code || "",
-        unit: product.unit || "pcs",
-        categoryId: product.categoryId?._id || product.categoryId || "",
-        subCategoryId: product.subCategoryId?._id || product.subCategoryId || "",
-        description: product.description || "",
+        asset_name: asset.asset_name || "",
+        qr_code: asset.qr_code || "",
+        unit: asset.unit || "pcs",
+        categoryId: asset.categoryId?._id || asset.categoryId || "",
+        subCategoryId: asset.subCategoryId?._id || asset.subCategoryId || "",
+        description: asset.description || "",
       })
     } else {
       setFormData({
-        product_name: "",
+        asset_name: "",
         qr_code: "",
         unit: "pcs",
         categoryId: "",
@@ -60,7 +60,7 @@ export function ProductDialog({ open, onOpenChange, product, categories, onSucce
         description: "",
       })
     }
-  }, [product, open])
+  }, [asset, open])
 
   // Fetch sub-categories when categoryId changes
   useEffect(() => {
@@ -85,14 +85,14 @@ export function ProductDialog({ open, onOpenChange, product, categories, onSucce
 
     try {
       const url = isEdit 
-        ? `/products/${product._id}`
-        : `/products`
+        ? `/assets/${asset._id}`
+        : `/assets`
       
       const method = isEdit ? "put" : "post"
 
       await apiClient[method](url, formData)
 
-      toast.success(isEdit ? "Product updated successfully" : "Product registered successfully")
+      toast.success(isEdit ? "Asset updated successfully" : "Asset registered successfully")
       onSuccess?.()
       onOpenChange(false)
     } catch (error) {
@@ -114,19 +114,19 @@ export function ProductDialog({ open, onOpenChange, product, categories, onSucce
                 : "Define a new item in the centralized product catalog."}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-                <div className="grid gap-2 col-span-2">
-                    <Label htmlFor="product_name">Product Name</Label>
-                    <Input
-                        id="product_name"
-                        placeholder="e.g. 50kg Rail Piece, Signal Relay X"
-                        value={formData.product_name}
-                        onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
-                        required
-                    />
-                </div>
-            </div>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2 col-span-2">
+                      <Label htmlFor="asset_name">Asset Name / Title</Label>
+                      <Input
+                          id="asset_name"
+                          placeholder="e.g. 50kg Rail Piece, Signal Relay X"
+                          value={formData.asset_name}
+                          onChange={(e) => setFormData({ ...formData, asset_name: e.target.value })}
+                          required
+                      />
+                  </div>
+              </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">

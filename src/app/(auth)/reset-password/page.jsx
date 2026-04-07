@@ -9,6 +9,9 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { MailCheck, ShieldCheck } from "lucide-react";
 
 // Zod schema for validation
 const resetPasswordSchema = z
@@ -24,9 +27,11 @@ const resetPasswordSchema = z
   });
 
 export default function ResetPasswordPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const email = searchParams.get("email");
+  const [resetSuccess, setResetSuccess] = React.useState(false);
 
   const {
     register,
@@ -48,11 +53,9 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/reset-password`,
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/resetpassword/${token}`,
         {
-          email: email,
-          token: token,
           password: data.password,
         },
         {
@@ -64,10 +67,14 @@ export default function ResetPasswordPage() {
         toast.success(
           response.data.message || "Your password has been reset successfully."
         );
-        // Optionally redirect the user to the login page
-        // router.push('/login');
+        setResetSuccess(true);
+        // Automatically redirect after 3 seconds
+        setTimeout(() => {
+           router.push("/");
+        }, 3000);
       }
     } catch (error) {
+      console.error("Reset password error:", error);
       const errorMessage =
         error.response?.data?.message || "An error occurred. Please try again.";
       toast.error(errorMessage);
@@ -135,74 +142,106 @@ export default function ResetPasswordPage() {
                </div>
             </div>
             
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-              Reset Password
-            </h2>
-            <p className="mt-2 text-muted-foreground font-medium">
-              Account: <span className="text-slate-900 font-semibold">{email || "your email"}</span>
-            </p>
-
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
-              {errors.root && (
-                <div className="p-4 text-sm text-center text-red-800 bg-red-50 border border-red-100 rounded-xl">
-                  {errors.root.message}
+            {resetSuccess ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <div className="p-4 rounded-full bg-green-50 text-green-600 mb-6">
+                  <ShieldCheck className="w-12 h-12" />
                 </div>
-              )}
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="password"
-                  className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-0.5"
-                >
-                  New Password
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
-                    errors.password ? "border-red-500 focus:ring-red-500" : ""
-                  }`}
-                  {...register("password")}
-                />
-                {errors.password && (
-                  <p className="text-xs font-medium text-red-500 ml-0.5">
-                    {errors.password.message}
-                  </p>
-                )}
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  Password Reset!
+                </h2>
+                <p className="mt-4 text-muted-foreground font-medium">
+                  Your password has been updated. You will be redirected to the login page in a few seconds.
+                </p>
+                <Button asChild className="w-full mt-10 h-11 rounded-xl font-semibold bg-primary">
+                  <Link href="/">Login Now</Link>
+                </Button>
               </div>
+            ) : (
+              <>
+                <div className="md:hidden flex justify-center mb-8">
+                   <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z" />
+                      </svg>
+                   </div>
+                </div>
+                
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                  Reset Password
+                </h2>
+                <p className="mt-2 text-muted-foreground font-medium">
+                  Account: <span className="text-slate-900 font-semibold">{email || "your email"}</span>
+                </p>
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="confirmPassword"
-                  className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-0.5"
-                >
-                  Confirm New Password
-                </label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="••••••••"
-                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
-                    errors.confirmPassword ? "border-red-500 focus:ring-red-500" : ""
-                  }`}
-                  {...register("confirmPassword")}
-                />
-                {errors.confirmPassword && (
-                  <p className="text-xs font-medium text-red-500 ml-0.5">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-5">
+                  {!token && (
+                    <div className="p-4 text-sm text-center text-amber-800 bg-amber-50 border border-amber-100 rounded-xl">
+                      Warning: Missing reset token. This request may fail.
+                    </div>
+                  )}
+                  {errors.root && (
+                    <div className="p-4 text-sm text-center text-red-800 bg-red-50 border border-red-100 rounded-xl">
+                      {errors.root.message}
+                    </div>
+                  )}
 
-              <Button
-                disabled={isSubmitting || !token || !email}
-                type="submit"
-                className="w-full h-11 bg-primary hover:bg-primary/95 text-white font-semibold rounded-xl shadow-md transition-all duration-100 active:scale-[0.99]"
-              >
-                {isSubmitting ? "Resetting..." : "Reset Password"}
-              </Button>
-            </form>
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="password"
+                      className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-0.5"
+                    >
+                      New Password
+                    </label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="••••••••"
+                      className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
+                        errors.password ? "border-red-500 focus:ring-red-500" : ""
+                      }`}
+                      {...register("password")}
+                    />
+                    {errors.password && (
+                      <p className="text-xs font-medium text-red-500 ml-0.5">
+                        {errors.password.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="text-sm font-semibold text-slate-700 dark:text-gray-300 ml-0.5"
+                    >
+                      Confirm New Password
+                    </label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      placeholder="••••••••"
+                      className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
+                        errors.confirmPassword ? "border-red-500 focus:ring-red-500" : ""
+                      }`}
+                      {...register("confirmPassword")}
+                    />
+                    {errors.confirmPassword && (
+                      <p className="text-xs font-medium text-red-500 ml-0.5">
+                        {errors.confirmPassword.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    disabled={isSubmitting || !token || !email}
+                    type="submit"
+                    className="w-full h-11 bg-primary hover:bg-primary/95 text-white font-semibold rounded-xl shadow-md transition-all duration-100 active:scale-[0.99]"
+                  >
+                    {isSubmitting ? "Resetting..." : "Reset Password"}
+                  </Button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>

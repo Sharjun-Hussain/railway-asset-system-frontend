@@ -18,6 +18,8 @@ const forgotPasswordSchema = z.object({
 
 export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [debugResetLink, setDebugResetLink] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState("");
 
   const {
     register,
@@ -34,7 +36,7 @@ export default function ForgotPasswordPage() {
   const onSubmit = async (data) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/forgot-password`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/forgot-password`,
         {
           method: "POST",
           headers: {
@@ -44,20 +46,30 @@ export default function ForgotPasswordPage() {
         }
       );
 
-      if (res.status === 200) {
-        toast.success(res.data || "Password reset link sent!", {
+      const result = await res.json();
+
+      if (res.ok) {
+        toast.success(result.message || "Password reset link generated!", {
           icon: <Info size={18} className="me-2" />,
           richColors: true,
           closeButton: true,
         });
+        
+        // --- Debug Mode ---
+        // Since no real email is sent, capture the token and email for the test link
+        if (result.resetToken) {
+           setDebugResetLink(`/reset-password?token=${result.resetToken}&email=${data.email}`);
+           setSubmittedEmail(data.email);
+        }
+        
         setIsSubmitted(true);
       } else {
-        throw new Error(res.data || "An unknown error occurred.");
+        throw new Error(result.message || "An unknown error occurred.");
       }
     } catch (error) {
       console.error("Forgot password error:", error);
       const errorMessage =
-        error.response?.data?.message ||
+        error.message ||
         "Failed to send reset link. Please try again.";
 
       setError("root", {
@@ -128,7 +140,24 @@ export default function ForgotPasswordPage() {
                 <p className="mt-4 text-muted-foreground font-medium">
                   We've sent a password reset link to your official email address. Please check your inbox.
                 </p>
-                <Button asChild variant="outline" className="w-full mt-10 h-11 rounded-xl font-semibold border-slate-200">
+
+                {/* Debug Test Link (Since no email service is connected) */}
+                {debugResetLink && (
+                  <div className="mt-8 p-4 bg-primary/5 border border-primary/20 rounded-xl text-left">
+                    <p className="text-xs font-bold text-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                      Debug: Test Recovery Link
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                      In a production environment, this link would be sent via email. For testing purposes, you can use the button below:
+                    </p>
+                    <Button asChild size="sm" className="w-full bg-primary hover:bg-primary/95 text-xs h-9">
+                       <Link href={debugResetLink}>Go to Reset Page</Link>
+                    </Button>
+                  </div>
+                )}
+
+                <Button asChild variant="ghost" className="w-full mt-6 h-11 rounded-xl font-semibold border-slate-200">
                   <Link href="/">Back to Portal Login</Link>
                 </Button>
               </div>

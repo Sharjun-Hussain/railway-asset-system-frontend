@@ -40,7 +40,6 @@ const navigationGroups = [
     items: [
       { name: "Products", href: "/products", icon: Package },
       { name: "Inventory", href: "/inventory", icon: Warehouse },
-      { name: "Warehouses", href: "/warehouses", icon: Warehouse },
     ]
   },
   {
@@ -48,6 +47,7 @@ const navigationGroups = [
     items: [
       { name: "Divisions", href: "/divisions", icon: Building },
       { name: "Stations", href: "/stations", icon: Building },
+      { name: "Warehouses", href: "/warehouses", icon: Warehouse },
     ]
   },
   {

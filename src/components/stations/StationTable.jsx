@@ -92,6 +92,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
               <TableHead>Station Name</TableHead>
               <TableHead>Division</TableHead>
               <TableHead>Region</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead className="text-right px-6">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -119,6 +120,15 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
                    <span className="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">
                       {station.divisionId?.region || "N/A"}
                    </span>
+                </TableCell>
+                <TableCell>
+                  <div className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                    station.is_active 
+                      ? "bg-emerald-50 text-emerald-700" 
+                      : "bg-slate-100 text-slate-500"
+                  }`}>
+                    {station.is_active ? "Active" : "Inactive"}
+                  </div>
                 </TableCell>
                 <TableCell className="text-right px-6">
                   <DropdownMenu>

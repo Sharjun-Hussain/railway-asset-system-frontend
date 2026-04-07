@@ -85,10 +85,10 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
         <Table>
           <TableHeader className="bg-slate-50/50">
             <TableRow>
-              <TableHead className="w-[250px] font-bold text-slate-500 py-4">Warehouse Name</TableHead>
+              <TableHead className="w-[200px] font-bold text-slate-500 py-4">Warehouse Name</TableHead>
               <TableHead className="font-bold text-slate-500">Type</TableHead>
               <TableHead className="font-bold text-slate-500">Station</TableHead>
-              <TableHead className="font-bold text-slate-500">Description</TableHead>
+              <TableHead className="font-bold text-slate-500">Status</TableHead>
               <TableHead className="text-right px-6 font-bold text-slate-500">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -114,8 +114,14 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
                     {warehouse.stationId?.station_name || "Unknown"}
                   </div>
                 </TableCell>
-                <TableCell className="text-slate-500 text-sm max-w-[200px] truncate">
-                  {warehouse.description || "-"}
+                <TableCell>
+                  <div className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+                    warehouse.is_active 
+                      ? "bg-emerald-50 text-emerald-700" 
+                      : "bg-slate-100 text-slate-500"
+                  }`}>
+                    {warehouse.is_active ? "Active" : "Inactive"}
+                  </div>
                 </TableCell>
                 <TableCell className="text-right px-6">
                   <DropdownMenu>
@@ -143,7 +149,7 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
       <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
         <AlertDialogContent className="rounded-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold font-bold">Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle className="text-xl font-bold">Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription className="text-sm font-medium">
               This action cannot be undone. This will permanently delete the warehouse from the system.
               Note that warehouses with linked stock cannot be deleted.

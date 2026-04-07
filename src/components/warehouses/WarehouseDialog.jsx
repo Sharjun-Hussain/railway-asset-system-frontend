@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner"
 import apiClient from "@/lib/api"
+import { Switch } from "@/components/ui/switch"
 
 const WAREHOUSE_TYPES = ["Mechanical", "Signal", "Stationery", "General"]
 
@@ -29,10 +30,10 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
   const [loading, setLoading] = useState(false)
   const [stations, setStations] = useState([])
   const [formData, setFormData] = useState({
-    warehouse_name: "",
     warehouse_type: "General",
     stationId: "",
-    description: ""
+    description: "",
+    is_active: true
   })
 
   const isEdit = !!warehouse
@@ -55,14 +56,16 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
         warehouse_name: warehouse.warehouse_name || "",
         warehouse_type: warehouse.warehouse_type || "General",
         stationId: warehouse.stationId?._id || warehouse.stationId || "",
-        description: warehouse.description || ""
+        description: warehouse.description || "",
+        is_active: warehouse.is_active !== undefined ? warehouse.is_active : true
       })
     } else {
       setFormData({
         warehouse_name: "",
         warehouse_type: "General",
         stationId: "",
-        description: ""
+        description: "",
+        is_active: true
       })
     }
   }, [warehouse, open])
@@ -163,6 +166,17 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
+            </div>
+
+            <div className="flex items-center justify-between rounded-xl border border-slate-100 p-4 bg-slate-50/50">
+                <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-slate-700">Warehouse Status</Label>
+                    <p className="text-[11px] font-medium text-muted-foreground">Toggle to set warehouse as active or inactive</p>
+                </div>
+                <Switch
+                    checked={formData.is_active}
+                    onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
             </div>
           </div>
           <DialogFooter className="gap-2">

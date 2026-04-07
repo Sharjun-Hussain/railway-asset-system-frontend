@@ -92,64 +92,61 @@ export default function StationsPage() {
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="border-none shadow-sm bg-primary text-white overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-             <Train className="h-20 w-20" />
+      {/* Stats Cards - Compact Design */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Total Stations */}
+        <Card className="border-none shadow-sm bg-primary text-white overflow-hidden relative group h-full">
+          <div className="absolute -top-2 -right-2 p-4 opacity-10 group-hover:scale-110 transition-transform duration-300">
+            <Train className="h-16 w-16" />
           </div>
-          <CardContent className="p-6 relative z-10">
-            <p className="text-primary-foreground/80 font-semibold text-sm mb-1">Total Stations</p>
-            <div className="flex items-end gap-3">
-               <h3 className="text-4xl font-black">{stations.length}</h3>
-               <div className="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full mb-1 font-medium">
-                  <TrendingUp className="h-3 w-3" /> +2
-               </div>
+          <CardContent className="p-4 relative z-10 flex flex-col justify-end h-full min-h-[110px]">
+            <div>
+              <p className="text-primary-foreground/80 font-semibold text-xs mb-1">
+                Total Stations
+              </p>
+              <h3 className="text-3xl font-black leading-none">{stations.length}</h3>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-               <div className="p-2.5 rounded-xl bg-orange-50 text-orange-600 border border-orange-100">
-                  <Building2 className="h-5 w-5" />
-               </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Divisions</Badge>
+        {/* Active Stations */}
+        <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
+          <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
+            <div className="flex items-center justify-between mb-2">
+              <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100">
+                <TrendingUp className="h-4 w-4" />
+              </div>
             </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">Unique Divisions</p>
-            <h3 className="text-2xl font-black text-slate-800">
-               {divisions.length}
-            </h3>
+            <div>
+              <p className="text-muted-foreground font-semibold text-xs mb-1">
+                Active Stations
+              </p>
+              <h3 className="text-2xl font-black text-slate-800 leading-none">
+                {stations.filter(s => s.is_active !== false).length}
+              </h3>
+            </div>
           </CardContent>
         </Card>
 
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-               <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100">
-                  <MapPin className="h-5 w-5" />
-               </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Scope</Badge>
+        {/* Inactive Stations */}
+        <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
+          <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
+            <div className="flex items-center justify-between mb-2">
+              <div className="p-1.5 rounded-lg bg-slate-50 text-slate-400 border border-slate-100">
+                <MapPin className="h-4 w-4" />
+              </div>
             </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">Coverage</p>
-            <h3 className="text-2xl font-black text-slate-800">National</h3>
+            <div>
+              <p className="text-muted-foreground font-semibold text-xs mb-1">
+                Inactive Stations
+              </p>
+              <h3 className="text-2xl font-black text-slate-800 leading-none">
+                {stations.filter(s => s.is_active === false).length}
+              </h3>
+            </div>
           </CardContent>
         </Card>
-
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-               <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100">
-                  <TrendingUp className="h-5 w-5" />
-               </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Growth</Badge>
-            </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">New Stations</p>
-            <h3 className="text-2xl font-black text-slate-800">6.2% </h3>
-          </CardContent>
-        </Card>
-      </div> */}
+      </div>
 
       {/* Filter Section */}
       <div className="space-y-4">

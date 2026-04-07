@@ -21,15 +21,16 @@ import {
 } from "@/components/ui/select"
 import { toast } from "sonner"
 import apiClient from "@/lib/api"
+import { Switch } from "@/components/ui/switch"
 
 export function StationDialog({ open, onOpenChange, station, onSuccess }) {
   const [loading, setLoading] = useState(false)
   const [divisions, setDivisions] = useState([])
   const [formData, setFormData] = useState({
-    station_name: "",
     station_code: "",
     divisionId: "",
-    address: ""
+    address: "",
+    is_active: true
   })
 
   const isEdit = !!station
@@ -52,14 +53,16 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
         station_name: station.station_name || "",
         station_code: station.station_code || "",
         divisionId: station.divisionId?._id || station.divisionId || "",
-        address: station.address || ""
+        address: station.address || "",
+        is_active: station.is_active !== undefined ? station.is_active : true
       })
     } else {
       setFormData({
         station_name: "",
         station_code: "",
         divisionId: "",
-        address: ""
+        address: "",
+        is_active: true
       })
     }
   }, [station, open])
@@ -98,7 +101,7 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
                 <div className="grid gap-2">
                     <Label htmlFor="station_name">Station Name</Label>
                     <Input
@@ -109,26 +112,18 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
                         required
                     />
                 </div>
-                <div className="grid gap-2">
-                    <Label htmlFor="station_code">Station Code</Label>
-                    <Input
-                        id="station_code"
-                        placeholder="e.g. FOT"
-                        value={formData.station_code}
-                        onChange={(e) => setFormData({ ...formData, station_code: e.target.value.toUpperCase() })}
-                        required
-                    />
-                </div>
+               
             </div>
             
-            <div className="grid gap-2">
-              <Label htmlFor="divisionId">Division</Label>
+            <div className="grid grid-cols-2 gap-2">
+             <div className="grid gap-2">
+               <Label htmlFor="divisionId">Division</Label>
               <Select 
                 value={formData.divisionId} 
                 onValueChange={(value) => setFormData({ ...formData, divisionId: value })}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className={"w-full"}>
                   <SelectValue placeholder="Select a division" />
                 </SelectTrigger>
                 <SelectContent>
@@ -139,7 +134,21 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
                   ))}
                 </SelectContent>
               </Select>
+             </div>
+
+              <div className="grid gap-2">
+                    <Label htmlFor="station_code">Station Code</Label>
+                    <Input
+                        id="station_code"
+                        placeholder="e.g. FOT"
+                        value={formData.station_code}
+                        onChange={(e) => setFormData({ ...formData, station_code: e.target.value.toUpperCase() })}
+                        required
+                    />
+                </div>
             </div>
+
+            
 
             <div className="grid gap-2">
               <Label htmlFor="address">Address</Label>
@@ -149,6 +158,16 @@ export function StationDialog({ open, onOpenChange, station, onSuccess }) {
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               />
+            </div>
+            <div className="flex items-center justify-between rounded-xl border border-slate-100 p-4 bg-slate-50/50">
+                <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-slate-700">Station Status</Label>
+                    <p className="text-[11px] font-medium text-muted-foreground">Toggle to set station as active or inactive</p>
+                </div>
+                <Switch
+                    checked={formData.is_active}
+                    onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                />
             </div>
           </div>
           <DialogFooter>

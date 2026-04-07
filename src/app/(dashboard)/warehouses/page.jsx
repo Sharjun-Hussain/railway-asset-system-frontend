@@ -107,39 +107,39 @@ export default function WarehousesPage() {
           </CardContent>
         </Card>
 
-        {/* Specialized Stores */}
+        {/* Active Warehouses */}
         <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
           <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
             <div className="flex items-center justify-between mb-2">
-              <div className="p-1.5 rounded-lg bg-slate-50 text-slate-600 border border-slate-100">
-                <Layers className="h-4 w-4" />
+              <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100">
+                <Box className="h-4 w-4" />
               </div>
             </div>
             <div>
               <p className="text-muted-foreground font-semibold text-xs mb-1">
-                Specialized Stores
+                Active Stores
               </p>
               <h3 className="text-2xl font-black text-slate-800 leading-none">
-                {warehouses.filter(w => ["Mechanical", "Signal"].includes(w.warehouse_type)).length}
+                {warehouses.filter(w => w.is_active !== false).length}
               </h3>
             </div>
           </CardContent>
         </Card>
 
-        {/* Station Coverage */}
+        {/* Inactive Warehouses */}
         <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
           <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
             <div className="flex items-center justify-between mb-2">
-              <div className="p-1.5 rounded-lg bg-slate-50 text-slate-600 border border-slate-100">
-                <MapPin className="h-4 w-4" />
+              <div className="p-1.5 rounded-lg bg-slate-50 text-slate-400 border border-slate-100">
+                <Warehouse className="h-4 w-4" />
               </div>
             </div>
             <div>
               <p className="text-muted-foreground font-semibold text-xs mb-1">
-                Active Stations
+                Inactive Stores
               </p>
-              <h3 className="text-3xl font-black text-slate-800 leading-none">
-                {[...new Set(warehouses.map(w => w.stationId?._id || w.stationId))].length}
+              <h3 className="text-2xl font-black text-slate-800 leading-none">
+                {warehouses.filter(w => w.is_active === false).length}
               </h3>
             </div>
           </CardContent>

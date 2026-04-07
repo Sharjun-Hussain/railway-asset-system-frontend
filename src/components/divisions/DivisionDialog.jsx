@@ -19,6 +19,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 import axios from "axios"
 
@@ -28,7 +29,8 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     division_name: "",
-    region: ""
+    region: "",
+    is_active: true
   })
 
   const isEdit = !!division
@@ -37,12 +39,14 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
     if (division) {
       setFormData({
         division_name: division.division_name || "",
-        region: division.region || ""
+        region: division.region || "",
+        is_active: division.is_active !== undefined ? division.is_active : true
       })
     } else {
       setFormData({
         division_name: "",
-        region: ""
+        region: "",
+        is_active: true
       })
     }
   }, [division, open])
@@ -109,6 +113,18 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            
+            <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+               <div className="space-y-0.5">
+                  <Label htmlFor="is_active" className="text-sm font-bold">Active Status</Label>
+                  <p className="text-xs text-muted-foreground font-medium">Enable or disable this division across the system.</p>
+               </div>
+               <Switch 
+                  id="is_active" 
+                  checked={formData.is_active} 
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+               />
             </div>
           </div>
           <DialogFooter>

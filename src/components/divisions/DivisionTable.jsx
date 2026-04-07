@@ -116,8 +116,14 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 font-bold uppercase text-[10px]">
-                    Active
+                  <Badge 
+                    variant="outline" 
+                    className={division.is_active 
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-100 font-bold uppercase text-[10px]"
+                      : "bg-slate-50 text-slate-500 border-slate-100 font-bold uppercase text-[10px]"
+                    }
+                  >
+                    {division.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right px-6">

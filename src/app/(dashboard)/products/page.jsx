@@ -43,6 +43,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import { ProductDialog } from "@/components/products/ProductDialog"
+import { AssetQRCode } from "@/components/products/AssetQRCode"
 import apiClient from "@/lib/api"
 import {
   Select,
@@ -51,6 +52,14 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle
+} from "@/components/ui/sheet"
 
 
 export default function AssetsPage() {
@@ -64,6 +73,7 @@ export default function AssetsPage() {
   // Dialog States
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedAsset, setSelectedAsset] = useState(null)
+  const [qrAsset, setQrAsset] = useState(null)
   const [deleteId, setDeleteId] = useState(null)
   const [deleting, setDeleting] = useState(false)
 
@@ -241,11 +251,16 @@ export default function AssetsPage() {
                 ) : (
                   filteredAssets.map((asset) => (
                     <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
-                      <TableCell className="">
-                        <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 font-mono">
-                          {asset.qr_code || "N/A"}
-
-                        </Badge>
+                      <TableCell className="w-[100px] py-2">
+                        <div 
+                          className="flex items-center gap-2 cursor-pointer hover:scale-[1.02] transition-transform"
+                          onClick={() => setQrAsset(asset)}
+                        >
+                          <AssetQRCode value={asset.qr_code} size={28} className="p-0 border-slate-200" />
+                          <Badge className="bg-slate-50 text-slate-500 hover:bg-slate-100 border-none px-1.5 py-0 font-mono text-[9px] tracking-tighter">
+                            {asset.qr_code || "N/A"}
+                          </Badge>
+                        </div>
                       </TableCell>
                       <TableCell className="font-semibold text-slate-700 min-w-[200px]">
                         {asset.asset_name}
@@ -336,6 +351,50 @@ export default function AssetsPage() {
         categories={categories}
         onSuccess={fetchData}
       />
+
+      {/* Unified QR Preview Sheet */}
+      <Sheet open={!!qrAsset} onOpenChange={(open) => !open && setQrAsset(null)}>
+        <SheetContent side="right" className="sm:max-w-xs border-l-slate-100 shadow-2xl p-0">
+          <div className="flex flex-col h-full overflow-hidden">
+            <SheetHeader className="p-6 border-b border-slate-50 bg-slate-50/50">
+              <SheetTitle className="text-xl font-black text-slate-800 tracking-tight">
+                Asset QR Master
+              </SheetTitle>
+              <SheetDescription className="text-slate-500 font-medium pt-1 line-clamp-1">
+                 {qrAsset?.asset_name}
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white overflow-y-auto">
+              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100 mb-6 shadow-sm">
+                <AssetQRCode value={qrAsset?.qr_code} size={200} className="border-none p-0 bg-transparent" />
+              </div>
+              <h3 className="text-slate-800 font-bold text-lg tracking-tight mb-0.5 text-center px-4 line-clamp-2">
+                {qrAsset?.asset_name}
+              </h3>
+              <p className="text-slate-400 font-mono text-xs uppercase tracking-[0.2em] mb-4">
+                {qrAsset?.qr_code}
+              </p>
+            </div>
+
+            <SheetFooter className="p-6 border-t border-slate-50 bg-slate-50/30 flex-row justify-end items-center gap-2">
+               <Button 
+                  variant="ghost" 
+                  className="font-bold text-slate-400 hover:text-slate-600 rounded-xl"
+                  onClick={() => setQrAsset(null)}
+                >
+                  Close
+               </Button>
+               <Button 
+                  className="bg-primary hover:bg-primary/90 text-white font-bold px-6 h-11 rounded-xl shadow-lg shadow-primary/20"
+                  onClick={() => window.print()}
+               >
+                  Print Label
+               </Button>
+            </SheetFooter>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

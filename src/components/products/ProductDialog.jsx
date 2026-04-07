@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect } from "react"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -103,125 +103,152 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>{isEdit ? "Edit Product" : "Register New Product"}</DialogTitle>
-            <DialogDescription>
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="sm:max-w-xl border-l-slate-100 shadow-2xl p-0">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
+          <SheetHeader className="p-6 border-b border-slate-50 bg-slate-50/50">
+            <SheetTitle className="text-2xl font-black text-slate-800 tracking-tight">
+              {isEdit ? "Edit Asset Definition" : "Register New Asset"}
+            </SheetTitle>
+            <SheetDescription className="text-slate-500 font-medium pt-1">
               {isEdit 
                 ? "Update the master definition of this railway asset." 
-                : "Define a new item in the centralized product catalog."}
-            </DialogDescription>
-          </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2 col-span-2">
-                      <Label htmlFor="asset_name">Asset Name / Title</Label>
-                      <Input
-                          id="asset_name"
-                          placeholder="e.g. 50kg Rail Piece, Signal Relay X"
-                          value={formData.asset_name}
-                          onChange={(e) => setFormData({ ...formData, asset_name: e.target.value })}
-                          required
-                      />
-                  </div>
+                : "Define a new item in the centralized SAMS asset catalog."}
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="space-y-4">
+              <div className="grid gap-2">
+                <Label htmlFor="asset_name" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                  Asset Name / Title
+                </Label>
+                <Input
+                  id="asset_name"
+                  placeholder="e.g. 50kg Rail Piece, Signal Relay X"
+                  value={formData.asset_name}
+                  onChange={(e) => setFormData({ ...formData, asset_name: e.target.value })}
+                  className="h-11 bg-slate-50/50 border-slate-200 focus:ring-primary rounded-xl"
+                  required
+                />
               </div>
 
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="qr_code">Identification Code (QR)</Label>
-                    <Input
-                        id="qr_code"
-                        placeholder="e.g. QR-MECH-001"
-                        value={formData.qr_code}
-                        onChange={(e) => setFormData({ ...formData, qr_code: e.target.value })}
-                        required
-                    />
+                  <Label htmlFor="qr_code" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                    Master Code (QR)
+                  </Label>
+                  <Input
+                    id="qr_code"
+                    placeholder="e.g. QR-MECH-001"
+                    value={formData.qr_code}
+                    onChange={(e) => setFormData({ ...formData, qr_code: e.target.value })}
+                    className="h-11 bg-slate-50/50 border-slate-200 focus:ring-primary rounded-xl font-mono"
+                    required
+                  />
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="unit">Unit of Measure</Label>
-                    <Select 
-                        value={formData.unit} 
-                        onValueChange={(value) => setFormData({ ...formData, unit: value })}
-                        required
-                    >
-                        <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select unit" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        {UNITS.map((unit) => (
-                            <SelectItem key={unit} value={unit}>
-                            {unit}
-                            </SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                  <Label htmlFor="unit" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                    Unit of Measure
+                  </Label>
+                  <Select 
+                    value={formData.unit} 
+                    onValueChange={(value) => setFormData({ ...formData, unit: value })}
+                    required
+                  >
+                    <SelectTrigger className="w-full h-11 bg-slate-50/50 border-slate-200 rounded-xl">
+                      <SelectValue placeholder="Select unit" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      {UNITS.map((unit) => (
+                        <SelectItem key={unit} value={unit} className="rounded-lg">
+                          {unit}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-            </div>
+              </div>
 
-            <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                    <Label htmlFor="categoryId">Category</Label>
-                    <Select 
-                        value={formData.categoryId} 
-                        onValueChange={(value) => setFormData({ ...formData, categoryId: value, subCategoryId: "" })}
-                        required
-                    >
-                        <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        {categories.map((cat) => (
-                            <SelectItem key={cat._id} value={cat._id}>
-                            {cat.category_name}
-                            </SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                  <Label htmlFor="categoryId" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                    Main Category
+                  </Label>
+                  <Select 
+                    value={formData.categoryId} 
+                    onValueChange={(value) => setFormData({ ...formData, categoryId: value, subCategoryId: "" })}
+                    required
+                  >
+                    <SelectTrigger className="w-full h-11 bg-slate-50/50 border-slate-200 rounded-xl font-semibold text-slate-700">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      {categories.map((cat) => (
+                        <SelectItem key={cat._id} value={cat._id} className="rounded-lg font-medium">
+                          {cat.category_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid gap-2">
-                    <Label htmlFor="subCategoryId">Sub-Category</Label>
-                    <Select 
-                        value={formData.subCategoryId} 
-                        onValueChange={(value) => setFormData({ ...formData, subCategoryId: value })}
-                        disabled={!formData.categoryId}
-                    >
-                        <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select sub-category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                        {subCategories.map((sub) => (
-                            <SelectItem key={sub._id} value={sub._id}>
-                            {sub.sub_category_name}
-                            </SelectItem>
-                        ))}
-                        </SelectContent>
-                    </Select>
+                  <Label htmlFor="subCategoryId" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                    Sub-Category
+                  </Label>
+                  <Select 
+                    value={formData.subCategoryId} 
+                    onValueChange={(value) => setFormData({ ...formData, subCategoryId: value })}
+                    disabled={!formData.categoryId}
+                  >
+                    <SelectTrigger className="w-full h-11 bg-slate-50/50 border-slate-200 rounded-xl font-semibold text-slate-700">
+                      <SelectValue placeholder="Select sub-category" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      {subCategories.map((sub) => (
+                        <SelectItem key={sub._id} value={sub._id} className="rounded-lg font-medium">
+                          {sub.sub_category_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-            </div>
+              </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="description">Technical Description</Label>
-              <Textarea
-                id="description"
-                placeholder="Optional specifications, dimensions, or usage notes..."
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="min-h-[100px]"
-              />
+              <div className="grid gap-2 pt-2">
+                <Label htmlFor="description" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                  Technical Specifications
+                </Label>
+                <Textarea
+                  id="description"
+                  placeholder="Optional specifications, dimensions, or usage notes..."
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="min-h-[120px] bg-slate-50/50 border-slate-200 focus:ring-primary rounded-xl p-4"
+                />
+              </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+
+          <SheetFooter className="p-6 border-t border-slate-50 bg-slate-50/30 flex-row justify-end items-center gap-3">
+            <Button 
+              type="button" 
+              variant="ghost" 
+              onClick={() => onOpenChange(false)}
+              className="font-bold text-slate-400 hover:text-slate-600 rounded-xl"
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Saving..." : isEdit ? "Save Changes" : "Register Product"}
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="bg-primary hover:bg-primary/90 text-white font-bold px-8 h-12 rounded-xl shadow-lg shadow-primary/20"
+            >
+              {loading ? "Registering..." : isEdit ? "Save Definition" : "Register Asset"}
             </Button>
-          </DialogFooter>
+          </SheetFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   )
 }

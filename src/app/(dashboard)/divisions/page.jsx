@@ -74,54 +74,65 @@ export default function DivisionsPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="border-none shadow-sm bg-primary text-white overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-             <Building className="h-24 w-24" />
-          </div>
-          <CardContent className="p-6 relative z-10">
-            <p className="text-primary-foreground/80 font-semibold text-sm mb-1">Total Divisions</p>
-            <div className="flex items-end gap-3">
-               <h3 className="text-4xl font-black">{divisions.length}</h3>
-               <div className="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full mb-1 font-medium">
-                  <TrendingUp className="h-3 w-3" /> +1 new
-               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-               <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
-                  <MapPin className="h-5 w-5" />
-               </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Active Divisions</Badge>
-            </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">Active Divisions</p>
-            <h3 className="text-2xl font-black text-slate-800">
-          {divisions.filter((d => d.is_active === true)).length}
-            </h3>
-          </CardContent>
-        </Card>
-
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-               <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 border border-purple-100">
-                  <MapPin className="h-5 w-5" />
-               </div>
-               <Badge variant="secondary" className="bg-slate-50 text-slate-500 font-bold">Inactive Divisions</Badge>
-            </div>
-            <p className="text-muted-foreground font-semibold text-sm mb-1">Inactive Divisions</p>
-            <h3 className="text-2xl font-black text-slate-800">
-          {divisions.filter((d => d.is_active === false)).length}
-            </h3>
-          </CardContent>
-        </Card>
-
-       
+     {/* Stats Cards - Compact Design */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  
+  {/* Total Divisions */}
+  <Card className="border-none shadow-sm bg-primary text-white overflow-hidden relative group h-full">
+    <div className="absolute -top-2 -right-2 p-4 opacity-10 group-hover:scale-110 transition-transform duration-300">
+      <Building className="h-16 w-16" />
+    </div>
+    <CardContent className="p-4 relative z-10 flex flex-col justify-end h-full min-h-[110px]">
+      <div>
+        <p className="text-primary-foreground/80 font-semibold text-xs mb-1">
+          Total Divisions
+        </p>
+        <div className="flex items-end gap-2">
+          <h3 className="text-3xl font-black leading-none">{divisions.length}</h3>
+        </div>
       </div>
+    </CardContent>
+  </Card>
+
+  {/* Active Divisions */}
+  <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
+    <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
+      <div className="flex items-center justify-between mb-2">
+        <div className="p-1.5 rounded-lg bg-purple-50 text-purple-600 border border-purple-100">
+          <MapPin className="h-4 w-4" />
+        </div>
+      </div>
+      <div>
+        <p className="text-muted-foreground font-semibold text-xs mb-1">
+          Active Divisions
+        </p>
+        <h3 className="text-2xl font-black text-slate-800 leading-none">
+          {divisions.filter(d => d.is_active === true).length}
+        </h3>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Inactive Divisions */}
+  <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
+    <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
+      <div className="flex items-center justify-between mb-2">
+        <div className="p-1.5 rounded-lg bg-purple-50 text-purple-600 border border-purple-100">
+          <MapPin className="h-4 w-4" />
+        </div>
+      </div>
+      <div>
+        <p className="text-muted-foreground font-semibold text-xs mb-1">
+          Inactive Divisions
+        </p>
+        <h3 className="text-2xl font-black text-slate-800 leading-none">
+          {divisions.filter(d => d.is_active === false).length}
+        </h3>
+      </div>
+    </CardContent>
+  </Card>
+
+</div>
 
       {/* Table Section */}
       <div className="space-y-4">

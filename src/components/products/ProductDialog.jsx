@@ -146,7 +146,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                         onValueChange={(value) => setFormData({ ...formData, unit: value })}
                         required
                     >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select unit" />
                         </SelectTrigger>
                         <SelectContent>
@@ -168,7 +168,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                         onValueChange={(value) => setFormData({ ...formData, categoryId: value, subCategoryId: "" })}
                         required
                     >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -187,7 +187,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                         onValueChange={(value) => setFormData({ ...formData, subCategoryId: value })}
                         disabled={!formData.categoryId}
                     >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select sub-category" />
                         </SelectTrigger>
                         <SelectContent>

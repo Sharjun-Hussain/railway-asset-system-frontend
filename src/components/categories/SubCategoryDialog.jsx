@@ -99,7 +99,7 @@ export function SubCategoryDialog({ open, onOpenChange, subCategory, categories,
                 onValueChange={(value) => setFormData({ ...formData, categoryId: value })}
                 required
               >
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select main category" />
                 </SelectTrigger>
                 <SelectContent>

@@ -193,9 +193,10 @@ export default function AssetsPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b">
-                <TableHead className="w-[120px] font-bold">Asset Code</TableHead>
-                <TableHead className="font-bold  ">Asset Description</TableHead>
-                <TableHead className="font-bold ">Classification</TableHead>
+                <TableHead className="w-[120px] font-bold">QR Code</TableHead>
+                <TableHead className="font-bold  ">Description</TableHead>
+                <TableHead className="font-bold ">Category</TableHead>
+                <TableHead className="font-bold ">Sub Category</TableHead>
                 <TableHead className="font-bold ">Unit</TableHead>
                 <TableHead className="text-right font-bold ">Actions</TableHead>
               </TableRow>
@@ -212,7 +213,8 @@ export default function AssetsPage() {
                   <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
                     <TableCell className="">
                         <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 font-mono">
-                            {asset.qr_code || "N/A"}
+                            {asset.qr_code || "N/A"} 
+
                         </Badge>
                     </TableCell>
                     <TableCell className="font-semibold text-slate-700 min-w-[200px]">
@@ -226,10 +228,14 @@ export default function AssetsPage() {
                     <TableCell>
                        <div className="flex flex-col gap-1">
                           <span className="text-slate-600 font-medium text-xs">
-                            {asset.categoryId?.category_name}
+                        <Badge variant="secondary">{asset.categoryId?.category_name}</Badge>
                           </span>
-                          <span className="text-[10px] text-slate-400 font-medium italic">
-                            {asset.subCategoryId?.sub_category_name || "Uncategorized"}
+                       </div>
+                    </TableCell>
+                     <TableCell>
+                       <div className="flex flex-col gap-1">
+                          <span className="text-slate-600 font-medium text-xs">
+                            <Badge variant="secondary">{asset.subCategoryId?.sub_category_name}</Badge>
                           </span>
                        </div>
                     </TableCell>
@@ -246,14 +252,14 @@ export default function AssetsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-44 rounded-xl shadow-lg border-slate-100">
-                          <DropdownMenuItem className="cursor-pointer font-bold text-sm" onClick={() => {
+                          <DropdownMenuItem className="cursor-pointer  text-sm" onClick={() => {
                               setSelectedAsset(asset)
                               setDialogOpen(true)
                           }}>
                             <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Asset
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 font-bold text-sm" onClick={() => setDeleteId(asset._id)}>
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete Definition
+                          <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 text-sm" onClick={() => setDeleteId(asset._id)}>
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete 
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

@@ -10,7 +10,6 @@ const apiClient = axios.create({
   },
 });
 
-// Request interceptor for API calls
 apiClient.interceptors.request.use(
   async (config) => {
     const session = await getSession();
@@ -24,7 +23,6 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor for API calls
 apiClient.interceptors.response.use(
   (response) => {
     return response;

@@ -1,91 +1,102 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { 
-  Warehouse, 
-  MapPin, 
-  Plus, 
-  Search, 
-  Layers, 
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Warehouse,
+  MapPin,
+  Plus,
+  Search,
+  Layers,
   Box,
-  LayoutGrid
-} from "lucide-react"
-import { WarehouseTable } from "@/components/warehouses/WarehouseTable"
-import { WarehouseDialog } from "@/components/warehouses/WarehouseDialog"
-import { Card, CardContent } from "@/components/ui/card"
-import apiClient from "@/lib/api"
-import { toast } from "sonner"
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from "@/components/ui/select"
+  LayoutGrid,
+} from "lucide-react";
+import { WarehouseTable } from "@/components/warehouses/WarehouseTable";
+import { WarehouseDialog } from "@/components/warehouses/WarehouseDialog";
+import { Card, CardContent } from "@/components/ui/card";
+import apiClient from "@/lib/api";
+import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function WarehousesPage() {
-  const [warehouses, setWarehouses] = useState([])
-  const [stations, setStations] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [stationFilter, setStationFilter] = useState("all")
-  const [typeFilter, setTypeFilter] = useState("all")
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [selectedWarehouse, setSelectedWarehouse] = useState(null)
+  const [warehouses, setWarehouses] = useState([]);
+  const [stations, setStations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [stationFilter, setStationFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
   const fetchData = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
       const [warehousesRes, stationsRes] = await Promise.all([
         apiClient.get("/warehouses"),
-        apiClient.get("/stations")
-      ])
-      setWarehouses(warehousesRes.data.data || [])
-      setStations(stationsRes.data.data || [])
+        apiClient.get("/stations"),
+      ]);
+      setWarehouses(warehousesRes.data.data || []);
+      setStations(stationsRes.data.data || []);
     } catch (error) {
-      console.error("Error fetching data:", error)
-      toast.error("Failed to load warehouses")
+      console.error("Error fetching data:", error);
+      toast.error("Failed to load warehouses");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const filteredWarehouses = warehouses.filter((w) => {
-    const matchesSearch = w.warehouse_name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStation = stationFilter === "all" || w.stationId?._id === stationFilter || w.stationId === stationFilter
-    const matchesType = typeFilter === "all" || w.warehouse_type === typeFilter
-    return matchesSearch && matchesStation && matchesType
-  })
+    const matchesSearch = w.warehouse_name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesStation =
+      stationFilter === "all" ||
+      w.stationId?._id === stationFilter ||
+      w.stationId === stationFilter;
+    const matchesType = typeFilter === "all" || w.warehouse_type === typeFilter;
+    return matchesSearch && matchesStation && matchesType;
+  });
 
   const handleEdit = (warehouse) => {
-    setSelectedWarehouse(warehouse)
-    setDialogOpen(true)
-  }
+    setSelectedWarehouse(warehouse);
+    setDialogOpen(true);
+  };
 
   const handleAdd = () => {
-    setSelectedWarehouse(null)
-    setDialogOpen(true)
-  }
+    setSelectedWarehouse(null);
+    setDialogOpen(true);
+  };
 
-  const WAREHOUSE_TYPES = ["Mechanical", "Signal", "Stationery", "General"]
+  const WAREHOUSE_TYPES = ["Mechanical", "Signal", "Stationery", "General"];
 
   return (
     <div className="animate-in fade-in duration-500 space-y-8">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Railway Warehouses</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900">
+            Railway Warehouses
+          </h2>
           <p className="text-muted-foreground mt-1 font-medium">
-            Manage specialized inventory storage locations and station-linked stores.
+            Manage specialized inventory storage locations and station-linked
+            stores.
           </p>
         </div>
-        <Button onClick={handleAdd} className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 h-11 px-6 rounded-xl font-bold">
+        <Button
+          onClick={handleAdd}
+          className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 h-11 px-6 rounded-xl font-bold"
+        >
           <Plus className="h-5 w-5" /> Register Warehouse
         </Button>
       </div>
@@ -102,7 +113,9 @@ export default function WarehousesPage() {
               <p className="text-primary-foreground/80 font-semibold text-xs mb-1">
                 Total Warehouses
               </p>
-              <h3 className="text-3xl font-black leading-none">{warehouses.length}</h3>
+              <h3 className="text-3xl font-black leading-none">
+                {warehouses.length}
+              </h3>
             </div>
           </CardContent>
         </Card>
@@ -120,7 +133,7 @@ export default function WarehousesPage() {
                 Active Stores
               </p>
               <h3 className="text-2xl font-black text-slate-800 leading-none">
-                {warehouses.filter(w => w.is_active !== false).length}
+                {warehouses.filter((w) => w.is_active !== false).length}
               </h3>
             </div>
           </CardContent>
@@ -139,7 +152,7 @@ export default function WarehousesPage() {
                 Inactive Stores
               </p>
               <h3 className="text-2xl font-black text-slate-800 leading-none">
-                {warehouses.filter(w => w.is_active === false).length}
+                {warehouses.filter((w) => w.is_active === false).length}
               </h3>
             </div>
           </CardContent>
@@ -158,7 +171,7 @@ export default function WarehousesPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          
+
           <div className="flex items-center gap-3 flex-wrap">
             <div className="w-[180px]">
               <Select value={stationFilter} onValueChange={setStationFilter}>
@@ -166,9 +179,15 @@ export default function WarehousesPage() {
                   <SelectValue placeholder="All Stations" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-slate-100 shadow-xl">
-                  <SelectItem value="all" className="">All Stations</SelectItem>
+                  <SelectItem value="all" className="">
+                    All Stations
+                  </SelectItem>
                   {stations.map((station) => (
-                    <SelectItem key={station._id} value={station._id} className="">
+                    <SelectItem
+                      key={station._id}
+                      value={station._id}
+                      className=""
+                    >
                       {station.station_name}
                     </SelectItem>
                   ))}
@@ -182,7 +201,9 @@ export default function WarehousesPage() {
                   <SelectValue placeholder="All Types" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl border-slate-100 shadow-xl">
-                  <SelectItem value="all" className="">All Types</SelectItem>
+                  <SelectItem value="all" className="">
+                    All Types
+                  </SelectItem>
                   {WAREHOUSE_TYPES.map((type) => (
                     <SelectItem key={type} value={type} className="">
                       {type}
@@ -194,20 +215,20 @@ export default function WarehousesPage() {
           </div>
         </div>
 
-        <WarehouseTable 
-          warehouses={filteredWarehouses} 
+        <WarehouseTable
+          warehouses={filteredWarehouses}
           loading={loading}
           onEdit={handleEdit}
           onDeleteSuccess={fetchData}
         />
       </div>
 
-      <WarehouseDialog 
+      <WarehouseDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         warehouse={selectedWarehouse}
         onSuccess={fetchData}
       />
     </div>
-  )
+  );
 }

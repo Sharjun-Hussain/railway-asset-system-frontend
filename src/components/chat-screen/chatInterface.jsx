@@ -89,7 +89,7 @@ export function ChatInterface() {
                 key={message.id}
                 className={cn(
                   "flex items-start gap-4",
-                  message.role === "user" ? "justify-end" : ""
+                  message.role === "user" ? "justify-end" : "",
                 )}
               >
                 {message.role === "bot" && (
@@ -104,7 +104,7 @@ export function ChatInterface() {
                     "p-3 rounded-lg max-w-[80%]",
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      : "bg-muted",
                   )}
                 >
                   <p className="text-sm whitespace-pre-wrap">

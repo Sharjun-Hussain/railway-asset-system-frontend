@@ -46,6 +46,7 @@ const navigationGroups = [
     name: "SYSTEM",
     items: [
       { name: "RBAC Admin", href: "/admin/rbac", icon: ShieldCheck, permission: { module: 'rbac', action: 'view' } },
+      { name: "Audit Logs", href: "/admin/audit-logs", icon: History, permission: { module: 'rbac', action: 'view' } },
       { name: "Settings", href: "/settings", icon: Settings },
     ]
   }

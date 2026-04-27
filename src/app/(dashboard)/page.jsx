@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8 min-h-screen bg-background/50">
-      {/* Header Section */}
+
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2 border-b border-border/50">
         <div className="flex items-center gap-4">
           <div className="p-3.5 h-12 w-12 rounded-2xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
@@ -67,17 +67,15 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Asset Metrics (Top Stats) */}
+
       <AssetMetrics />
 
-      {/* Main Bento Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-        {/* Left Span: AI Chat (The Core Interaction) */}
         <div className="lg:col-span-6">
           <AIChat />
         </div>
 
-        {/* Right Span: Live Feed & Quick Navigation */}
+
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Reports Card */}
           {/* <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">

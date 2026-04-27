@@ -43,7 +43,7 @@ export default function StockInventoryPage() {
     try {
       const [stockRes, prodRes, whRes] = await Promise.all([
         apiClient.get("/inventory"),
-        apiClient.get("/products"),
+        apiClient.get("/assets"),
         apiClient.get("/warehouses")
       ])
       

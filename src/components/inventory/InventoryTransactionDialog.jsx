@@ -60,7 +60,7 @@ export function InventoryTransactionDialog({
     setLoading(true);
 
     try {
-      await apiClient.post("/inventory/transaction", formData);
+      await apiClient.post("/transactions", formData);
       toast.success("Inventory transaction processed successfully");
       onSuccess?.();
       onOpenChange(false);

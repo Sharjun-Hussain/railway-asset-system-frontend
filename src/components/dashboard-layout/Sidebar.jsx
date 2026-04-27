@@ -30,7 +30,7 @@ const navigationGroups = [
     items: [
       { name: "Assets", href: "/products", icon: Package, permission: { module: 'product', action: 'view' } },
       { name: " Categories", href: "/categories", icon: LayoutDashboard, permission: { module: 'product', action: 'view' } },
-      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' } },
+      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' }, exact: true },
       { name: "Adjustments", href: "/inventory/adjustments", icon: History, permission: { module: 'stock', action: 'adjust' } },
     ]
   },
@@ -90,7 +90,9 @@ export function Sidebar({ session }) {
 
               <div className="space-y-1">
                 {visibleItems.map((item) => {
-                  const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+                  const isActive = item.exact 
+                    ? pathname === item.href 
+                    : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
                   const Icon = item.icon
 
                   return (

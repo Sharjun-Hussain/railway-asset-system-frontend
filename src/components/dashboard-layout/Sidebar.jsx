@@ -47,7 +47,7 @@ const navigationGroups = [
     items: [
       { name: "RBAC Admin", href: "/admin/rbac", icon: ShieldCheck, permission: { module: 'rbac', action: 'view' } },
       { name: "Audit Logs", href: "/admin/audit-logs", icon: History, permission: { module: 'rbac', action: 'view' } },
-      { name: "Settings", href: "/settings", icon: Settings },
+      // { name: "Settings", href: "/settings", icon: Settings },
     ]
   }
 ]
@@ -91,8 +91,8 @@ export function Sidebar({ session }) {
 
               <div className="space-y-1">
                 {visibleItems.map((item) => {
-                  const isActive = item.exact 
-                    ? pathname === item.href 
+                  const isActive = item.exact
+                    ? pathname === item.href
                     : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
                   const Icon = item.icon
 

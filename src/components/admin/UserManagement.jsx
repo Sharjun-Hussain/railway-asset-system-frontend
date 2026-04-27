@@ -32,6 +32,7 @@ export function UserManagement() {
   const [roles, setRoles] = useState([])
   const [divisions, setDivisions] = useState([])
   const [stations, setStations] = useState([])
+  const [warehouses, setWarehouses] = useState([])
   const [loading, setLoading] = useState(true)
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   
@@ -41,7 +42,8 @@ export function UserManagement() {
     email: "",
     roleIds: [],
     divisionId: "",
-    stationId: ""
+    stationId: "",
+    warehouseIds: []
   })
 
   useEffect(() => {
@@ -50,16 +52,18 @@ export function UserManagement() {
 
   const fetchInitialData = async () => {
     try {
-      const [usersRes, rolesRes, divisionsRes, stationsRes] = await Promise.all([
+      const [usersRes, rolesRes, divisionsRes, stationsRes, warehousesRes] = await Promise.all([
         apiClient.get("/users"),
         apiClient.get("/roles"),
         apiClient.get("/divisions"),
-        apiClient.get("/stations")
+        apiClient.get("/stations"),
+        apiClient.get("/warehouses")
       ])
       setUsers(usersRes.data)
       setRoles(rolesRes.data)
       setDivisions(divisionsRes.data?.data || divisionsRes.data)
       setStations(stationsRes.data?.data || stationsRes.data)
+      setWarehouses(warehousesRes.data?.data || warehousesRes.data)
     } catch (error) {
       toast.error("Failed to fetch data")
       console.error(error)
@@ -75,7 +79,7 @@ export function UserManagement() {
       toast.success("Invitation sent successfully")
       setIsInviteOpen(false)
       fetchInitialData() // refresh list
-      setFormData({ full_name: "", email: "", roleIds: [], divisionId: "", stationId: "" })
+      setFormData({ full_name: "", email: "", roleIds: [], divisionId: "", stationId: "", warehouseIds: [] })
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send invitation")
     }
@@ -154,7 +158,7 @@ export function UserManagement() {
                    
                    <div className="grid gap-2">
                       <Label className="text-xs font-bold uppercase text-slate-500">Division</Label>
-                      <Select onValueChange={(val) => setFormData({...formData, divisionId: val})}>
+                      <Select onValueChange={(val) => setFormData({...formData, divisionId: val, stationId: "", warehouseIds: []})}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select Division" />
                         </SelectTrigger>
@@ -167,21 +171,60 @@ export function UserManagement() {
                    </div>
                 </div>
 
-                <div className="grid gap-2">
-                  <Label className="text-xs font-bold uppercase text-slate-500">Specific Station (Optional)</Label>
-                  <Select onValueChange={(val) => setFormData({...formData, stationId: val})}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select Station" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {stations
-                        .filter(s => !formData.divisionId || s.divisionId?._id === formData.divisionId || s.divisionId === formData.divisionId)
-                        .map(s => (
-                          <SelectItem key={s._id} value={s._id}>{s.station_name}</SelectItem>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid gap-2">
+                    <Label className="text-xs font-bold uppercase text-slate-500">Station</Label>
+                    <Select onValueChange={(val) => setFormData({...formData, stationId: val, warehouseIds: []})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Station" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {stations
+                          .filter(s => !formData.divisionId || (s.divisionId?._id === formData.divisionId || s.divisionId === formData.divisionId))
+                          .map(s => (
+                            <SelectItem key={s._id} value={s._id}>{s.station_name}</SelectItem>
+                          ))
+                        }
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label className="text-xs font-bold uppercase text-slate-500">Store / Warehouse (Multi-select)</Label>
+                    <div className="border rounded-lg p-2 max-h-[120px] overflow-y-auto space-y-1 bg-slate-50/50">
+                      {warehouses
+                        .filter(w => !formData.stationId || (w.stationId?._id === formData.stationId || w.stationId === formData.stationId))
+                        .map(w => (
+                          <div key={w._id} className="flex items-center gap-2 hover:bg-white p-1 rounded transition-colors">
+                            <input 
+                              type="checkbox" 
+                              id={`wh-${w._id}`}
+                              className="rounded border-slate-300 text-primary focus:ring-primary h-3.5 w-3.5"
+                              checked={formData.warehouseIds.includes(w._id)}
+                              onChange={(e) => {
+                                const checked = e.target.checked;
+                                setFormData(prev => ({
+                                  ...prev,
+                                  warehouseIds: checked 
+                                    ? [...prev.warehouseIds, w._id] 
+                                    : prev.warehouseIds.filter(id => id !== w._id)
+                                }))
+                               }}
+                             />
+                             <label htmlFor={`wh-${w._id}`} className="text-xs font-medium text-slate-600 cursor-pointer flex-1">
+                               {w.warehouse_name}
+                             </label>
+                          </div>
                         ))
                       }
-                    </SelectContent>
-                  </Select>
+                      {formData.stationId && warehouses.filter(w => (w.stationId?._id === formData.stationId || w.stationId === formData.stationId)).length === 0 && (
+                        <p className="text-[10px] text-slate-400 italic p-2 text-center text-wrap">No warehouses found for this station.</p>
+                      )}
+                      {!formData.stationId && (
+                        <p className="text-[10px] text-slate-400 italic p-2 text-center text-wrap">Select a station first.</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -237,6 +280,15 @@ export function UserManagement() {
                         <span className="text-[10px] text-slate-500 ml-4 italic px-2 border-l border-slate-200">
                           {user.stationId.station_name} Station
                         </span>
+                      )}
+                      {user.warehouseIds?.length > 0 && (
+                        <div className="flex flex-wrap gap-1 ml-4 mt-1">
+                          {user.warehouseIds.map(w => (
+                            <Badge key={w._id} variant="outline" className="text-[9px] px-1.5 py-0 border-slate-200 text-slate-500">
+                              {w.warehouse_name}
+                            </Badge>
+                          ))}
+                        </div>
                       )}
                    </div>
                 </TableCell>

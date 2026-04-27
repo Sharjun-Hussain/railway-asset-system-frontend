@@ -94,7 +94,7 @@ export function UserManagement() {
               <UserPlus className="h-4 w-4" /> Invite New User
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto scrollbar-tiny">
             <form onSubmit={handleInvite}>
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">

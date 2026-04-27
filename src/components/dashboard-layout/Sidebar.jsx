@@ -15,35 +15,36 @@ import {
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { signOut } from "next-auth/react"
+import { useRBAC } from "@/hooks/useRBAC"
 
 const navigationGroups = [
   {
     name: "CORE",
     items: [
       { name: "Dashboard", href: "/", icon: LayoutDashboard },
-      { name: "Transactions", href: "/transactions", icon: History },
+      { name: "Transactions", href: "/transactions", icon: History, permission: { module: 'stock', action: 'view' } },
     ]
   },
   {
     name: "INVENTORY",
     items: [
-      { name: "Assets", href: "/products", icon: Package },
-      { name: "Categories", href: "/categories", icon: LayoutDashboard },
-      { name: "Stock Inventory", href: "/inventory", icon: Warehouse },
+      { name: "Assets", href: "/products", icon: Package, permission: { module: 'product', action: 'view' } },
+      { name: "Categories", href: "/categories", icon: LayoutDashboard, permission: { module: 'product', action: 'view' } },
+      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' } },
     ]
   },
   {
     name: "INFRASTRUCTURE",
     items: [
-      { name: "Divisions", href: "/divisions", icon: Building },
-      { name: "Stations", href: "/stations", icon: Building },
-      { name: "Warehouses", href: "/warehouses", icon: Warehouse },
+      { name: "Divisions", href: "/divisions", icon: Building, permission: { module: 'division', action: 'view' } },
+      { name: "Stations", href: "/stations", icon: Building, permission: { module: 'station', action: 'view' } },
+      { name: "Warehouses", href: "/warehouses", icon: Warehouse, permission: { module: 'warehouse', action: 'view' } },
     ]
   },
   {
     name: "SYSTEM",
     items: [
-      { name: "RBAC Admin", href: "/admin/rbac", icon: ShieldCheck },
+      { name: "RBAC Admin", href: "/admin/rbac", icon: ShieldCheck, permission: { module: 'rbac', action: 'view' } },
       { name: "Settings", href: "/settings", icon: Settings },
     ]
   }
@@ -51,6 +52,7 @@ const navigationGroups = [
 
 export function Sidebar({ session }) {
   const pathname = usePathname()
+  const { hasPermission } = useRBAC()
 
   return (
     <aside className="fixed left-0 top-0 h-screen bg-white border-r z-50 flex flex-col w-64 shadow-sm overflow-x-hidden">
@@ -70,42 +72,52 @@ export function Sidebar({ session }) {
 
       {/* Navigation */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 space-y-8 scrollbar-tiny">
-        {navigationGroups.map((group) => (
-          <div key={group.name} className="space-y-1">
-             <h3 className="px-4 text-xs font-bold text-muted-foreground mb-4 opacity-100">
-               {group.name}
-             </h3>
-            
-            <div className="space-y-1">
-                {group.items.map((item) => {
-                const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
-                const Icon = item.icon
-                
-                return (
-                  <Link
-                      key={item.name}
-                      href={item.href}
-                      className={cn(
-                          "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium relative group/item w-full",
-                          isActive 
-                          ? "bg-primary text-white shadow-md shadow-primary/10" 
-                          : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground"
-                      )}
-                  >
-                      <Icon className={cn(
-                          "h-5 w-5 shrink-0 transition-colors", 
-                          !isActive && "text-muted-foreground/70 group-hover/item:text-foreground"
-                      )} />
-                      
-                      <span className="whitespace-nowrap opacity-100">
-                          {item.name}
-                      </span>
-                  </Link>
-                )
-                })}
+        {navigationGroups.map((group) => {
+          // Filter items within the group
+          const visibleItems = group.items.filter(item => 
+            !item.permission || hasPermission(item.permission.module, item.permission.action)
+          )
+
+          // Don't show group if no items are visible
+          if (visibleItems.length === 0) return null
+
+          return (
+            <div key={group.name} className="space-y-1">
+               <h3 className="px-4 text-xs font-bold text-muted-foreground mb-4 opacity-100">
+                 {group.name}
+               </h3>
+              
+              <div className="space-y-1">
+                  {visibleItems.map((item) => {
+                  const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+                  const Icon = item.icon
+                  
+                  return (
+                    <Link
+                        key={item.name}
+                        href={item.href}
+                        className={cn(
+                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium relative group/item w-full",
+                            isActive 
+                            ? "bg-primary text-white shadow-md shadow-primary/10" 
+                            : "text-muted-foreground hover:bg-secondary/70 hover:text-foreground"
+                        )}
+                    >
+                        <Icon className={cn(
+                            "h-5 w-5 shrink-0 transition-colors", 
+                            !isActive && "text-muted-foreground/70 group-hover/item:text-foreground"
+                        )} />
+                        
+                        <span className="whitespace-nowrap opacity-100">
+                            {item.name}
+                        </span>
+                    </Link>
+                  )
+                  })}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Footer / Profile */}

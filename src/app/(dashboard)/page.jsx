@@ -13,7 +13,7 @@ import {
   Box,
   MapPin,
   Clock,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,9 +22,30 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   const QUICK_REPORTS = [
-    { id: 1, type: "Maintenance", title: "Engine #4521 - Service Completed", status: "Done", time: "2h ago", color: "green" },
-    { id: 2, type: "Arrival", title: "Gampaha Station - Track Sync", status: "Syncing", time: "15m ago", color: "blue" },
-    { id: 3, type: "Alert", title: "Signal Failure - Colombo Fort", status: "Critical", time: "Just now", color: "red" },
+    {
+      id: 1,
+      type: "Maintenance",
+      title: "Engine #4521 - Service Completed",
+      status: "Done",
+      time: "2h ago",
+      color: "green",
+    },
+    {
+      id: 2,
+      type: "Arrival",
+      title: "Gampaha Station - Track Sync",
+      status: "Syncing",
+      time: "15m ago",
+      color: "blue",
+    },
+    {
+      id: 3,
+      type: "Alert",
+      title: "Signal Failure - Colombo Fort",
+      status: "Critical",
+      time: "Just now",
+      color: "red",
+    },
   ];
 
   return (
@@ -38,15 +59,12 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
               Asset Command Center
-             
             </h1>
             <p className="text-muted-foreground text-sm font-medium mt-1">
               System monitoring and AI-assisted asset management.
             </p>
           </div>
         </div>
-
-       
       </div>
 
       {/* Asset Metrics (Top Stats) */}
@@ -55,14 +73,14 @@ export default function DashboardPage() {
       {/* Main Bento Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
         {/* Left Span: AI Chat (The Core Interaction) */}
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-6">
           <AIChat />
         </div>
 
         {/* Right Span: Live Feed & Quick Navigation */}
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Reports Card */}
-          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
+          {/* <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
             <CardHeader className="pb-3 border-b border-border/50">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -95,12 +113,10 @@ export default function DashboardPage() {
                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                </Button>
             </CardContent>
-          </Card>
-
-          
+          </Card> */}
 
           {/* Quick Links Group */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* <div className="grid grid-cols-2 gap-4">
              <Link href="/inventory" className="p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-primary/40 transition-all flex flex-col gap-3 group">
                 <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
                    <Box size={18} />
@@ -113,7 +129,7 @@ export default function DashboardPage() {
                 </div>
                 <span className="text-sm font-bold text-muted-foreground group-hover:text-foreground">Stations</span>
              </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

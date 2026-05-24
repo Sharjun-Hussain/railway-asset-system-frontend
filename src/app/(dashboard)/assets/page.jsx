@@ -252,7 +252,7 @@ export default function AssetsPage() {
                   filteredAssets.map((asset) => (
                     <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
                       <TableCell className="w-[100px] py-2">
-                        <div 
+                        <div
                           className="flex items-center gap-2 cursor-pointer hover:scale-[1.02] transition-transform"
                           onClick={() => setQrAsset(asset)}
                         >
@@ -361,7 +361,7 @@ export default function AssetsPage() {
                 Asset QR Master
               </SheetTitle>
               <SheetDescription className="text-slate-500 font-medium pt-1 line-clamp-1">
-                 {qrAsset?.asset_name}
+                {qrAsset?.asset_name}
               </SheetDescription>
             </SheetHeader>
 
@@ -378,19 +378,19 @@ export default function AssetsPage() {
             </div>
 
             <SheetFooter className="p-6 border-t border-slate-50 bg-slate-50/30 flex-row justify-end items-center gap-2">
-               <Button 
-                  variant="ghost" 
-                  className="font-bold text-slate-400 hover:text-slate-600 rounded-xl"
-                  onClick={() => setQrAsset(null)}
-                >
-                  Close
-               </Button>
-               <Button 
-                  className="bg-primary hover:bg-primary/90 text-white font-bold px-6 h-11 rounded-xl shadow-lg shadow-primary/20"
-                  onClick={() => window.print()}
-               >
-                  Print Label
-               </Button>
+              <Button
+                variant="ghost"
+                className="font-bold text-slate-400 hover:text-slate-600 rounded-xl"
+                onClick={() => setQrAsset(null)}
+              >
+                Close
+              </Button>
+              <Button
+                className="bg-primary hover:bg-primary/90 text-white font-bold px-6 h-11 rounded-xl shadow-lg shadow-primary/20"
+                onClick={() => window.print()}
+              >
+                Print Label
+              </Button>
             </SheetFooter>
           </div>
         </SheetContent>

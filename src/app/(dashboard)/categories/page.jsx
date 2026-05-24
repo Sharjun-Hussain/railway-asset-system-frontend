@@ -1,13 +1,20 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from "react"
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
 } from "@/components/ui/tabs"
-import { Plus, LayoutDashboard, Layers, Search, Filter } from "lucide-react"
+import {
+  Plus,
+  LayoutDashboard,
+  Layers,
+  Search,
+  Filter,
+  FolderTree
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { CategoryTable } from "@/components/categories/CategoryTable"
@@ -27,7 +34,7 @@ export default function CategoriesPage() {
   // Dialog states
   const [catDialogOpen, setCatDialogOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
-  
+
   const [subDialogOpen, setSubDialogOpen] = useState(false)
   const [selectedSubCategory, setSelectedSubCategory] = useState(null)
 
@@ -38,7 +45,7 @@ export default function CategoriesPage() {
         apiClient.get("/categories"),
         apiClient.get("/subcategories")
       ])
-      
+
       setCategories(Array.isArray(catRes.data) ? catRes.data : [])
       setSubCategories(Array.isArray(subRes.data) ? subRes.data : [])
     } catch (error) {
@@ -54,25 +61,33 @@ export default function CategoriesPage() {
     fetchData()
   }, [fetchData])
 
-  const filteredCategories = categories.filter(c => 
+  const filteredCategories = categories.filter(c =>
     c.category_name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const filteredSubCategories = subCategories.filter(s => 
+  const filteredSubCategories = subCategories.filter(s =>
     s.sub_category_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     s.categoryId?.category_name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-6 max-w-7xl mx-auto pb-10 animate-in fade-in duration-500">
+
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Asset Categories</h1>
-          <p className="text-slate-500 font-medium">Manage main categories and sub-categories for centralized inventory.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary rounded-xl shadow-inner shadow-white/20 hidden sm:block">
+            <FolderTree className="h-6 w-6 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Asset Categories</h1>
+            <p className="text-sm text-slate-500 font-medium mt-0.5">
+              Manage main classifications and sub-categories for your inventory
+            </p>
+          </div>
         </div>
-        <Button 
-          className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold px-6 h-11 rounded-xl"
+        <Button
+          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
           onClick={() => {
             if (activeTab === "categories") {
               setSelectedCategory(null)
@@ -83,40 +98,45 @@ export default function CategoriesPage() {
             }
           }}
         >
-          <Plus className="mr-2 h-5 w-5" /> 
+          <Plus className="mr-2 h-4 w-4" />
           Add {activeTab === "categories" ? "Category" : "Sub-Category"}
         </Button>
       </div>
 
-      {/* Stats Cards Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+      {/* Premium Stats Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Active Categories</p>
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Main Categories</p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-4xl font-black text-slate-800">{categories.filter(c => c.is_active !== false).length}</h3>
-                  <span className="text-slate-400 text-sm font-bold">/ {categories.length} total</span>
+                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                    {categories.filter(c => c.is_active !== false).length}
+                  </h3>
+                  <span className="text-slate-400 text-sm font-bold">/ {categories.length}</span>
                 </div>
               </div>
-              <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
                 <LayoutDashboard className="h-6 w-6" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Active Sub-Categories</p>
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Sub Categories</p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-4xl font-black text-slate-800">{subCategories.filter(s => s.is_active !== false).length}</h3>
-                  <span className="text-slate-400 text-sm font-bold">/ {subCategories.length} total</span>
+                  <h3 className="text-4xl font-black text-slate-900 tracking-tighter">
+                    {subCategories.filter(s => s.is_active !== false).length}
+                  </h3>
+                  <span className="text-slate-400 text-sm font-bold">/ {subCategories.length}</span>
                 </div>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
                 <Layers className="h-6 w-6" />
               </div>
             </div>
@@ -124,78 +144,91 @@ export default function CategoriesPage() {
         </Card>
       </div>
 
-      {/* Main Tabs Selection */}
+      {/* Main Tabs Selection & Toolbar */}
       <Tabs defaultValue="categories" className="w-full" onValueChange={setActiveTab}>
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <TabsList className="bg-slate-100/50 p-1 rounded-xl border border-slate-200/60 w-fit">
-            <TabsTrigger value="categories" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6">
+
+        {/* Unified Pill Toolbar */}
+        <div className="bg-white p-2 rounded-[1.25rem] border border-slate-200/80 shadow-sm flex flex-col md:flex-row gap-2 justify-between items-center mb-6">
+          <TabsList className="bg-slate-50/80 p-1 rounded-xl h-12 w-full md:w-auto grid grid-cols-2 md:flex">
+            <TabsTrigger
+              value="categories"
+              className="rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 h-full text-sm data-[state=active]:text-primary transition-all"
+            >
               Main Categories
             </TabsTrigger>
-            <TabsTrigger value="subcategories" className="rounded-lg font-bold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6">
+            <TabsTrigger
+              value="subcategories"
+              className="rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 h-full text-sm data-[state=active]:text-primary transition-all"
+            >
               Sub-Categories
             </TabsTrigger>
           </TabsList>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 w-full md:w-auto">
             <div className="relative w-full md:w-[300px]">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input 
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
                 placeholder={`Search ${activeTab}...`}
-                className="pl-10 h-10 bg-white border-slate-200 rounded-xl"
+                className="pl-11 h-12 bg-slate-50/50 border-transparent hover:border-slate-200 focus-visible:ring-primary focus-visible:bg-white transition-all rounded-xl text-[14.5px]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline" className="h-10 w-10 p-0 rounded-xl bg-white border-slate-200">
+            <Button variant="outline" className="h-12 w-12 p-0 rounded-xl bg-slate-50/50 border-transparent hover:border-slate-200 hover:bg-slate-50 transition-all shrink-0">
               <Filter className="h-4 w-4 text-slate-500" />
             </Button>
           </div>
         </div>
 
-        <TabsContent value="categories" className="mt-0 outline-none">
-          {loading ? (
-            <div className="h-64 flex items-center justify-center text-slate-400 font-medium">
-              Loading Categories...
-            </div>
-          ) : (
-            <CategoryTable 
-              categories={filteredCategories}
-              onEdit={(cat) => {
-                setSelectedCategory(cat)
-                setCatDialogOpen(true)
-              }}
-              onDeleteSuccess={fetchData}
-            />
-          )}
-        </TabsContent>
+        {/* Tab Content Wrapper */}
+        <div className="bg-white rounded-[1.5rem] border border-slate-200/80 shadow-sm overflow-hidden min-h-[400px]">
+          <TabsContent value="categories" className="mt-0 outline-none">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center h-[400px] gap-4">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+                <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing Categories...</p>
+              </div>
+            ) : (
+              <CategoryTable
+                categories={filteredCategories}
+                onEdit={(cat) => {
+                  setSelectedCategory(cat)
+                  setCatDialogOpen(true)
+                }}
+                onDeleteSuccess={fetchData}
+              />
+            )}
+          </TabsContent>
 
-        <TabsContent value="subcategories" className="mt-0 outline-none">
-          {loading ? (
-            <div className="h-64 flex items-center justify-center text-slate-400 font-medium">
-              Loading Sub-Categories...
-            </div>
-          ) : (
-            <SubCategoryTable 
-              subCategories={filteredSubCategories}
-              onEdit={(sub) => {
-                setSelectedSubCategory(sub)
-                setSubDialogOpen(true)
-              }}
-              onDeleteSuccess={fetchData}
-            />
-          )}
-        </TabsContent>
+          <TabsContent value="subcategories" className="mt-0 outline-none">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center h-[400px] gap-4">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+                <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing Sub-Categories...</p>
+              </div>
+            ) : (
+              <SubCategoryTable
+                subCategories={filteredSubCategories}
+                onEdit={(sub) => {
+                  setSelectedSubCategory(sub)
+                  setSubDialogOpen(true)
+                }}
+                onDeleteSuccess={fetchData}
+              />
+            )}
+          </TabsContent>
+        </div>
       </Tabs>
 
       {/* Dialogs */}
-      <CategoryDialog 
+      <CategoryDialog
         open={catDialogOpen}
         onOpenChange={setCatDialogOpen}
         category={selectedCategory}
         onSuccess={fetchData}
       />
 
-      <SubCategoryDialog 
+      <SubCategoryDialog
         open={subDialogOpen}
         onOpenChange={setSubDialogOpen}
         subCategory={selectedSubCategory}

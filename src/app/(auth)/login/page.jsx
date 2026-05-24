@@ -107,14 +107,14 @@ export default function LoginPage() {
         {/* Left Panel: Branding & Visual */}
         <div className="hidden md:flex md:w-5/12 relative bg-primary p-12 text-white flex-col justify-between overflow-hidden">
           {/* Background Image with Overlay */}
-          <div 
+          <div
             className="absolute inset-0 z-0 bg-cover bg-center brightness-[0.4]"
-            style={{ 
+            style={{
               backgroundImage: "url('/Assets/login-bg-1.jpg')",
             }}
           />
           <div className="absolute inset-0 z-10 bg-primary/60 backdrop-blur-[1px]" />
-          
+
           <div className="relative z-20">
             <div className="p-3 w-fit rounded-xl bg-white/10 border border-white/20 mb-8">
               <svg
@@ -142,7 +142,7 @@ export default function LoginPage() {
 
           <div className="relative z-20 mt-auto">
             <div className="text-xs text-white/40 pt-4 border-t border-white/10">
-              &copy; 2026 Sri Lankan Railway Department. All rights reserved.
+              &copy; 2026 Sri Lankan Railway Department. All rights reserved. Developed By Sharjun Hussain
             </div>
           </div>
         </div>
@@ -151,13 +151,13 @@ export default function LoginPage() {
         <div className="w-full p-8 md:p-14 md:w-7/12 bg-card">
           <div className="max-w-sm mx-auto">
             <div className="md:hidden flex justify-center mb-8">
-               <div className="p-3 rounded-lg bg-primary/10 text-primary">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z" />
-                  </svg>
-               </div>
+              <div className="p-3 rounded-lg bg-primary/10 text-primary">
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z" />
+                </svg>
+              </div>
             </div>
-            
+
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
               Portal Login
             </h2>
@@ -183,9 +183,8 @@ export default function LoginPage() {
                   id="email"
                   placeholder="user@department.gov"
                   type="email"
-                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
-                    errors.email ? "border-red-500 focus:ring-red-500" : ""
-                  }`}
+                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${errors.email ? "border-red-500 focus:ring-red-500" : ""
+                    }`}
                   {...register("email")}
                 />
                 {errors.email && (
@@ -214,9 +213,8 @@ export default function LoginPage() {
                   id="password"
                   placeholder="••••••••"
                   type="password"
-                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${
-                    errors.password ? "border-red-500 focus:ring-red-500" : ""
-                  }`}
+                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${errors.password ? "border-red-500 focus:ring-red-500" : ""
+                    }`}
                   {...register("password")}
                 />
                 {errors.password && (
@@ -226,14 +224,14 @@ export default function LoginPage() {
                 )}
               </div>
 
-              <Button 
-                disabled={isSubmitting} 
-                type="submit" 
+              <Button
+                disabled={isSubmitting}
+                type="submit"
                 className="w-full h-11 bg-primary hover:bg-primary/95 text-white font-semibold rounded-xl shadow-md transition-all duration-100 active:scale-[0.99]"
               >
                 {isSubmitting ? "Verifying..." : "Sign In to Dashboard"}
               </Button>
-              
+
               <div className="pt-2">
                 <p className="text-sm text-center text-muted-foreground font-medium">
                   Need technical assistance?{" "}

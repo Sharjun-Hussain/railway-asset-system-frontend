@@ -9,9 +9,11 @@ import {
   FileEdit,
   Trash2,
   Package,
-  Info,
   Layers,
-  LayoutDashboard
+  LayoutDashboard,
+  Printer,
+  QrCode,
+  Box
 } from "lucide-react"
 import {
   Table,
@@ -60,6 +62,7 @@ import {
   SheetHeader,
   SheetTitle
 } from "@/components/ui/sheet"
+import { cn } from "@/lib/utils"
 
 
 export default function AssetsPage() {
@@ -80,16 +83,13 @@ export default function AssetsPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [assetRes, catRes, subCatRes, unitRes] = await Promise.all([
+      const [assetRes, catRes] = await Promise.all([
         apiClient.get("/assets"),
         apiClient.get("/categories"),
-
-
       ])
 
       setAssets(Array.isArray(assetRes.data) ? assetRes.data : [])
       setCategories(Array.isArray(catRes.data) ? catRes.data : [])
-
     } catch (error) {
       console.error("Error fetching assets:", error)
       toast.error("Failed to load asset catalog")
@@ -108,7 +108,6 @@ export default function AssetsPage() {
 
     try {
       await apiClient.delete(`/assets/${deleteId}`)
-
       toast.success("Asset definition removed successfully")
       fetchData()
     } catch (error) {
@@ -129,61 +128,74 @@ export default function AssetsPage() {
     return matchesSearch && matchesCategory
   })
 
+  // Calculate unique standard units
+  const uniqueUnits = new Set(assets.map(a => a.unit).filter(Boolean)).size || 0
+
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-10">
+    <div className="space-y-6 max-w-7xl mx-auto pb-10 animate-in fade-in duration-500">
+
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">Asset Inventory Catalog</h1>
-          <p className="text-slate-500 font-medium tracking-tight">Manage standardized asset definitions for the Smart Asset Management System.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary rounded-xl shadow-inner shadow-white/20 hidden sm:block">
+            <Package className="h-6 w-6 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Asset Inventory Catalog</h1>
+            <p className="text-sm text-slate-500 font-medium mt-0.5">
+              Manage standardized asset definitions for the Smart Asset Management System
+            </p>
+          </div>
         </div>
         <Button
-          className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold px-6 h-11 rounded-xl"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-5 h-10 rounded-lg transition-all"
           onClick={() => {
             setSelectedAsset(null)
             setDialogOpen(true)
           }}
         >
-          <Plus className="mr-2 h-5 w-5" /> Register New Asset
+          <Plus className="mr-2 h-4 w-4" /> Register New Asset
         </Button>
       </div>
 
-      {/* Analytics Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+      {/* Analytics Dashboard - Premium Spacious Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest mb-1">Total Assets</p>
-                <h3 className="text-4xl font-black text-slate-800">{assets.length}</h3>
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Total Assets</p>
+                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{assets.length}</h3>
               </div>
-              <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100">
-                <Package className="h-6 w-6" />
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
+                <Box className="h-6 w-6" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Main Categories</p>
-                <h3 className="text-4xl font-black text-slate-800">{categories.length}</h3>
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Categories</p>
+                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{categories.length}</h3>
               </div>
-              <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
                 <LayoutDashboard className="h-6 w-6" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group">
+
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-wider mb-1">Standard Units</p>
-                <h3 className="text-4xl font-black text-slate-800">06</h3>
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Standard Units</p>
+                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{uniqueUnits < 10 ? `0${uniqueUnits}` : uniqueUnits}</h3>
               </div>
-              <div className="p-3 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100">
+              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
                 <Layers className="h-6 w-6" />
               </div>
             </div>
@@ -191,159 +203,186 @@ export default function AssetsPage() {
         </Card>
       </div>
 
-      {/* Master Table Section */}
-      <div className="space-y-4">
-        <div className="flex flex-col md:flex-row items-center gap-3 bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
-          <div className="relative flex-1 w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input
-              placeholder="Search assets by name or master code..."
-              className="pl-9 h-10 bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="w-full md:w-[220px]">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full bg-white border-slate-200 shadow-sm">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL">All Categories</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category._id} value={category._id}>
-                    {category.category_name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+      {/* Search & Filter Toolbar - Unified Pill Design */}
+      <div className="bg-white p-2 rounded-[1.25rem] border border-slate-200/80 shadow-sm flex flex-col sm:flex-row gap-2 items-center">
+        <div className="relative w-full flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+          <Input
+            placeholder="Search assets by name or code..."
+            className="pl-12 h-12 w-full bg-slate-50/50 border-transparent hover:border-slate-200 focus-visible:ring-primary focus-visible:bg-white transition-all rounded-xl text-[15px]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
+        <div className="w-full sm:w-[260px] relative">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full h-12 bg-slate-50/50 border-transparent hover:border-slate-200 shadow-none rounded-xl focus:ring-primary text-[15px]">
+              <div className="flex items-center text-slate-600 font-medium">
+                <Filter className="w-4 h-4 mr-2 text-slate-400" />
+                <SelectValue placeholder="All Categories" />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-slate-200 shadow-xl">
+              <SelectItem value="ALL" className="font-semibold py-2.5">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category._id} value={category._id} className="py-2.5 font-medium">
+                  {category.category_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Master Table Section - Elegant & Breathable */}
+      <div className="bg-white rounded-[1.5rem] border border-slate-200/80 shadow-sm overflow-hidden min-h-[400px]">
         {loading ? (
-          <div className="flex items-center justify-center p-12 bg-white rounded-xl border border-slate-100 shadow-sm">
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              <p className="text-sm text-muted-foreground font-medium">Synchronizing SAMS asset database...</p>
-            </div>
+          <div className="flex flex-col items-center justify-center h-[400px] gap-4">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
+            <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing Asset Catalog...</p>
           </div>
         ) : (
-          <div className="rounded-xl border border-slate-100 bg-white shadow-sm overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b">
-                  <TableHead className="w-[120px] font-bold">QR Code</TableHead>
-                  <TableHead className="font-bold  ">Description</TableHead>
-                  <TableHead className="font-bold ">Category</TableHead>
-                  <TableHead className="font-bold ">Sub Category</TableHead>
-                  <TableHead className="font-bold ">Unit</TableHead>
-                  <TableHead className="text-right font-bold ">Actions</TableHead>
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
+                <TableHead className="w-[380px] font-bold text-slate-500 text-xs uppercase tracking-wider pl-8 py-4">Asset Details</TableHead>
+                <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Category</TableHead>
+                <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Sub Category</TableHead>
+                <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider text-center py-4">Unit</TableHead>
+                <TableHead className="w-[100px] font-bold text-slate-500 text-xs uppercase tracking-wider text-right pr-8 py-4">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredAssets.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="h-64 text-center">
+                    <div className="flex flex-col items-center justify-center text-slate-400 gap-4">
+                      <div className="p-4 bg-slate-50 rounded-full">
+                        <Search className="h-8 w-8 text-slate-300" />
+                      </div>
+                      <p className="font-semibold text-slate-500 text-lg">No assets match your search</p>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAssets.length === 0 && !loading ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-40 text-center text-slate-400 font-medium">
-                      No active asset definitions found.
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  filteredAssets.map((asset) => (
-                    <TableRow key={asset._id} className="hover:bg-slate-50/50 transition-colors border-b last:border-0 group">
-                      <TableCell className="w-[100px] py-2">
-                        <div
-                          className="flex items-center gap-2 cursor-pointer hover:scale-[1.02] transition-transform"
-                          onClick={() => setQrAsset(asset)}
-                        >
-                          <AssetQRCode value={asset.qr_code} size={28} className="p-0 border-slate-200" />
-                          <Badge className="bg-slate-50 text-slate-500 hover:bg-slate-100 border-none px-1.5 py-0 font-mono text-[9px] tracking-tighter">
-                            {asset.qr_code || "N/A"}
-                          </Badge>
+              ) : (
+                filteredAssets.map((asset) => (
+                  <TableRow key={asset._id} className="hover:bg-slate-50/80 transition-colors group border-b border-slate-100 last:border-0">
+
+                    {/* Asset Details - Beautiful Hover state to open QR */}
+                    <TableCell className="pl-8 py-5">
+                      <button
+                        className="flex flex-col gap-1.5 max-w-[340px] text-left focus:outline-none group/btn w-full"
+                        onClick={() => setQrAsset(asset)}
+                      >
+                        <div className="flex items-center gap-2 w-full">
+                          <span className="text-[15px] font-bold text-slate-900 group-hover/btn:text-primary group-hover/btn:underline decoration-primary/30 underline-offset-4 transition-all truncate">
+                            {asset.asset_name}
+                          </span>
+                          {asset.qr_code && (
+                            <QrCode className="h-4 w-4 text-slate-300 group-hover/btn:text-primary transition-colors shrink-0" />
+                          )}
                         </div>
-                      </TableCell>
-                      <TableCell className="font-semibold text-slate-700 min-w-[200px]">
-                        {asset.asset_name}
-                        {asset.description && (
-                          <p className="text-[10px] font-medium text-slate-500 mt-0.5 line-clamp-1 max-w-[300px]">
+                        {asset.description ? (
+                          <span className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
                             {asset.description}
-                          </p>
+                          </span>
+                        ) : (
+                          <span className="text-sm text-slate-400 italic">No detailed description</span>
                         )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-slate-600 font-medium text-xs">
-                            <Badge variant="secondary">{asset.categoryId?.category_name}</Badge>
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          <span className="text-slate-600 font-medium text-xs">
-                            <Badge variant="secondary">{asset.subCategoryId?.sub_category_name}</Badge>
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="inline-flex items-center px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 text-[10px] font-bold uppercase tracking-wider">
-                          {asset.unit}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-44 rounded-xl shadow-lg border-slate-100">
-                            <DropdownMenuItem className="cursor-pointer  text-sm" onClick={() => {
+                      </button>
+                    </TableCell>
+
+                    {/* Category */}
+                    <TableCell className="py-5">
+                      <Badge variant="secondary" className="bg-slate-100 text-slate-700 border-none font-semibold px-3 py-1 text-xs">
+                        {asset.categoryId?.category_name || "Uncategorized"}
+                      </Badge>
+                    </TableCell>
+
+                    {/* Sub Category */}
+                    <TableCell className="py-5">
+                      {asset.subCategoryId?.sub_category_name ? (
+                        <Badge variant="outline" className="text-slate-600 border-slate-200 bg-white font-semibold shadow-sm px-3 py-1 text-xs">
+                          {asset.subCategoryId.sub_category_name}
+                        </Badge>
+                      ) : (
+                        <span className="text-slate-300 text-sm font-medium pl-3">-</span>
+                      )}
+                    </TableCell>
+
+                    {/* Unit */}
+                    <TableCell className="text-center py-5">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-lg border border-primary/20 bg-primary/5 text-primary text-[11px] font-bold uppercase tracking-widest">
+                        {asset.unit || "N/A"}
+                      </span>
+                    </TableCell>
+
+                    {/* Actions */}
+                    <TableCell className="text-right pr-8 py-5">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-9 w-9 p-0 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors">
+                            <MoreHorizontal className="h-5 w-5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 rounded-2xl shadow-xl border-slate-100 p-1.5">
+                          <DropdownMenuItem
+                            className="cursor-pointer text-sm font-semibold rounded-xl mb-1 py-2.5 focus:bg-primary/5 focus:text-primary transition-colors"
+                            onClick={() => {
                               setSelectedAsset(asset)
                               setDialogOpen(true)
-                            }}>
-                              <FileEdit className="mr-2 h-4 w-4 text-primary" /> Edit Asset
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600 text-sm" onClick={() => setDeleteId(asset._id)}>
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                            }}
+                          >
+                            <FileEdit className="mr-2.5 h-4 w-4" /> Edit Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer text-sm font-semibold text-rose-600 focus:bg-rose-50 focus:text-rose-700 rounded-xl py-2.5 transition-colors"
+                            onClick={() => setDeleteId(asset._id)}
+                          >
+                            <Trash2 className="mr-2.5 h-4 w-4" /> Delete Asset
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
         )}
       </div>
 
-      {/* Confirmation Dialogs */}
+      {/* Delete Confirmation Dialog */}
       <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
-        <AlertDialogContent className="rounded-2xl border-none">
+        <AlertDialogContent className="rounded-2xl border-none shadow-xl max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-black text-slate-800">Remove Asset Definition?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500 font-medium pt-2">
-              This action strictly removes the <span className="font-bold text-slate-700">centralized definition</span>.
-              Existing inventory records for this item must be cleared before removal.
+            <AlertDialogTitle className="text-xl font-bold text-slate-900">Remove Asset Definition?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 pt-2 leading-relaxed">
+              This action strictly removes the <strong className="text-slate-700">centralized definition</strong>.
+              Any existing inventory records tied to this asset must be cleared beforehand.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="pt-4">
-            <AlertDialogCancel disabled={deleting} className="rounded-xl border-slate-200 font-bold text-slate-600">Cancel</AlertDialogCancel>
+          <AlertDialogFooter className="pt-4 gap-2 sm:gap-0">
+            <AlertDialogCancel disabled={deleting} className="rounded-xl border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 mt-0">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault()
                 handleDelete()
               }}
-              className="bg-red-600 hover:bg-red-700 rounded-xl font-bold px-6 shadow-lg shadow-red-200"
+              className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold shadow-sm"
               disabled={deleting}
             >
-              {deleting ? "De-registering Asset..." : "Confirm Removal"}
+              {deleting ? "Removing..." : "Confirm Removal"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
+      {/* Register/Edit Asset Modal Component */}
       <ProductDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
@@ -354,45 +393,55 @@ export default function AssetsPage() {
 
       {/* Unified QR Preview Sheet */}
       <Sheet open={!!qrAsset} onOpenChange={(open) => !open && setQrAsset(null)}>
-        <SheetContent side="right" className="sm:max-w-xs border-l-slate-100 shadow-2xl p-0">
-          <div className="flex flex-col h-full overflow-hidden">
-            <SheetHeader className="p-6 border-b border-slate-50 bg-slate-50/50">
-              <SheetTitle className="text-xl font-black text-slate-800 tracking-tight">
-                Asset QR Master
-              </SheetTitle>
-              <SheetDescription className="text-slate-500 font-medium pt-1 line-clamp-1">
-                {qrAsset?.asset_name}
-              </SheetDescription>
-            </SheetHeader>
+        <SheetContent side="right" className="sm:max-w-sm border-l border-slate-200 shadow-2xl p-0 flex flex-col bg-slate-50/50">
 
-            <div className="flex-1 flex flex-col items-center justify-center p-8 bg-white overflow-y-auto">
-              <div className="bg-slate-50 p-4 rounded-3xl border border-slate-100 mb-6 shadow-sm">
-                <AssetQRCode value={qrAsset?.qr_code} size={200} className="border-none p-0 bg-transparent" />
-              </div>
-              <h3 className="text-slate-800 font-bold text-lg tracking-tight mb-0.5 text-center px-4 line-clamp-2">
-                {qrAsset?.asset_name}
-              </h3>
-              <p className="text-slate-400 font-mono text-xs uppercase tracking-[0.2em] mb-4">
-                {qrAsset?.qr_code}
-              </p>
+          <SheetHeader className="p-6 bg-white border-b border-slate-200">
+            <SheetTitle className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <QrCode className="h-5 w-5 text-primary" />
+              Asset Master View
+            </SheetTitle>
+            <SheetDescription className="text-slate-500 font-medium pt-1 line-clamp-1">
+              QR & Reference Details
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
+            {/* Main QR Display */}
+            <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm mb-8 w-full max-w-[280px] aspect-square flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-primary/5 rounded-[2rem] m-2 pointer-events-none" />
+              <AssetQRCode value={qrAsset?.qr_code} size={220} className="border-none p-0 relative z-10" />
             </div>
 
-            <SheetFooter className="p-6 border-t border-slate-50 bg-slate-50/30 flex-row justify-end items-center gap-2">
-              <Button
-                variant="ghost"
-                className="font-bold text-slate-400 hover:text-slate-600 rounded-xl"
-                onClick={() => setQrAsset(null)}
-              >
-                Close
-              </Button>
-              <Button
-                className="bg-primary hover:bg-primary/90 text-white font-bold px-6 h-11 rounded-xl shadow-lg shadow-primary/20"
-                onClick={() => window.print()}
-              >
-                Print Label
-              </Button>
-            </SheetFooter>
+            <div className="text-center px-4 w-full">
+              <h3 className="text-slate-900 font-bold text-lg tracking-tight mb-2 line-clamp-2">
+                {qrAsset?.asset_name}
+              </h3>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-200/50 rounded-lg">
+                <span className="text-slate-500 text-xs font-semibold">REF:</span>
+                <span className="text-slate-700 font-mono text-sm uppercase tracking-widest font-bold">
+                  {qrAsset?.qr_code || "N/A"}
+                </span>
+              </div>
+            </div>
           </div>
+
+          <SheetFooter className="p-6 bg-white border-t border-slate-200 mt-auto gap-3 flex-col sm:flex-row">
+            <Button
+              variant="outline"
+              className="w-full sm:w-1/3 rounded-xl border-slate-200 font-semibold"
+              onClick={() => setQrAsset(null)}
+            >
+              Close
+            </Button>
+            <Button
+              className="w-full sm:w-2/3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-sm"
+              onClick={() => window.print()}
+            >
+              <Printer className="w-4 h-4 mr-2" />
+              Print Label
+            </Button>
+          </SheetFooter>
+
         </SheetContent>
       </Sheet>
     </div>

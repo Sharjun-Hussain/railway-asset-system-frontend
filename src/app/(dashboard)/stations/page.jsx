@@ -3,15 +3,17 @@
 import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { 
-  Building2, 
-  Search, 
-  TrendingUp, 
+import {
+  Building2,
+  Search,
+  TrendingUp,
   Train,
   Plus,
   LayoutGrid,
   Filter,
-  MapPin
+  MapPin,
+  CheckCircle2,
+  XCircle
 } from "lucide-react"
 import { StationTable } from "@/components/stations/StationTable"
 import { StationDialog } from "@/components/stations/StationDialog"
@@ -19,12 +21,12 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import apiClient from "@/lib/api"
 import { toast } from "sonner"
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select"
 
 export default function StationsPage() {
@@ -58,12 +60,12 @@ export default function StationsPage() {
   }, [])
 
   const filteredStations = stations.filter((s) => {
-    const matchesSearch = 
+    const matchesSearch =
       s.station_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.station_code.toLowerCase().includes(searchQuery.toLowerCase())
-    
+
     const matchesDivision = selectedDivisionId === "all" || s.divisionId?._id === selectedDivisionId
-    
+
     return matchesSearch && matchesDivision
   })
 
@@ -78,120 +80,127 @@ export default function StationsPage() {
   }
 
   return (
-    <div className="animate-in fade-in duration-500 space-y-8">
+    <div className="space-y-6 max-w-7xl mx-auto pb-10 animate-in fade-in duration-500">
+
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-900">Railway Stations</h2>
-          <p className="text-muted-foreground mt-1 font-medium">
-            Manage physical station locations and division assignments.
-          </p>
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-primary rounded-xl shadow-inner shadow-white/20 hidden sm:block">
+            <Train className="h-6 w-6 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Railway Stations</h1>
+            <p className="text-sm text-slate-500 font-medium mt-0.5">
+              Manage physical station locations and division assignments
+            </p>
+          </div>
         </div>
-        <Button onClick={handleAdd} className="bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 gap-2 h-11 px-6 rounded-xl font-bold">
-          <Plus className="h-5 w-5" /> Add New Station
+        <Button
+          onClick={handleAdd}
+          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
+        >
+          <Plus className="mr-2 h-4 w-4" /> Add New Station
         </Button>
       </div>
 
-      {/* Stats Cards - Compact Design */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Premium Stats Dashboard Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
         {/* Total Stations */}
-        <Card className="border-none shadow-sm bg-primary text-white overflow-hidden relative group h-full">
-          <div className="absolute -top-2 -right-2 p-4 opacity-10 group-hover:scale-110 transition-transform duration-300">
-            <Train className="h-16 w-16" />
-          </div>
-          <CardContent className="p-4 relative z-10 flex flex-col justify-end h-full min-h-[110px]">
-            <div>
-              <p className="text-primary-foreground/80 font-semibold text-xs mb-1">
-                Total Stations
-              </p>
-              <h3 className="text-3xl font-black leading-none">{stations.length}</h3>
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Total Stations</p>
+                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{stations.length}</h3>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
+                <MapPin className="h-6 w-6" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Active Stations */}
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
-          <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
-            <div className="flex items-center justify-between mb-2">
-              <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100">
-                <TrendingUp className="h-4 w-4" />
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-emerald-50/30 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Active Stations</p>
+                <h3 className="text-4xl font-black text-emerald-600 tracking-tighter">
+                  {stations.filter(s => s.is_active !== false).length}
+                </h3>
               </div>
-            </div>
-            <div>
-              <p className="text-muted-foreground font-semibold text-xs mb-1">
-                Active Stations
-              </p>
-              <h3 className="text-2xl font-black text-slate-800 leading-none">
-                {stations.filter(s => s.is_active !== false).length}
-              </h3>
+              <div className="p-3.5 rounded-2xl bg-emerald-100 text-emerald-600 border border-emerald-200 shadow-inner">
+                <CheckCircle2 className="h-6 w-6" />
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Inactive Stations */}
-        <Card className="border-none shadow-sm bg-white overflow-hidden relative group h-full">
-          <CardContent className="p-4 flex flex-col justify-between h-full min-h-[110px]">
-            <div className="flex items-center justify-between mb-2">
-              <div className="p-1.5 rounded-lg bg-slate-50 text-slate-400 border border-slate-100">
-                <MapPin className="h-4 w-4" />
+        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <p className="text-slate-500 font-bold text-[10px] uppercase tracking-widest">Inactive Stations</p>
+                <h3 className="text-4xl font-black text-slate-400 tracking-tighter">
+                  {stations.filter(s => s.is_active === false).length}
+                </h3>
               </div>
-            </div>
-            <div>
-              <p className="text-muted-foreground font-semibold text-xs mb-1">
-                Inactive Stations
-              </p>
-              <h3 className="text-2xl font-black text-slate-800 leading-none">
-                {stations.filter(s => s.is_active === false).length}
-              </h3>
+              <div className="p-3.5 rounded-2xl bg-slate-100 text-slate-500 border border-slate-200 shadow-inner">
+                <XCircle className="h-6 w-6" />
+              </div>
             </div>
           </CardContent>
         </Card>
+
       </div>
 
-      {/* Filter Section */}
-      <div className="space-y-4">
-        <div className="flex flex-row items-center gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-          <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              placeholder="Search by name or station code..."
-              className="pl-11 bg-slate-50/50 border-slate-200 focus:ring-primary shadow-sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center gap-4 w-full md:w-auto">
-             <div className="w-full md:w-[200px]">
-                <Select value={selectedDivisionId} onValueChange={setSelectedDivisionId}>
-                  <SelectTrigger className="w-full bg-white border-slate-200">
-                    <div className="flex items-center gap-2">
-                        <Filter className="h-4 w-4 text-slate-400" />
-                        <SelectValue placeholder="All Divisions" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Divisions</SelectItem>
-                    {divisions.map((division) => (
-                      <SelectItem key={division._id} value={division._id}>
-                        {division.division_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-             </div>
-           
-          </div>
+      {/* Unified Pill Toolbar (Search & Filter) */}
+      <div className="bg-white p-2 rounded-[1.25rem] border border-slate-200/80 shadow-sm flex flex-col sm:flex-row gap-2 items-center">
+        <div className="relative w-full flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+          <Input
+            placeholder="Search by name or station code..."
+            className="pl-12 h-12 w-full bg-slate-50/50 border-transparent hover:border-slate-200 focus-visible:ring-primary focus-visible:bg-white transition-all rounded-xl text-[14.5px]"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
-        <StationTable 
-          stations={filteredStations} 
+        <div className="w-full sm:w-[260px] relative">
+          <Select value={selectedDivisionId} onValueChange={setSelectedDivisionId}>
+            <SelectTrigger className="w-full h-12 bg-slate-50/50 border-transparent hover:border-slate-200 shadow-none rounded-xl focus:ring-primary text-[15px]">
+              <div className="flex items-center text-slate-600 font-medium">
+                <Filter className="w-4 h-4 mr-2 text-slate-400" />
+                <SelectValue placeholder="All Divisions" />
+              </div>
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-slate-200 shadow-xl">
+              <SelectItem value="all" className="font-semibold py-2.5">All Divisions</SelectItem>
+              {divisions.map((division) => (
+                <SelectItem key={division._id} value={division._id} className="py-2.5 font-medium">
+                  {division.division_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Table Section Wrapper - Elegant & Breathable Container */}
+      <div className="bg-white rounded-[1.5rem] border border-slate-200/80 shadow-sm overflow-hidden min-h-[400px]">
+        {/* Note: Ensure StationTable uses similar internal padding/styling (e.g. py-5, uppercase headers) as the other pages */}
+        <StationTable
+          stations={filteredStations}
           loading={loading}
           onEdit={handleEdit}
           onDeleteSuccess={fetchData}
         />
       </div>
 
-      <StationDialog 
+      <StationDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         station={selectedStation}

@@ -9,11 +9,33 @@ import { useState, useEffect } from "react";
 import apiClient from "@/lib/api";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { Shield, Building, Warehouse, MapPin, UserCheck } from "lucide-react";
 
 
 export default function DashboardPage() {
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (session?.user) {
+      setUser(session.user);
+      const fetchFullUser = async () => {
+        try {
+          const res = await apiClient.get("/users");
+          const fullUser = res.data.find(u => u._id === session.user.id);
+          if (fullUser) {
+            setUser(fullUser);
+          }
+        } catch (error) {
+          console.error("Failed to fetch full user details", error);
+        }
+      };
+      fetchFullUser();
+    }
+  }, [session]);
 
   useEffect(() => {
     const fetchRecentTransactions = async () => {
@@ -109,21 +131,59 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Quick Links Group */}
-          {/* <div className="grid grid-cols-2 gap-4">
-             <Link href="/inventory" className="p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-primary/40 transition-all flex flex-col gap-3 group">
-                <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
-                   <Box size={18} />
+          {/* User Scope Card */}
+          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
+            <CardHeader className="px-4 py-3 border-b border-primary/10">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-bold flex items-center gap-2 text-primary">
+                  <UserCheck className="h-4 w-4" />
+                  Your Access Scope
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Shield className="h-4 w-4" /> Role
+                </span>
+                <Badge variant="outline" className="font-bold text-primary border-primary/20 bg-white">
+                  {user?.roles?.[0]?.name || user?.roles?.[0] || "Staff"}
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <Building className="h-4 w-4" /> Division
+                </span>
+                <span className="text-sm font-bold">
+                  {user?.divisionId?.division_name || "Headquarters"}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                  <MapPin className="h-4 w-4" /> Station
+                </span>
+                <span className="text-sm font-bold">
+                  {user?.stationId?.station_name || "All Stations"}
+                </span>
+              </div>
+              <div className="flex items-start justify-between">
+                <span className="text-sm font-medium text-muted-foreground flex items-center gap-2 pt-1">
+                  <Warehouse className="h-4 w-4" /> Warehouses
+                </span>
+                <div className="flex flex-col items-end gap-1">
+                  {user?.warehouseIds?.length > 0 ? (
+                    user.warehouseIds.map((w, i) => (
+                      <Badge key={i} variant="secondary" className="text-[10px]">
+                        {w.warehouse_name || w}
+                      </Badge>
+                    ))
+                  ) : (
+                    <span className="text-sm font-bold">All Warehouses</span>
+                  )}
                 </div>
-                <span className="text-sm font-bold text-muted-foreground group-hover:text-foreground">Inventory</span>
-             </Link>
-             <Link href="/stations" className="p-4 rounded-2xl bg-card border border-border/50 shadow-sm hover:border-primary/40 transition-all flex flex-col gap-3 group">
-                <div className="p-2 rounded-lg bg-primary/5 text-primary w-fit group-hover:bg-primary group-hover:text-white transition-all">
-                   <MapPin size={18} />
-                </div>
-                <span className="text-sm font-bold text-muted-foreground group-hover:text-foreground">Stations</span>
-             </Link>
-          </div> */}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

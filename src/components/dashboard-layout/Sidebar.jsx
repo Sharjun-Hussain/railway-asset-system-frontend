@@ -37,8 +37,8 @@ const navigationGroups = [
   {
     name: "INFRASTRUCTURE",
     items: [
-      { name: "Divisions", href: "/divisions", icon: Building, permission: { module: 'division', action: 'view' } },
-      { name: "Stations", href: "/stations", icon: Building, permission: { module: 'station', action: 'view' } },
+      { name: "Divisions", href: "/divisions", icon: Building, permission: { module: 'division', action: 'view' }, excludeRoles: ['Station Master'] },
+      { name: "Stations", href: "/stations", icon: Building, permission: { module: 'station', action: 'view' }, excludeRoles: ['Station Master'] },
       { name: "Warehouses", href: "/warehouses", icon: Warehouse, permission: { module: 'warehouse', action: 'view' } },
     ]
   },
@@ -54,7 +54,7 @@ const navigationGroups = [
 
 export function Sidebar({ session }) {
   const pathname = usePathname()
-  const { hasPermission } = useRBAC()
+  const { hasPermission, hasRole } = useRBAC()
 
   return (
     <aside className="fixed left-0 top-0 h-screen bg-white border-r z-50 flex flex-col w-64 shadow-sm overflow-x-hidden">
@@ -76,9 +76,12 @@ export function Sidebar({ session }) {
       <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 space-y-8 scrollbar-tiny">
         {navigationGroups.map((group) => {
           // Filter items within the group
-          const visibleItems = group.items.filter(item =>
-            !item.permission || hasPermission(item.permission.module, item.permission.action)
-          )
+          const visibleItems = group.items.filter(item => {
+            if (item.excludeRoles && item.excludeRoles.some(role => hasRole(role))) {
+              return false;
+            }
+            return !item.permission || hasPermission(item.permission.module, item.permission.action);
+          })
 
           // Don't show group if no items are visible
           if (visibleItems.length === 0) return null

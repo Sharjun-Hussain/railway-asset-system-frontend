@@ -21,11 +21,21 @@ import {
   DialogTrigger,
   DialogFooter
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { UserPlus, Mail, User as UserIcon, Shield } from "lucide-react"
+import { UserPlus, Mail, User as UserIcon, Shield, Trash2 } from "lucide-react"
 
 export function UserManagement() {
   const [users, setUsers] = useState([])
@@ -35,6 +45,8 @@ export function UserManagement() {
   const [warehouses, setWarehouses] = useState([])
   const [loading, setLoading] = useState(true)
   const [isInviteOpen, setIsInviteOpen] = useState(false)
+  const [deleteUserId, setDeleteUserId] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   
   // Form State
   const [formData, setFormData] = useState({
@@ -82,6 +94,21 @@ export function UserManagement() {
       setFormData({ full_name: "", email: "", roleIds: [], divisionId: "", stationId: "", warehouseIds: [] })
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send invitation")
+    }
+  }
+
+  const handleDeleteUser = async () => {
+    if (!deleteUserId) return
+    setIsDeleting(true)
+    try {
+      await apiClient.put(`/users/${deleteUserId}`, { isActive: false })
+      toast.success("User access deactivated successfully")
+      setDeleteUserId(null)
+      fetchInitialData() // refresh list
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to remove user")
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -267,6 +294,7 @@ export function UserManagement() {
               <TableHead className="font-semibold text-slate-600 h-12">Assigned Roles</TableHead>
               <TableHead className="font-semibold text-slate-600 h-12">Access Scope</TableHead>
               <TableHead className="text-center font-semibold text-slate-600 h-12">Status</TableHead>
+              <TableHead className="text-right font-semibold text-slate-600 h-12 pr-4">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -325,11 +353,47 @@ export function UserManagement() {
                     </Badge>
                   )}
                 </TableCell>
+                <TableCell className="text-right pr-4">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-lg"
+                    onClick={() => setDeleteUserId(user._id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
+
+      <AlertDialog open={!!deleteUserId} onOpenChange={(open) => !open && setDeleteUserId(null)}>
+        <AlertDialogContent className="rounded-2xl border-none shadow-xl max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-bold text-slate-900">Deactivate User?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500 pt-2 leading-relaxed">
+              Are you sure you want to remove this user's access from the platform? This will deactivate their account and prevent them from logging in.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="pt-4 gap-2 sm:gap-0">
+            <AlertDialogCancel disabled={isDeleting} className="rounded-xl border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 mt-0">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault()
+                handleDeleteUser()
+              }}
+              className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold shadow-sm"
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deactivating..." : "Confirm Deactivation"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

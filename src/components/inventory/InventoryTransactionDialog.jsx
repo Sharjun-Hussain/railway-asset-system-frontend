@@ -175,7 +175,7 @@ export function InventoryTransactionDialog({
                   <SelectItem value="ISSUE">
                     Stock Out (Issue Assets)
                   </SelectItem>
-                  <SelectItem value="TRANSFER">Internal Transfer</SelectItem>
+                  {/* <SelectItem value="TRANSFER">Internal Transfer</SelectItem> */}
                 </SelectContent>
               </Select>
             </div>

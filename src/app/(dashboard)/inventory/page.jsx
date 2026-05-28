@@ -183,16 +183,17 @@ export default function StockInventoryPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-semibold text-slate-600 text-sm pl-8 py-4">Asset Details</TableHead>
-              <TableHead className="font-semibold text-slate-600 text-sm py-4">Location Map</TableHead>
-              <TableHead className="text-right font-semibold text-slate-600 text-sm py-4">In Stock</TableHead>
-              <TableHead className="text-center font-semibold text-slate-600 text-sm pr-8 py-4">Last Updated</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm pl-8 py-3 w-[140px]">Asset ID</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Asset Details</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Location Map</TableHead>
+              <TableHead className="text-right font-semibold text-slate-600 text-sm py-3">In Stock</TableHead>
+              <TableHead className="text-left font-semibold text-slate-600 text-sm pr-8 py-3 w-[150px]">Last Updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={4} className="h-[300px] text-center">
+                <TableCell colSpan={5} className="h-[300px] text-center">
                   <div className="flex flex-col items-center justify-center gap-4">
                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
                     <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing SAMS inventory database...</p>
@@ -201,7 +202,7 @@ export default function StockInventoryPage() {
               </TableRow>
             ) : filteredStocks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="h-[300px] text-center">
+                <TableCell colSpan={5} className="h-[300px] text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400 gap-4">
                     <div className="p-4 bg-slate-50 rounded-full">
                       <Search className="h-8 w-8 text-slate-300" />
@@ -217,23 +218,25 @@ export default function StockInventoryPage() {
                 return (
                   <TableRow key={stock._id} className="hover:bg-slate-50/80 transition-colors group border-b border-slate-100 last:border-0">
 
+                    {/* Asset ID First Column */}
+                    <TableCell className="pl-8 py-3">
+                      <span className="font-mono text-xs font-semibold text-slate-600 bg-slate-100/70 px-2 py-1 rounded border border-slate-200/60 inline-block">
+                        {stock.assetId?.qr_code || "N/A"}
+                      </span>
+                    </TableCell>
+
                     {/* Asset Specs */}
-                    <TableCell className="pl-8 py-5">
-                      <div className="flex flex-col gap-1.5 max-w-[340px]">
-                        <span className="text-[15px] font-bold text-slate-900 leading-tight">
+                    <TableCell className="py-3">
+                      <div className="flex flex-col gap-1 max-w-[340px]">
+                        <span className="text-[14.5px] font-bold text-slate-900 leading-tight">
                           {stock.assetId?.asset_name}
                         </span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
-                            ID: {stock.assetId?.qr_code || "N/A"}
-                          </span>
-                        </div>
                       </div>
                     </TableCell>
 
                     {/* Location */}
-                    <TableCell className="py-5">
-                      <div className="flex flex-col gap-1">
+                    <TableCell className="py-3">
+                      <div className="flex flex-col gap-0.5">
                         <div className="inline-flex items-center gap-1.5 text-slate-700 font-semibold text-sm">
                           <Warehouse className="h-4 w-4 text-primary" />
                           {stock.warehouseId?.warehouse_name || 'Unknown Warehouse'}
@@ -261,15 +264,15 @@ export default function StockInventoryPage() {
                     </TableCell>
 
                     {/* Current Stock */}
-                    <TableCell className="text-right py-5">
+                    <TableCell className="text-right py-3">
                       <span className={`text-2xl font-black tracking-tight ${isLowStock ? "text-rose-600" : "text-slate-800"}`}>
                         {(stock.quantity || 0).toLocaleString()}
                       </span>
                     </TableCell>
 
                     {/* Last Sync */}
-                    <TableCell className="text-center pr-8 py-5">
-                      <div className="flex flex-col items-center justify-center gap-0.5">
+                    <TableCell className="text-left pr-8 py-3">
+                      <div className="flex flex-col items-start justify-center gap-0.5">
                         <span className="text-xs font-semibold text-slate-700">
                           {new Date(stock.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         </span>

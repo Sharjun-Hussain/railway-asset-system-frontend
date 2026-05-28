@@ -39,26 +39,44 @@ const METRICS = [
 export function AssetMetrics() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {METRICS.map((metric) => (
-        <Card key={metric.title} className="border-none shadow-lg rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md group hover:translate-y-[-2px] transition-all duration-200">
-          <CardContent className="p-6">
-            <div className="flex items-center mb-6">
-              <div className={`p-3 rounded-xl bg-${metric.color}-50 dark:bg-${metric.color}-950/30 text-${metric.color}-600 dark:text-${metric.color}-400 shadow-sm border border-${metric.color}-100 dark:border-${metric.color}-900/50 group-hover:scale-110 transition-transform duration-200`}>
-                <metric.icon size={22} strokeWidth={2.5} />
+      {METRICS.map((metric) => {
+        let colorClasses = {
+          bgBubble: "bg-indigo-50/30 group-hover:bg-indigo-50/50",
+          iconBg: "bg-indigo-50 text-indigo-500"
+        }
+        
+        if (metric.color === "green") {
+          colorClasses = {
+            bgBubble: "bg-emerald-50/30 group-hover:bg-emerald-50/50",
+            iconBg: "bg-emerald-50 text-emerald-500"
+          }
+        } else if (metric.color === "amber") {
+          colorClasses = {
+            bgBubble: "bg-amber-50/30 group-hover:bg-amber-50/50",
+            iconBg: "bg-amber-50 text-amber-500"
+          }
+        } else if (metric.color === "red") {
+          colorClasses = {
+            bgBubble: "bg-rose-50/30 group-hover:bg-rose-50/50",
+            iconBg: "bg-rose-50 text-rose-500"
+          }
+        }
+
+        return (
+          <Card key={metric.title} className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className={`absolute -right-8 -top-8 h-32 w-32 rounded-full transition-all duration-300 ${colorClasses.bgBubble}`} />
+            <div className="relative flex items-start justify-between">
+              <div>
+                <p className="mb-2 text-sm font-medium text-slate-400">{metric.title}</p>
+                <p className="text-4xl font-semibold text-slate-800">{metric.value}</p>
+              </div>
+              <div className={`rounded-2xl p-3 ${colorClasses.iconBg}`}>
+                <metric.icon className="h-6 w-6" />
               </div>
             </div>
-            
-            <div className="space-y-1">
-              <h3 className="text-sm font-bold text-muted-foreground/60">{metric.title}</h3>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-slate-900 dark:text-white">{metric.value}</span>
-              </div>
-            </div>
-            
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </CardContent>
-        </Card>
-      ))}
+          </Card>
+        )
+      })}
     </div>
   );
 }

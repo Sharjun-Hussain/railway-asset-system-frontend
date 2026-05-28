@@ -158,48 +158,48 @@ export default function AssetsPage() {
         </Button>
       </div>
 
-      {/* Analytics Dashboard - Premium Spacious Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Total Assets</p>
-                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{assets.length}</h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
-                <Box className="h-6 w-6" />
-              </div>
+      {/* Ultra-Compact Premium Stats Dashboard Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Card 1 - Total Assets */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-indigo-50/30 group-hover:bg-indigo-50/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Total Assets</p>
+              <p className="text-4xl font-semibold text-slate-800">{assets.length}</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-500">
+              <Box className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
 
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Categories</p>
-                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{categories.length}</h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
-                <LayoutDashboard className="h-6 w-6" />
-              </div>
+        {/* Card 2 - Categories */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-emerald-50/30 group-hover:bg-emerald-50/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Categories</p>
+              <p className="text-4xl font-semibold text-slate-800">{categories.length}</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-emerald-50 p-3 text-emerald-500">
+              <LayoutDashboard className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
 
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">Standard Units</p>
-                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{uniqueUnits < 10 ? `0${uniqueUnits}` : uniqueUnits}</h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
-                <Layers className="h-6 w-6" />
-              </div>
+        {/* Card 3 - Standard Units */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-amber-50/30 group-hover:bg-amber-50/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Standard Units</p>
+              <p className="text-4xl font-semibold text-slate-800">{uniqueUnits < 10 ? `0${uniqueUnits}` : uniqueUnits}</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-amber-50 p-3 text-amber-500">
+              <Layers className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
       </div>
 

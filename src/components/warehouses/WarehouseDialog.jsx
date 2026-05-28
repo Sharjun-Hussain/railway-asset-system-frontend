@@ -168,15 +168,34 @@ export function WarehouseDialog({ open, onOpenChange, warehouse, onSuccess }) {
               />
             </div>
 
-            <div className="flex items-center justify-between rounded-xl border border-slate-100 p-4 bg-slate-50/50">
-                <div className="space-y-0.5">
-                    <Label className="text-sm font-bold text-slate-700">Warehouse Status</Label>
-                    <p className="text-[11px] font-medium text-muted-foreground">Toggle to set warehouse as active or inactive</p>
-                </div>
-                <Switch
-                    checked={formData.is_active}
-                    onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
-                />
+            <div className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+              formData.is_active 
+                ? "bg-emerald-50/50 border-emerald-200 border-solid" 
+                : "bg-slate-50 border-slate-200 border-dashed"
+            }`}>
+               <div className="space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="is_active" className="text-sm font-bold">Active Status</Label>
+                    <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter ${
+                      formData.is_active 
+                        ? "bg-emerald-500 text-white" 
+                        : "bg-slate-400 text-white"
+                    }`}>
+                      {formData.is_active ? "Active" : "Inactive"}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground font-medium">
+                    {formData.is_active 
+                      ? "This warehouse is visible and active globally." 
+                      : "This warehouse is hidden and restricted."}
+                  </p>
+               </div>
+               <Switch 
+                  id="is_active" 
+                  checked={formData.is_active} 
+                  onCheckedChange={(checked) => setFormData({ ...formData, is_active: checked })}
+                  className="data-[state=checked]:bg-emerald-500"
+               />
             </div>
           </div>
           <DialogFooter className="gap-2">

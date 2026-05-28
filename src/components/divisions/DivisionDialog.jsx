@@ -117,7 +117,7 @@ export function DivisionDialog({ open, onOpenChange, division, onSuccess }) {
                         ? "bg-emerald-500 text-white" 
                         : "bg-slate-400 text-white"
                     }`}>
-                      {formData.is_active ? "Live" : "Disabled"}
+                      {formData.is_active ? "Active" : "Inactive"}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground font-medium">

@@ -97,11 +97,8 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
           <TableBody>
             {divisions.map((division) => (
               <TableRow key={division._id} className="hover:bg-slate-50/50 transition-colors">
-                <TableCell className="font-semibold py-3 border-b-0">
-                  <div className="flex items-center gap-2.5">
-                    <div className={`h-2 w-2 rounded-full shadow-sm ${division.is_active ? "bg-emerald-500" : "bg-slate-300"}`} />
-                    <span className="text-slate-700">{division.division_name}</span>
-                  </div>
+                <TableCell className="font-semibold py-3 border-b-0 text-slate-700">
+                  {division.division_name}
                 </TableCell>
                 <TableCell className="text-slate-600 font-medium">
                   {division.region}

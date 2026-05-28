@@ -19,17 +19,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { toast } from "sonner";
 import apiClient from "@/lib/api";
+import { useRBAC } from "@/hooks/useRBAC";
 
 export function InventoryTransactionDialog({
   open,
   onOpenChange,
-  products,
-  warehouses,
+  products = [],
+  warehouses = [],
+  divisions = [],
+  stations = [],
   onSuccess,
 }) {
   const [loading, setLoading] = useState(false);
+  const { user, isSuperAdmin, hasRole } = useRBAC();
+
   const [formData, setFormData] = useState({
     type: "RECEIVE",
     assetId: "",
@@ -39,6 +45,12 @@ export function InventoryTransactionDialog({
     referenceNo: "",
     remarks: "",
   });
+
+  const [selectedDivisionId, setSelectedDivisionId] = useState("");
+  const [selectedStationId, setSelectedStationId] = useState("");
+
+  const isStationMaster = hasRole("Station Master");
+  const isWarehouseStaff = hasRole("Warehouse Manager") || hasRole("Warehouse Staff");
 
   // Reset form when opened
   useEffect(() => {
@@ -52,15 +64,38 @@ export function InventoryTransactionDialog({
         referenceNo: "",
         remarks: "",
       });
+      setSelectedDivisionId("");
+      setSelectedStationId("");
+
+      if (isStationMaster) {
+        const uStationId = user?.stationId?._id || user?.stationId || "";
+        setSelectedStationId(uStationId);
+      }
+      if (isWarehouseStaff && user?.warehouseIds?.length > 0) {
+        const defaultWhId = user.warehouseIds[0]?._id || user.warehouseIds[0] || "";
+        setFormData((prev) => ({
+          ...prev,
+          warehouseId: defaultWhId,
+        }));
+      }
     }
-  }, [open]);
+  }, [open, isStationMaster, isWarehouseStaff, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await apiClient.post("/transactions", formData);
+      // Clean up payload for Mongoose ObjectId casting
+      const payload = { ...formData };
+      if (payload.type !== "TRANSFER") {
+        delete payload.toWarehouseId;
+      }
+      if (!payload.toWarehouseId) {
+        delete payload.toWarehouseId; // ensure empty strings are removed even if TRANSFER
+      }
+
+      await apiClient.post("/transactions", payload);
       toast.success("Inventory transaction processed successfully");
       onSuccess?.();
       onOpenChange(false);
@@ -71,9 +106,49 @@ export function InventoryTransactionDialog({
     }
   };
 
+  // Filter logic
+  const filteredStations = stations?.filter((s) => !selectedDivisionId || s.divisionId === selectedDivisionId || s.divisionId?._id === selectedDivisionId) || [];
+
+  const filteredWarehouses = warehouses?.filter((w) => {
+    if (isWarehouseStaff) {
+      const userWhIds = user?.warehouseIds?.map((wh) => wh._id || wh) || [];
+      return userWhIds.includes(w._id);
+    }
+    if (isStationMaster || selectedStationId) {
+      const stationIdToFilter = isStationMaster ? (user?.stationId?._id || user?.stationId) : selectedStationId;
+      return w.stationId === stationIdToFilter || w.stationId?._id === stationIdToFilter;
+    }
+    if (selectedDivisionId) {
+      const divStations = stations?.filter((s) => s.divisionId === selectedDivisionId || s.divisionId?._id === selectedDivisionId).map((s) => s._id) || [];
+      return divStations.includes(w.stationId?._id || w.stationId);
+    }
+    return true; 
+  }) || [];
+
+  // Options mapping
+  const productOptions = products.map((p) => ({
+    value: p._id,
+    label: `${p.asset_name} (${p.qr_code || 'NO-QR'})`,
+  }));
+
+  const divisionOptions = divisions?.map((d) => ({
+    value: d._id,
+    label: d.division_name,
+  })) || [];
+
+  const stationOptions = filteredStations?.map((s) => ({
+    value: s._id,
+    label: s.station_name,
+  })) || [];
+
+  const warehouseOptions = filteredWarehouses?.map((w) => ({
+    value: w._id,
+    label: w.warehouse_name,
+  })) || [];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Process Asset Transaction</DialogTitle>
@@ -81,13 +156,13 @@ export function InventoryTransactionDialog({
               Record a stock movement within the Smart Asset Management System.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-5 py-4">
             <div className="grid gap-2">
               <Label>Transaction Type</Label>
               <Select
                 value={formData.type}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, type: value })
+                  setFormData({ ...formData, type: value, toWarehouseId: "" })
                 }
               >
                 <SelectTrigger className="w-full">
@@ -107,24 +182,47 @@ export function InventoryTransactionDialog({
 
             <div className="grid gap-2">
               <Label>Asset Item</Label>
-              <Select
+              <Combobox
+                options={productOptions}
                 value={formData.assetId}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, assetId: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select asset" />
-                </SelectTrigger>
-                <SelectContent>
-                  {products.map((p) => (
-                    <SelectItem key={p._id} value={p._id}>
-                      {p.asset_name} ({p.qr_code})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(val) => setFormData({ ...formData, assetId: val })}
+                placeholder="Search and select asset..."
+                emptyText="No asset found."
+              />
             </div>
+
+            {/* Hierarchical Location Selection for Super Admin */}
+            {isSuperAdmin && (
+              <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                <div className="grid gap-2">
+                  <Label>Division Filter</Label>
+                  <Combobox
+                    options={divisionOptions}
+                    value={selectedDivisionId}
+                    onChange={(val) => {
+                      setSelectedDivisionId(val);
+                      setSelectedStationId("");
+                      setFormData({ ...formData, warehouseId: "" });
+                    }}
+                    placeholder="All Divisions"
+                    emptyText="No divisions."
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Station Filter</Label>
+                  <Combobox
+                    options={stationOptions}
+                    value={selectedStationId}
+                    onChange={(val) => {
+                      setSelectedStationId(val);
+                      setFormData({ ...formData, warehouseId: "" });
+                    }}
+                    placeholder={selectedDivisionId ? "All Stations" : "Select division first..."}
+                    emptyText="No stations."
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
@@ -133,46 +231,28 @@ export function InventoryTransactionDialog({
                     ? "Source Location"
                     : "Location"}
                 </Label>
-                <Select
+                <Combobox
+                  options={warehouseOptions}
                   value={formData.warehouseId}
-                  onValueChange={(value) =>
-                    setFormData({ ...formData, warehouseId: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select location" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {warehouses.map((w) => (
-                      <SelectItem key={w._id} value={w._id}>
-                        {w.warehouse_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  onChange={(val) => setFormData({ ...formData, warehouseId: val })}
+                  placeholder={isWarehouseStaff ? "Locked to your location" : "Select warehouse"}
+                  emptyText="No warehouse found."
+                />
               </div>
+
               {formData.type === "TRANSFER" && (
                 <div className="grid gap-2 animate-in slide-in-from-right-2 duration-300">
                   <Label>Target Location</Label>
-                  <Select
+                  <Combobox
+                    options={warehouses.map(w => ({ value: w._id, label: w.warehouse_name }))} // Internal transfers can typically go to any warehouse globally
                     value={formData.toWarehouseId}
-                    onValueChange={(value) =>
-                      setFormData({ ...formData, toWarehouseId: value })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {warehouses.map((w) => (
-                        <SelectItem key={w._id} value={w._id}>
-                          {w.warehouse_name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onChange={(val) => setFormData({ ...formData, toWarehouseId: val })}
+                    placeholder="Select target warehouse"
+                    emptyText="No warehouse found."
+                  />
                 </div>
               )}
+              
               <div
                 className={`grid gap-2 ${formData.type !== "TRANSFER" ? "col-span-1" : "col-span-2"}`}
               >
@@ -184,10 +264,11 @@ export function InventoryTransactionDialog({
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      quantity: parseFloat(e.target.value),
+                      quantity: parseFloat(e.target.value) || 0,
                     })
                   }
                   required
+                  min={1}
                 />
               </div>
             </div>
@@ -223,7 +304,7 @@ export function InventoryTransactionDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading || !formData.assetId || !formData.warehouseId}>
               {loading ? "Processing..." : "Complete Transaction"}
             </Button>
           </DialogFooter>
@@ -232,3 +313,4 @@ export function InventoryTransactionDialog({
     </Dialog>
   );
 }
+

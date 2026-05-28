@@ -33,6 +33,8 @@ export default function StockInventoryPage() {
   const [stocks, setStocks] = useState([])
   const [products, setProducts] = useState([])
   const [warehouses, setWarehouses] = useState([])
+  const [divisions, setDivisions] = useState([])
+  const [stations, setStations] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -42,15 +44,19 @@ export default function StockInventoryPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [stockRes, prodRes, whRes] = await Promise.all([
+      const [stockRes, prodRes, whRes, divRes, statRes] = await Promise.all([
         apiClient.get("/inventory"),
         apiClient.get("/assets"),
-        apiClient.get("/warehouses")
+        apiClient.get("/warehouses"),
+        apiClient.get("/divisions"),
+        apiClient.get("/stations")
       ])
 
       setStocks(Array.isArray(stockRes.data) ? stockRes.data : [])
       setProducts(Array.isArray(prodRes.data) ? prodRes.data : [])
-      setWarehouses(Array.isArray(whRes.data) ? whRes.data : [])
+      setWarehouses(Array.isArray(whRes.data?.data || whRes.data) ? (whRes.data?.data || whRes.data) : [])
+      setDivisions(Array.isArray(divRes.data?.data || divRes.data) ? (divRes.data?.data || divRes.data) : [])
+      setStations(Array.isArray(statRes.data?.data || statRes.data) ? (statRes.data?.data || statRes.data) : [])
     } catch (error) {
       console.error("Error fetching inventory data:", error)
       toast.error("Failed to sync inventory status")
@@ -177,17 +183,16 @@ export default function StockInventoryPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider pl-8 py-4">Asset Specification</TableHead>
-              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Physical Location</TableHead>
-              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Current Stock</TableHead>
-              <TableHead className="text-right font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Status</TableHead>
-              <TableHead className="text-center font-bold text-slate-500 text-xs uppercase tracking-wider pr-8 py-4">Last Sync</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm pl-8 py-4">Asset Details</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-4">Location Map</TableHead>
+              <TableHead className="text-right font-semibold text-slate-600 text-sm py-4">In Stock</TableHead>
+              <TableHead className="text-center font-semibold text-slate-600 text-sm pr-8 py-4">Last Updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-[300px] text-center">
+                <TableCell colSpan={4} className="h-[300px] text-center">
                   <div className="flex flex-col items-center justify-center gap-4">
                     <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
                     <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing SAMS inventory database...</p>
@@ -196,7 +201,7 @@ export default function StockInventoryPage() {
               </TableRow>
             ) : filteredStocks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-[300px] text-center">
+                <TableCell colSpan={4} className="h-[300px] text-center">
                   <div className="flex flex-col items-center justify-center text-slate-400 gap-4">
                     <div className="p-4 bg-slate-50 rounded-full">
                       <Search className="h-8 w-8 text-slate-300" />
@@ -219,12 +224,8 @@ export default function StockInventoryPage() {
                           {stock.assetId?.asset_name}
                         </span>
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="font-mono text-[10px] font-bold text-slate-500 uppercase bg-white px-1.5 py-0 border-slate-200">
-                            {stock.assetId?.qr_code || "NO-QR"}
-                          </Badge>
-                          <span className="text-slate-300 text-xs">•</span>
-                          <span className="text-[11px] font-bold text-primary uppercase tracking-wider">
-                            {stock.assetId?.unit || "pcs"}
+                          <span className="font-mono text-xs text-slate-500 bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                            ID: {stock.assetId?.qr_code || "N/A"}
                           </span>
                         </div>
                       </div>
@@ -232,9 +233,30 @@ export default function StockInventoryPage() {
 
                     {/* Location */}
                     <TableCell className="py-5">
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100 shadow-sm text-slate-700 font-medium text-sm">
-                        <Warehouse className="h-4 w-4 text-slate-400" />
-                        {stock.warehouseId?.warehouse_name}
+                      <div className="flex flex-col gap-1">
+                        <div className="inline-flex items-center gap-1.5 text-slate-700 font-semibold text-sm">
+                          <Warehouse className="h-4 w-4 text-primary" />
+                          {stock.warehouseId?.warehouse_name || 'Unknown Warehouse'}
+                        </div>
+                        {(() => {
+                          const whId = stock.warehouseId?._id || stock.warehouseId;
+                          const fullWh = warehouses.find(w => w._id === whId) || stock.warehouseId;
+                          const stId = fullWh?.stationId?._id || fullWh?.stationId;
+                          const fullSt = stations.find(s => s._id === stId) || fullWh?.stationId;
+                          const divId = fullSt?.divisionId?._id || fullSt?.divisionId;
+                          const fullDiv = divisions.find(d => d._id === divId) || fullSt?.divisionId;
+                          
+                          if (fullDiv?.division_name || fullSt?.station_name) {
+                            return (
+                              <div className="text-[11px] text-slate-500 flex items-center gap-1">
+                                {fullDiv?.division_name && <span>{fullDiv.division_name}</span>}
+                                {fullDiv?.division_name && fullSt?.station_name && <span className="text-slate-300">/</span>}
+                                {fullSt?.station_name && <span>{fullSt.station_name}</span>}
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
                       </div>
                     </TableCell>
 
@@ -245,24 +267,16 @@ export default function StockInventoryPage() {
                       </span>
                     </TableCell>
 
-                    {/* Status */}
-                    <TableCell className="text-right py-5">
-                      {isLowStock ? (
-                        <Badge className="bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50 font-bold text-[10px] uppercase py-1 px-2.5 shadow-sm">
-                          Critical Low
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 font-bold text-[10px] uppercase py-1 px-2.5 shadow-sm">
-                          Standard OK
-                        </Badge>
-                      )}
-                    </TableCell>
-
                     {/* Last Sync */}
                     <TableCell className="text-center pr-8 py-5">
-                      <span className="text-xs font-semibold text-slate-400 tracking-wide">
-                        {new Date(stock.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
+                      <div className="flex flex-col items-center justify-center gap-0.5">
+                        <span className="text-xs font-semibold text-slate-700">
+                          {new Date(stock.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                        <span className="text-[10px] font-medium text-slate-400 uppercase">
+                          {new Date(stock.updatedAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+                        </span>
+                      </div>
                     </TableCell>
 
                   </TableRow>
@@ -278,6 +292,8 @@ export default function StockInventoryPage() {
         onOpenChange={setTransactionOpen}
         products={products}
         warehouses={warehouses}
+        divisions={divisions}
+        stations={stations}
         onSuccess={fetchData}
       />
     </div>

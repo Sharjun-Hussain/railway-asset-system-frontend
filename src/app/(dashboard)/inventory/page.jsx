@@ -44,7 +44,7 @@ export default function StockInventoryPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const [stockRes, prodRes, whRes, divRes, statRes] = await Promise.all([
+      const results = await Promise.allSettled([
         apiClient.get("/inventory"),
         apiClient.get("/assets"),
         apiClient.get("/warehouses"),
@@ -52,11 +52,19 @@ export default function StockInventoryPage() {
         apiClient.get("/stations")
       ])
 
-      setStocks(Array.isArray(stockRes.data) ? stockRes.data : [])
-      setProducts(Array.isArray(prodRes.data) ? prodRes.data : [])
-      setWarehouses(Array.isArray(whRes.data?.data || whRes.data) ? (whRes.data?.data || whRes.data) : [])
-      setDivisions(Array.isArray(divRes.data?.data || divRes.data) ? (divRes.data?.data || divRes.data) : [])
-      setStations(Array.isArray(statRes.data?.data || statRes.data) ? (statRes.data?.data || statRes.data) : [])
+      const getResultData = (result) => result.status === 'fulfilled' ? result.value.data : [];
+
+      const stockData = getResultData(results[0]);
+      const prodData = getResultData(results[1]);
+      const whData = getResultData(results[2]);
+      const divData = getResultData(results[3]);
+      const statData = getResultData(results[4]);
+
+      setStocks(Array.isArray(stockData) ? stockData : [])
+      setProducts(Array.isArray(prodData) ? prodData : [])
+      setWarehouses(Array.isArray(whData?.data || whData) ? (whData?.data || whData) : [])
+      setDivisions(Array.isArray(divData?.data || divData) ? (divData?.data || divData) : [])
+      setStations(Array.isArray(statData?.data || statData) ? (statData?.data || statData) : [])
     } catch (error) {
       console.error("Error fetching inventory data:", error)
       toast.error("Failed to sync inventory status")

@@ -19,7 +19,7 @@ export default function DashboardPage() {
     const fetchRecentTransactions = async () => {
       try {
         const response = await apiClient.get("/transactions");
-        setRecentTransactions(response.data.slice(0, 5)); // get top 5 latest
+        setRecentTransactions(response.data.slice(0, 5));
       } catch (err) {
         console.error("Failed to load transactions", err);
       } finally {

@@ -56,12 +56,12 @@ export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
       <div className="w-full">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50">
-              <TableHead className="w-[80px] font-bold text-slate-500">#</TableHead>
-              <TableHead className="font-bold text-slate-500">Category Name</TableHead>
-              <TableHead className="font-bold text-slate-500">Status</TableHead>
-              <TableHead className="font-bold text-slate-500">Created At</TableHead>
-              <TableHead className="text-right font-bold text-slate-500">Actions</TableHead>
+            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[80px]">#</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Category Name</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Status</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Created At</TableHead>
+              <TableHead className="text-right font-semibold text-slate-600 text-sm py-3 px-6">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

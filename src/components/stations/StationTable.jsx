@@ -61,7 +61,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12 bg-white rounded-xl border border-slate-100 shadow-sm">
+      <div className="flex items-center justify-center p-12 w-full min-h-[300px]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <p className="text-sm text-muted-foreground font-medium">Loading stations...</p>
@@ -72,7 +72,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
 
   if (!stations || stations.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 bg-white rounded-xl border border-dashed border-slate-200">
+      <div className="flex flex-col items-center justify-center p-12 w-full min-h-[300px]">
         <Train className="h-10 w-10 text-muted-foreground/30 mb-4" />
         <h3 className="text-lg font-semibold text-slate-900">No Stations Found</h3>
         <p className="text-sm text-muted-foreground mt-1 text-center max-w-xs">
@@ -86,14 +86,14 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
     <>
       <div className="w-full">
         <Table>
-          <TableHeader className="bg-slate-50/50">
-            <TableRow>
-              <TableHead className="w-[120px]">Code</TableHead>
-              <TableHead>Station Name</TableHead>
-              <TableHead>Division</TableHead>
-              <TableHead>Region</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right px-6">Actions</TableHead>
+          <TableHeader>
+            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[120px]">Code</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Station Name</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Division</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Region</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Status</TableHead>
+              <TableHead className="text-right font-semibold text-slate-600 text-sm py-3 px-6">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

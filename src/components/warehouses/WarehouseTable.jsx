@@ -58,7 +58,7 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12 bg-white rounded-2xl border border-slate-100 shadow-sm">
+      <div className="flex items-center justify-center p-12 w-full min-h-[300px]">
         <div className="flex flex-col items-center gap-3">
           <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           <p className="text-sm text-muted-foreground font-medium">Loading warehouses...</p>
@@ -69,7 +69,7 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
 
   if (!warehouses || warehouses.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-12 bg-white rounded-2xl border border-dashed border-slate-200">
+      <div className="flex flex-col items-center justify-center p-12 w-full min-h-[300px]">
         <Warehouse className="h-10 w-10 text-muted-foreground/30 mb-4" />
         <h3 className="text-lg font-semibold text-slate-900">No Warehouses Found</h3>
         <p className="text-sm text-muted-foreground mt-1 text-center max-w-xs font-medium">
@@ -83,13 +83,13 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
     <>
       <div className="w-full">
         <Table>
-          <TableHeader className="bg-slate-50/50">
-            <TableRow>
-              <TableHead className="w-[200px] font-bold text-slate-500 py-4">Warehouse Name</TableHead>
-              <TableHead className="font-bold text-slate-500">Type</TableHead>
-              <TableHead className="font-bold text-slate-500">Station</TableHead>
-              <TableHead className="font-bold text-slate-500">Status</TableHead>
-              <TableHead className="text-right px-6 font-bold text-slate-500">Actions</TableHead>
+          <TableHeader>
+            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[200px]">Warehouse Name</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Type</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Station</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3">Status</TableHead>
+              <TableHead className="text-right font-semibold text-slate-600 text-sm py-3 px-6">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -44,7 +44,7 @@ export function PermissionList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {Object.entries(groupedPermissions).map(([module, perms]) => (
-          <div key={module} className="rounded-xl border bg-white overflow-hidden shadow-sm flex flex-col">
+          <div key={module} className="rounded-2xl border border-slate-200/60 bg-white overflow-hidden shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300 flex flex-col">
             <div className="bg-slate-50 px-4 py-3 border-b flex items-center justify-between">
               <h3 className="font-bold text-sm uppercase tracking-wider text-slate-600">{module}</h3>
               <Badge variant="secondary" className="text-[10px] bg-slate-200">{perms.length} Actions</Badge>

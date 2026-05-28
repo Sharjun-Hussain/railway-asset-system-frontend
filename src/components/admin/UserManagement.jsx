@@ -237,20 +237,20 @@ export function UserManagement() {
         </Dialog>
       </div>
 
-      <div className="rounded-xl border bg-white overflow-hidden shadow-sm">
+      <div className="rounded-2xl border border-slate-200/60 bg-white overflow-hidden shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)]">
         <Table>
           <TableHeader>
-            <TableRow className="bg-slate-50/50 hover:bg-slate-50/50">
-              <TableHead className="w-[250px]">Basic Details</TableHead>
-              <TableHead>Assigned Roles</TableHead>
-              <TableHead>Organizational Scope</TableHead>
-              <TableHead className="text-center">Account Status</TableHead>
+            <TableRow className="bg-slate-50/80 hover:bg-slate-50/80 border-b-slate-200/60">
+              <TableHead className="w-[280px] font-semibold text-slate-600 h-12">User Identity</TableHead>
+              <TableHead className="font-semibold text-slate-600 h-12">Assigned Roles</TableHead>
+              <TableHead className="font-semibold text-slate-600 h-12">Access Scope</TableHead>
+              <TableHead className="text-center font-semibold text-slate-600 h-12">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user._id} className="group">
-                <TableCell>
+              <TableRow key={user._id} className="group hover:bg-slate-50/40 transition-colors cursor-default border-b-slate-100">
+                <TableCell className="py-4">
                   <div className="flex flex-col">
                     <span className="font-bold text-slate-900">{user.full_name}</span>
                     <span className="text-xs text-slate-500 flex items-center gap-1">

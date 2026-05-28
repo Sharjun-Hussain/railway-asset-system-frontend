@@ -28,24 +28,24 @@ export default function RBACPage() {
       {/* Main Content Sections */}
       <Tabs defaultValue="users" className="w-full">
 
-        {/* Unified Pill-Shaped Tabs Toolbar */}
-        <div className="bg-white p-2 rounded-[1.25rem] border border-slate-200/80 shadow-sm mb-6 w-full sm:w-fit overflow-x-auto">
-          <TabsList className="bg-slate-50/80 p-1 rounded-xl h-12 w-full sm:w-auto inline-flex min-w-max">
+        {/* Sleek Underline-Style Tabs Toolbar */}
+        <div className="mb-8 w-full overflow-x-auto border-b border-slate-200">
+          <TabsList className="flex w-max min-w-full justify-start h-14 bg-transparent p-0">
             <TabsTrigger
               value="users"
-              className="flex items-center gap-2 rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 h-full text-sm data-[state=active]:text-primary transition-all"
+              className="relative h-14 flex items-center gap-2 rounded-none border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
             >
               <Users className="h-4 w-4" /> Users
             </TabsTrigger>
             <TabsTrigger
               value="roles"
-              className="flex items-center gap-2 rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 h-full text-sm data-[state=active]:text-primary transition-all"
+              className="relative h-14 flex items-center gap-2 rounded-none border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
             >
               <Key className="h-4 w-4" /> Roles
             </TabsTrigger>
             <TabsTrigger
               value="permissions"
-              className="flex items-center gap-2 rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm px-6 h-full text-sm data-[state=active]:text-primary transition-all"
+              className="relative h-14 flex items-center gap-2 rounded-none border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
             >
               <Lock className="h-4 w-4" /> Permissions
             </TabsTrigger>
@@ -53,14 +53,14 @@ export default function RBACPage() {
         </div>
 
         {/* Tab Contents - Note: Ensure the child components share the premium table styling */}
-        <div className="bg-white rounded-[1.5rem] border border-slate-200/80 shadow-sm overflow-hidden min-h-[400px]">
-          <TabsContent value="users" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+        <div className="min-h-[400px]">
+          <TabsContent value="users" className="mt-0 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <UserManagement />
           </TabsContent>
-          <TabsContent value="roles" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="roles" className="mt-0 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <RoleManagement />
           </TabsContent>
-          <TabsContent value="permissions" className="mt-0 focus-visible:outline-none focus-visible:ring-0">
+          <TabsContent value="permissions" className="mt-0 focus-visible:outline-none focus-visible:ring-0 animate-in fade-in slide-in-from-bottom-2 duration-500">
             <PermissionList />
           </TabsContent>
         </div>

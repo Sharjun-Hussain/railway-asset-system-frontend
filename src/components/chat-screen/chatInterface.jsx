@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SendHorizontal, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import apiClient from "@/lib/api";
 
 // Shortcut prompts
 const shortcutPrompts = [
@@ -56,15 +57,27 @@ export function ChatInterface() {
     setInput("");
     setIsLoading(true);
 
-    // ... (Dummy API call logic remains the same) ...
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    const botResponse = {
-      id: Date.now() + 1,
-      role: "bot",
-      content: `Query received for: "${userMessage.content}". I am processing this... \n\n(This is a placeholder. Connect me to your RAG endpoint.)`,
-    };
-    setMessages((prev) => [...prev, botResponse]);
-    setIsLoading(false);
+    try {
+      const response = await apiClient.post("/rag/query", { prompt: input });
+      const answer = response.data.data.answer;
+
+      const botResponse = {
+        id: Date.now() + 1,
+        role: "bot",
+        content: answer || "I'm sorry, I couldn't process your request.",
+      };
+      setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      console.error("Chat API Error:", error);
+      const botResponse = {
+        id: Date.now() + 1,
+        role: "bot",
+        content: "Sorry, I encountered an error while trying to process your request.",
+      };
+      setMessages((prev) => [...prev, botResponse]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleShortcutClick = (prompt) => {

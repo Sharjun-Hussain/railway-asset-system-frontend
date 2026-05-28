@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import apiClient from "@/lib/api";
 
 const INITIAL_MESSAGES = [
   {
@@ -51,16 +52,36 @@ export function AIChat() {
     setMessages([...messages, userMessage]);
     setInput("");
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
-        id: Date.now() + 1,
-        role: "assistant",
-        content: "I'm processing your request regarding asset synchronization. One moment while I pull the latest field reports...",
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      };
-      setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    // Add loading message first
+    const loadingMessageId = Date.now() + 1;
+    setMessages(prev => [...prev, {
+      id: loadingMessageId,
+      role: "assistant",
+      content: "Thinking...",
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }]);
+
+    const fetchAnswer = async () => {
+      try {
+        const response = await apiClient.post("/rag/query", { prompt: input });
+        const answer = response.data.data.answer;
+
+        setMessages(prev => prev.map(msg => 
+          msg.id === loadingMessageId 
+            ? { ...msg, content: answer || "I'm sorry, I couldn't process your request." } 
+            : msg
+        ));
+      } catch (error) {
+        console.error("Chat API Error:", error);
+        setMessages(prev => prev.map(msg => 
+          msg.id === loadingMessageId 
+            ? { ...msg, content: "Sorry, I encountered an error while trying to connect to the AI server." } 
+            : msg
+        ));
+      }
+    };
+
+    fetchAnswer();
   };
 
   const QUICK_ACTIONS = [

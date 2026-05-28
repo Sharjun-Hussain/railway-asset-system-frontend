@@ -45,7 +45,7 @@ export function RoleManagement() {
 
       <div className="grid grid-cols-1 gap-4">
         {roles.map((role) => (
-          <div key={role._id} className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
+          <div key={role._id} className="rounded-2xl border border-slate-200/60 bg-white p-6 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-300">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">

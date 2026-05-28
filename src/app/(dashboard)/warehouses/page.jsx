@@ -151,14 +151,14 @@ export default function WarehousesPage() {
         </Card>
       </div>
 
-      {/* Unified Pill Toolbar (Search & Filters) */}
-      <div className="bg-white p-2 rounded-[1.25rem] border border-slate-200/80 shadow-sm flex flex-col lg:flex-row gap-2 items-center">
-
-        <div className="relative w-full flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+      {/* Compact Search & Filter Toolbar */}
+      <div className="flex flex-col lg:flex-row w-full items-center justify-between gap-4">
+        
+        <div className="relative w-full lg:max-w-sm">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
             placeholder="Search warehouse name..."
-            className="pl-12 h-12 w-full bg-slate-50/50 border-transparent hover:border-slate-200 focus-visible:ring-primary focus-visible:bg-white transition-all rounded-xl text-[14.5px]"
+            className="pl-10 h-10 w-full bg-white border border-slate-200 shadow-sm hover:border-slate-300 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all rounded-full text-sm font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -166,11 +166,11 @@ export default function WarehousesPage() {
 
         <div className="flex w-full lg:w-auto gap-2">
           {/* Station Filter */}
-          <div className="w-full lg:w-[220px] relative">
+          <div className="w-full lg:w-[180px] relative">
             <Select value={stationFilter} onValueChange={setStationFilter}>
-              <SelectTrigger className="w-full h-12 bg-slate-50/50 border-transparent hover:border-slate-200 shadow-none rounded-xl focus:ring-primary text-[15px]">
-                <div className="flex items-center text-slate-600 font-medium truncate">
-                  <MapPin className="w-4 h-4 mr-2 text-slate-400 shrink-0" />
+              <SelectTrigger className="w-full h-10 bg-white border border-slate-200 hover:border-slate-300 shadow-sm rounded-full focus:ring-1 focus:ring-primary focus:border-primary text-sm font-medium transition-all">
+                <div className="flex items-center text-slate-600 truncate">
+                  <MapPin className="w-3.5 h-3.5 mr-2 text-slate-400 shrink-0" />
                   <SelectValue placeholder="All Stations" />
                 </div>
               </SelectTrigger>
@@ -186,11 +186,11 @@ export default function WarehousesPage() {
           </div>
 
           {/* Type Filter */}
-          <div className="w-full lg:w-[200px] relative">
+          <div className="w-full lg:w-[160px] relative">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-full h-12 bg-slate-50/50 border-transparent hover:border-slate-200 shadow-none rounded-xl focus:ring-primary text-[15px]">
-                <div className="flex items-center text-slate-600 font-medium truncate">
-                  <Layers className="w-4 h-4 mr-2 text-slate-400 shrink-0" />
+              <SelectTrigger className="w-full h-10 bg-white border border-slate-200 hover:border-slate-300 shadow-sm rounded-full focus:ring-1 focus:ring-primary focus:border-primary text-sm font-medium transition-all">
+                <div className="flex items-center text-slate-600 truncate">
+                  <Layers className="w-3.5 h-3.5 mr-2 text-slate-400 shrink-0" />
                   <SelectValue placeholder="All Types" />
                 </div>
               </SelectTrigger>
@@ -205,7 +205,6 @@ export default function WarehousesPage() {
             </Select>
           </div>
         </div>
-
       </div>
 
       {/* Table Section Wrapper - Elegant & Breathable Container */}

@@ -100,52 +100,59 @@ export function UserManagement() {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto scrollbar-tiny">
             <form onSubmit={handleInvite}>
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-2">
-                  <Mail className="h-5 w-5 text-primary" /> Invite User to Platform
+              <DialogHeader className="pb-4 border-b border-slate-100">
+                <DialogTitle className="flex items-center gap-2 text-xl">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <UserPlus className="h-5 w-5 text-primary" />
+                  </div>
+                  Invite User to Platform
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="grid gap-6 py-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="full_name" className="text-xs font-bold uppercase text-slate-500">Full Name</Label>
-                  <div className="relative">
-                    <UserIcon className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                    <Input 
-                      id="full_name" 
-                      placeholder="e.g. John Doe" 
-                      className="pl-10" 
-                      required 
-                      value={formData.full_name}
-                      onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid gap-2">
-                  <Label htmlFor="email" className="text-xs font-bold uppercase text-slate-500">Official Email address</Label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="user@slrail.lk" 
-                      className="pl-10" 
-                      required 
-                      value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    />
-                  </div>
-                </div>
-
+              <div className="grid gap-5 py-6">
+                {/* Row 1: Full Name & Email */}
                 <div className="grid grid-cols-2 gap-4">
-                   <div className="grid gap-2">
-                      <Label className="text-xs font-bold uppercase text-slate-500">Primary Role</Label>
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="full_name" className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Full Name</Label>
+                    <div className="relative">
+                      <UserIcon className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Input 
+                        id="full_name" 
+                        placeholder="e.g. John Doe" 
+                        className="pl-10 h-10 rounded-xl" 
+                        required 
+                        value={formData.full_name}
+                        onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid gap-1.5">
+                    <Label htmlFor="email" className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Official Email address</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="user@slrail.lk" 
+                        className="pl-10 h-10 rounded-xl" 
+                        required 
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Row 2: Role & Division */}
+                <div className="grid grid-cols-2 gap-4">
+                   <div className="grid gap-1.5">
+                      <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Primary Role</Label>
                       <Select 
                         onValueChange={(val) => setFormData({...formData, roleIds: [val]})}
                         required
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-10 rounded-xl">
                           <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent>
@@ -156,10 +163,10 @@ export function UserManagement() {
                       </Select>
                    </div>
                    
-                   <div className="grid gap-2">
-                      <Label className="text-xs font-bold uppercase text-slate-500">Division</Label>
+                   <div className="grid gap-1.5">
+                      <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Division</Label>
                       <Select onValueChange={(val) => setFormData({...formData, divisionId: val, stationId: "", warehouseIds: []})}>
-                        <SelectTrigger>
+                        <SelectTrigger className="h-10 rounded-xl">
                           <SelectValue placeholder="Select Division" />
                         </SelectTrigger>
                         <SelectContent>
@@ -171,66 +178,81 @@ export function UserManagement() {
                    </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-2">
-                    <Label className="text-xs font-bold uppercase text-slate-500">Station</Label>
-                    <Select onValueChange={(val) => setFormData({...formData, stationId: val, warehouseIds: []})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Station" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {stations
-                          .filter(s => !formData.divisionId || (s.divisionId?._id === formData.divisionId || s.divisionId === formData.divisionId))
-                          .map(s => (
-                            <SelectItem key={s._id} value={s._id}>{s.station_name}</SelectItem>
-                          ))
-                        }
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label className="text-xs font-bold uppercase text-slate-500">Store / Warehouse (Multi-select)</Label>
-                    <div className="border rounded-lg p-2 max-h-[120px] overflow-y-auto space-y-1 bg-slate-50/50">
-                      {warehouses
-                        .filter(w => !formData.stationId || (w.stationId?._id === formData.stationId || w.stationId === formData.stationId))
-                        .map(w => (
-                          <div key={w._id} className="flex items-center gap-2 hover:bg-white p-1 rounded transition-colors">
-                            <input 
-                              type="checkbox" 
-                              id={`wh-${w._id}`}
-                              className="rounded border-slate-300 text-primary focus:ring-primary h-3.5 w-3.5"
-                              checked={formData.warehouseIds.includes(w._id)}
-                              onChange={(e) => {
-                                const checked = e.target.checked;
-                                setFormData(prev => ({
-                                  ...prev,
-                                  warehouseIds: checked 
-                                    ? [...prev.warehouseIds, w._id] 
-                                    : prev.warehouseIds.filter(id => id !== w._id)
-                                }))
-                               }}
-                             />
-                             <label htmlFor={`wh-${w._id}`} className="text-xs font-medium text-slate-600 cursor-pointer flex-1">
-                               {w.warehouse_name}
-                             </label>
-                          </div>
+                {/* Row 3: Station */}
+                <div className="grid gap-1.5">
+                  <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Station</Label>
+                  <Select onValueChange={(val) => setFormData({...formData, stationId: val, warehouseIds: []})}>
+                    <SelectTrigger className="h-10 rounded-xl">
+                      <SelectValue placeholder="Select Station" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stations
+                        .filter(s => !formData.divisionId || (s.divisionId?._id === formData.divisionId || s.divisionId === formData.divisionId))
+                        .map(s => (
+                          <SelectItem key={s._id} value={s._id}>{s.station_name}</SelectItem>
                         ))
                       }
-                      {formData.stationId && warehouses.filter(w => (w.stationId?._id === formData.stationId || w.stationId === formData.stationId)).length === 0 && (
-                        <p className="text-[10px] text-slate-400 italic p-2 text-center text-wrap">No warehouses found for this station.</p>
-                      )}
-                      {!formData.stationId && (
-                        <p className="text-[10px] text-slate-400 italic p-2 text-center text-wrap">Select a station first.</p>
-                      )}
-                    </div>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Row 4: Warehouses (Full Width) */}
+                <div className="grid gap-1.5">
+                  <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Assign Warehouses</Label>
+                  <div className="border border-slate-200 rounded-xl p-3 max-h-[160px] overflow-y-auto bg-slate-50/50 scrollbar-tiny">
+                    {warehouses.filter(w => !formData.stationId || (w.stationId?._id === formData.stationId || w.stationId === formData.stationId)).length > 0 ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        {warehouses
+                          .filter(w => !formData.stationId || (w.stationId?._id === formData.stationId || w.stationId === formData.stationId))
+                          .map(w => {
+                            const isSelected = formData.warehouseIds.includes(w._id);
+                            return (
+                              <div key={w._id} className={`flex items-center gap-3 p-2.5 rounded-lg transition-all border ${isSelected ? 'bg-primary/5 border-primary/30 shadow-sm' : 'bg-white border-transparent hover:border-slate-300 shadow-sm'}`}>
+                                <input 
+                                  type="checkbox" 
+                                  id={`wh-${w._id}`}
+                                  className="rounded border-slate-300 text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    const checked = e.target.checked;
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      warehouseIds: checked 
+                                        ? [...prev.warehouseIds, w._id] 
+                                        : prev.warehouseIds.filter(id => id !== w._id)
+                                    }))
+                                   }}
+                                 />
+                                 <label htmlFor={`wh-${w._id}`} className={`text-sm cursor-pointer flex-1 select-none ${isSelected ? 'font-semibold text-primary' : 'font-medium text-slate-700'}`}>
+                                   {w.warehouse_name}
+                                 </label>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                    ) : (
+                      <>
+                        {formData.stationId ? (
+                          <div className="flex items-center justify-center h-[80px]">
+                            <p className="text-xs text-slate-400 italic text-center px-4">No warehouses found for this station.</p>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center h-[80px]">
+                            <p className="text-xs text-slate-400 italic text-center px-4">Select a station first to assign warehouses.</p>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
 
-              <DialogFooter>
-                <Button type="button" variant="ghost" onClick={() => setIsInviteOpen(false)}>Cancel</Button>
-                <Button type="submit">Send Invitation Link</Button>
+              <DialogFooter className="border-t border-slate-100 pt-4">
+                <Button type="button" variant="ghost" onClick={() => setIsInviteOpen(false)} className="rounded-xl">Cancel</Button>
+                <Button type="submit" className="rounded-xl bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20">
+                  <Mail className="w-4 h-4 mr-2" /> Send Invitation Link
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>

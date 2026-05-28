@@ -88,7 +88,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[120px]">Code</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[120px] pl-6">Code</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Station Name</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Division</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Region</TableHead>
@@ -99,7 +99,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
           <TableBody>
             {stations.map((station) => (
               <TableRow key={station._id} className="hover:bg-slate-50/50 transition-colors">
-                <TableCell className="py-4">
+                <TableCell className="py-4 pl-6">
                   <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 font-mono">
                     {station.station_code}
                   </Badge>

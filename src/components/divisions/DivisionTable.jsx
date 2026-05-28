@@ -87,7 +87,7 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[300px]">Division Name</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[300px] pl-6">Division Name</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Region</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Created Date</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Status</TableHead>
@@ -97,7 +97,7 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
           <TableBody>
             {divisions.map((division) => (
               <TableRow key={division._id} className="hover:bg-slate-50/50 transition-colors">
-                <TableCell className="font-semibold py-3 border-b-0 text-slate-700">
+                <TableCell className="font-semibold py-3 border-b-0 text-slate-700 pl-6">
                   {division.division_name}
                 </TableCell>
                 <TableCell className="text-slate-600 font-medium">

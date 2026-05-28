@@ -57,7 +57,7 @@ export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[80px]">#</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[80px] pl-6">#</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Category Name</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Status</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Created At</TableHead>
@@ -74,7 +74,7 @@ export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
             ) : (
               categories.map((category, index) => (
                 <TableRow key={category._id} className="hover:bg-slate-50/30 transition-colors">
-                  <TableCell className="font-medium text-slate-400">
+                  <TableCell className="font-medium text-slate-400 pl-6">
                     {String(index + 1).padStart(2, '0')}
                   </TableCell>
                   <TableCell className="font-bold text-slate-700">

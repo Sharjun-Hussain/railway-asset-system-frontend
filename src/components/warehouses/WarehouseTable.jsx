@@ -85,7 +85,7 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[200px]">Warehouse Name</TableHead>
+              <TableHead className="font-semibold text-slate-600 text-sm py-3 w-[200px] pl-6">Warehouse Name</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Type</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Station</TableHead>
               <TableHead className="font-semibold text-slate-600 text-sm py-3">Status</TableHead>
@@ -95,7 +95,7 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
           <TableBody>
             {warehouses.map((warehouse) => (
               <TableRow key={warehouse._id} className="hover:bg-slate-50/50 transition-colors group">
-                <TableCell className="py-4 border-b-0">
+                <TableCell className="py-4 border-b-0 pl-6">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-primary group-hover:text-white transition-colors">
                         <Warehouse size={16} />

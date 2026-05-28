@@ -53,7 +53,7 @@ export function CategoryTable({ categories, onEdit, onDeleteSuccess }) {
 
   return (
     <>
-      <div className="rounded-xl border bg-white overflow-hidden">
+      <div className="w-full">
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50">

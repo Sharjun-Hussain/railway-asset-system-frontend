@@ -84,7 +84,7 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="w-full">
         <Table>
           <TableHeader className="bg-slate-50/50">
             <TableRow>

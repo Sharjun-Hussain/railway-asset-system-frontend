@@ -1,37 +1,43 @@
 "use client";
 
-import { AssetMetrics } from "@/components/dashboard/AssetMetrics";
 import { AIChat } from "@/components/dashboard/AIChat";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, History, ArrowRight } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import apiClient from "@/lib/api";
+import { format } from "date-fns";
+import Link from "next/link";
 
 
 export default function DashboardPage() {
-  const QUICK_REPORTS = [
-    {
-      id: 1,
-      type: "Maintenance",
-      title: "Engine #4521 - Service Completed",
-      status: "Done",
-      time: "2h ago",
-      color: "green",
-    },
-    {
-      id: 2,
-      type: "Arrival",
-      title: "Gampaha Station - Track Sync",
-      status: "Syncing",
-      time: "15m ago",
-      color: "blue",
-    },
-    {
-      id: 3,
-      type: "Alert",
-      title: "Signal Failure - Colombo Fort",
-      status: "Critical",
-      time: "Just now",
-      color: "red",
-    },
-  ];
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentTransactions = async () => {
+      try {
+        const response = await apiClient.get("/transactions");
+        setRecentTransactions(response.data.slice(0, 5)); // get top 5 latest
+      } catch (err) {
+        console.error("Failed to load transactions", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRecentTransactions();
+  }, []);
+
+  const getTypeStyle = (type) => {
+    switch (type) {
+      case "RECEIVE": return { badge: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20", dot: "bg-emerald-500" };
+      case "ISSUE": return { badge: "bg-rose-500/10 text-rose-600 border-rose-500/20", dot: "bg-rose-500" };
+      case "TRANSFER": return { badge: "bg-blue-500/10 text-blue-600 border-blue-500/20", dot: "bg-blue-500" };
+      case "ADJUST": return { badge: "bg-amber-500/10 text-amber-600 border-amber-500/20", dot: "bg-amber-500" };
+      default: return { badge: "bg-slate-500/10 text-slate-600 border-slate-500/20", dot: "bg-slate-500" };
+    }
+  };
 
   return (
     <div className="space-y-8 min-h-screen bg-background/50">
@@ -53,17 +59,15 @@ export default function DashboardPage() {
       </div>
 
 
-      <AssetMetrics />
-
       <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-        <div className="lg:col-span-6">
+        <div className="lg:col-span-4">
           <AIChat />
         </div>
 
 
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Reports Card */}
-          {/* <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
+          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
             <CardHeader className="pb-3 border-b border-border/50">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg font-bold flex items-center gap-2">
@@ -76,27 +80,36 @@ export default function DashboardPage() {
               </div>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
-               {QUICK_REPORTS.map((report) => (
-                 <div key={report.id} className="p-4 rounded-xl border border-border/50 bg-white/50 dark:bg-slate-900/50 hover:border-primary/30 transition-all cursor-pointer group">
+               {loading ? (
+                 <div className="flex justify-center p-4"><div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>
+               ) : recentTransactions.length === 0 ? (
+                 <div className="text-center p-4 text-sm text-muted-foreground font-medium">No recent activity.</div>
+               ) : recentTransactions.map((t) => {
+                 const style = getTypeStyle(t.type);
+                 return (
+                 <div key={t._id} className="p-4 rounded-xl border border-border/50 bg-white/50 dark:bg-slate-900/50 hover:border-primary/30 transition-all cursor-pointer group">
                    <div className="flex items-start justify-between mb-2">
-                      <Badge className={`text-xs font-bold py-0.5 px-2 rounded bg-${report.color}-500/10 text-${report.color}-600 dark:text-${report.color}-400 border border-${report.color}-500/20`}>
-                        {report.type}
+                      <Badge className={`text-xs font-bold py-0.5 px-2 rounded border ${style.badge}`}>
+                        {t.type}
                       </Badge>
-                      <span className="text-xs font-medium text-muted-foreground">{report.time}</span>
+                      <span className="text-[11px] font-medium text-muted-foreground">{format(new Date(t.createdAt), "MMM d, h:mm a")}</span>
                    </div>
-                   <h4 className="text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors">{report.title}</h4>
+                   <h4 className="text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors line-clamp-1">{t.assetId?.asset_name || 'Unknown Asset'}</h4>
                    <div className="flex items-center gap-1.5 pt-1">
-                      <div className={`h-1.5 w-1.5 rounded-full bg-${report.color}-500`} />
-                      <span className="text-xs font-bold text-muted-foreground/70">{report.status}</span>
+                      <div className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
+                      <span className="text-xs font-bold text-muted-foreground/70 truncate">{t.warehouseId?.warehouse_name || 'Unknown Location'}</span>
                    </div>
                  </div>
-               ))}
-               <Button variant="ghost" className="w-full h-10 rounded-xl font-bold text-xs gap-2 group">
-                 View Full Activity Logs
-                 <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-               </Button>
+                 )
+               })}
+               <Link href="/transactions">
+                 <Button variant="ghost" className="w-full h-10 rounded-xl font-bold text-xs gap-2 group">
+                   View Full Activity Logs
+                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                 </Button>
+               </Link>
             </CardContent>
-          </Card> */}
+          </Card>
 
           {/* Quick Links Group */}
           {/* <div className="grid grid-cols-2 gap-4">

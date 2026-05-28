@@ -92,11 +92,11 @@ export function AIChat() {
   ];
 
   return (
-    <Card className="flex flex-col h-[640px] border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
-      <CardHeader className="border-b border-border/50 bg-secondary/5 pb-4">
+    <Card className="flex flex-col h-[600px] border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
+      <CardHeader className="border-b border-border/50 bg-secondary/5 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
+            <div className="p-2 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
               <Bot size={20} />
             </div>
             <div>
@@ -115,30 +115,30 @@ export function AIChat() {
         {/* Messages Container */}
         <div 
           ref={scrollRef}
-          className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-tiny"
+          className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-tiny"
         >
           {messages.map((msg) => (
             <div 
               key={msg.id}
               className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
             >
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
                 msg.role === 'assistant' 
                   ? 'bg-primary/10 text-primary border border-primary/20' 
                   : 'bg-slate-100 text-slate-600 border border-slate-200'
               }`}>
-                {msg.role === 'assistant' ? <Bot size={18} /> : <User size={18} />}
+                {msg.role === 'assistant' ? <Bot size={16} /> : <User size={16} />}
               </div>
               
               <div className={`flex flex-col max-w-[80%] ${msg.role === 'user' ? 'items-end' : ''}`}>
-                <div className={`p-4 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                <div className={`py-2.5 px-3.5 rounded-2xl text-[13.5px] leading-relaxed shadow-sm ${
                   msg.role === 'assistant'
                     ? 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 rounded-tl-none border border-border/50'
                     : 'bg-primary text-white rounded-tr-none font-medium'
                 }`}>
                   {msg.content}
                 </div>
-                <span className="text-xs font-bold text-muted-foreground/60 mt-2 px-1">
+                <span className="text-[10px] font-bold text-muted-foreground/60 mt-1 px-1">
                   {msg.timestamp}
                 </span>
               </div>
@@ -147,7 +147,7 @@ export function AIChat() {
         </div>
 
         {/* Quick Actions & Input Area */}
-        <div className="p-6 border-t border-border/50 bg-secondary/5 space-y-4">
+        <div className="p-4 border-t border-border/50 bg-secondary/5 space-y-3">
           <div className="flex gap-2 p-1 overflow-x-auto scrollbar-tiny">
             {QUICK_ACTIONS.map((action) => (
               <Button 
@@ -167,15 +167,15 @@ export function AIChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask me anything about assets, maintenance or inventory..."
-              className="h-12 pl-4 pr-12 rounded-xl border-border bg-white dark:bg-slate-950 shadow-inner focus-visible:ring-primary focus-visible:ring-offset-0 placeholder:text-muted-foreground/50 transition-all font-medium"
+              className="h-10 pl-4 pr-10 rounded-xl border-border bg-white dark:bg-slate-950 shadow-inner focus-visible:ring-primary focus-visible:ring-offset-0 placeholder:text-muted-foreground/50 transition-all font-medium text-sm"
             />
             <Button 
               type="submit"
               disabled={!input.trim()}
               size="icon"
-              className="absolute right-1.5 top-1.5 h-9 w-9 rounded-lg bg-primary hover:bg-primary/95 shadow-lg shadow-primary/20 transition-transform active:scale-95 disabled:opacity-50 disabled:grayscale"
+              className="absolute right-1 top-1 h-8 w-8 rounded-lg bg-primary hover:bg-primary/95 shadow-lg shadow-primary/20 transition-transform active:scale-95 disabled:opacity-50 disabled:grayscale"
             >
-              <Send size={16} />
+              <Send size={14} />
             </Button>
           </form>
           

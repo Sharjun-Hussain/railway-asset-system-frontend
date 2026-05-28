@@ -90,13 +90,6 @@ export default function StockInventoryPage() {
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <Button
-            variant="outline"
-            className="border-slate-200 font-semibold px-6 h-11 rounded-xl shadow-sm hover:bg-slate-50 transition-all text-slate-700 w-full sm:w-auto"
-            onClick={() => setTransactionOpen(true)}
-          >
-            <ArrowRightLeft className="mr-2 h-4 w-4 text-primary" /> Transfer / Issue
-          </Button>
-          <Button
             className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all w-full sm:w-auto"
             onClick={() => setTransactionOpen(true)}
           >
@@ -105,81 +98,78 @@ export default function StockInventoryPage() {
         </div>
       </div>
 
-      {/* Premium Stats Dashboard Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs tracking-widest">Total SKU Records</p>
-                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">{stocks.length}</h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-primary/10 text-primary border border-primary/20 shadow-inner">
-                <PackageCheck className="h-6 w-6" />
-              </div>
+      {/* Ultra-Compact Premium Stats Dashboard Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        {/* Card 1 */}
+        {/* Card 1 - Total SKU */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-indigo-50/30 group-hover:bg-indigo-50/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Total SKU</p>
+              <p className="text-4xl font-semibold text-slate-800">{stocks.length}</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-500">
+              <PackageCheck className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
 
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-rose-50/30 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs tracking-widest">Low Stock Alerts</p>
-                <h3 className="text-4xl font-black text-rose-600 tracking-tighter">{lowStockCount}</h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-rose-100 text-rose-600 border border-rose-200 shadow-inner">
-                <AlertTriangle className="h-6 w-6" />
-              </div>
+        {/* Card 2 - Low Alerts */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rose-50/30 group-hover:bg-rose-50/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Low Alerts</p>
+              <p className="text-4xl font-semibold text-rose-500">{lowStockCount}</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-rose-50 p-3 text-rose-500">
+              <AlertTriangle className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
 
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-emerald-50/30 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs tracking-widest">Active Quantities</p>
-                <h3 className="text-4xl font-black text-emerald-600 tracking-tighter">
-                  {totalActiveQuantities.toLocaleString()}
-                </h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-emerald-100 text-emerald-600 border border-emerald-200 shadow-inner">
-                <TrendingUp className="h-6 w-6" />
-              </div>
+        {/* Card 3 - Active Qty */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-emerald-50/30 group-hover:bg-emerald-50/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Active Qty</p>
+              <p className="text-4xl font-semibold text-slate-800">{totalActiveQuantities.toLocaleString()}</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-emerald-50 p-3 text-emerald-500">
+              <TrendingUp className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
 
-        <Card className="border-slate-200/60 shadow-sm bg-gradient-to-br from-white to-slate-50/50 overflow-hidden relative group rounded-[1.5rem] hover:shadow-md transition-shadow">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <p className="text-slate-500 font-bold text-xs tracking-widest">Recent Activity</p>
-                <h3 className="text-4xl font-black text-slate-900 tracking-tighter">24h</h3>
-              </div>
-              <div className="p-4 rounded-2xl bg-slate-100 text-slate-600 border border-slate-200 shadow-inner">
-                <History className="h-6 w-6" />
-              </div>
+        {/* Card 4 - Activity */}
+        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
+          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-slate-50/30 group-hover:bg-slate-100/50 transition-all duration-300" />
+          <div className="relative flex items-start justify-between">
+            <div>
+              <p className="mb-2 text-sm font-medium text-slate-400">Activity</p>
+              <p className="text-4xl font-semibold text-slate-800">24h</p>
             </div>
-          </CardContent>
+            <div className="rounded-2xl bg-slate-50 p-3 text-slate-500">
+              <History className="h-6 w-6" />
+            </div>
+          </div>
         </Card>
       </div>
 
-      {/* Unified Pill Toolbar */}
-      <div className="bg-white p-2 rounded-[1.25rem] border border-slate-200/80 shadow-sm flex flex-col sm:flex-row gap-2 items-center">
-        <div className="relative w-full flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+      {/* Compact Search Toolbar */}
+      <div className="flex w-full items-center justify-end">
+        <div className="relative w-full sm:max-w-xs">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
-            placeholder="Filter stock by asset name, code or warehouse location..."
-            className="pl-12 h-12 w-full bg-slate-50/50 border-transparent hover:border-slate-200 focus-visible:ring-primary focus-visible:bg-white transition-all rounded-xl text-[14.5px]"
+            placeholder="Search assets, codes, locations..."
+            className="pl-10 h-10 w-full bg-white border border-slate-200 shadow-sm hover:border-slate-300 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all rounded-full text-sm font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Button variant="outline" className="h-12 w-12 p-0 rounded-xl bg-slate-50/50 border-transparent hover:border-slate-200 hover:bg-slate-50 transition-all shrink-0">
-          <Filter className="h-4 w-4 text-slate-500" />
-        </Button>
       </div>
 
       {/* Master Table Section - Elegant & Breathable */}

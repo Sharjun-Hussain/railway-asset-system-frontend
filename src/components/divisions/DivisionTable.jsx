@@ -23,7 +23,8 @@ import {
   FileEdit, 
   Trash2, 
   MapPin, 
-  Calendar 
+  Calendar,
+  Building2
 } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
@@ -96,9 +97,14 @@ export function DivisionTable({ divisions, onEdit, onDeleteSuccess, loading }) {
           </TableHeader>
           <TableBody>
             {divisions.map((division) => (
-              <TableRow key={division._id} className="hover:bg-slate-50/50 transition-colors">
-                <TableCell className="font-semibold py-3 border-b-0 text-slate-700 pl-6">
-                  {division.division_name}
+              <TableRow key={division._id} className="hover:bg-slate-50/50 transition-colors group">
+                <TableCell className="py-4 border-b-0 pl-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                      <Building2 size={16} />
+                    </div>
+                    <span className="font-bold text-slate-700">{division.division_name}</span>
+                  </div>
                 </TableCell>
                 <TableCell className="text-slate-600 font-medium">
                   {division.region}

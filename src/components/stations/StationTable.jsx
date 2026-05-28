@@ -98,16 +98,18 @@ export function StationTable({ stations, onEdit, onDeleteSuccess, loading }) {
           </TableHeader>
           <TableBody>
             {stations.map((station) => (
-              <TableRow key={station._id} className="hover:bg-slate-50/50 transition-colors">
+              <TableRow key={station._id} className="hover:bg-slate-50/50 transition-colors group">
                 <TableCell className="py-4 pl-6">
                   <Badge className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-none px-3 font-mono">
                     {station.station_code}
                   </Badge>
                 </TableCell>
                 <TableCell className="font-semibold text-slate-800">
-                  <div className="flex items-center gap-2">
-                    <Train className="h-4 w-4 text-primary/60" />
-                    {station.station_name}
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-slate-100 text-slate-500 group-hover:bg-primary group-hover:text-white transition-colors">
+                      <Train size={16} />
+                    </div>
+                    <span className="font-bold text-slate-700">{station.station_name}</span>
                   </div>
                 </TableCell>
                 <TableCell>

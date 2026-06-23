@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { SendHorizontal, Bot, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import apiClient from "@/lib/api";
@@ -37,10 +38,12 @@ export function ChatInterface() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const loadHistory = async () => {
+      setIsHistoryLoading(true);
       try {
         const res = await apiClient.get("/rag/history");
         const history = res.data?.data || [];
@@ -62,6 +65,8 @@ export function ChatInterface() {
         }
       } catch (error) {
         console.error("Failed to load chat history:", error);
+      } finally {
+        setIsHistoryLoading(false);
       }
     };
     loadHistory();
@@ -125,7 +130,23 @@ export function ChatInterface() {
       <CardContent className="flex-1 overflow-hidden p-0">
         <ScrollArea className="h-full">
           <div className="p-6 space-y-6">
-            {messages.map((message) => (
+            {isHistoryLoading ? (
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-9 w-9 rounded-full shrink-0" />
+                  <Skeleton className="h-20 w-3/4 rounded-lg" />
+                </div>
+                <div className="flex items-start gap-4 justify-end">
+                  <Skeleton className="h-12 w-1/2 rounded-lg" />
+                  <Skeleton className="h-9 w-9 rounded-full shrink-0" />
+                </div>
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-9 w-9 rounded-full shrink-0" />
+                  <Skeleton className="h-32 w-2/3 rounded-lg" />
+                </div>
+              </div>
+            ) : (
+              messages.map((message) => (
               <div
                 key={message.id}
                 className={cn(
@@ -160,7 +181,8 @@ export function ChatInterface() {
                   </Avatar>
                 )}
               </div>
-            ))}
+            ))
+            )}
             {isLoading && (
               <div className="flex items-start gap-4">
                 <Avatar className="h-9 w-9 border">

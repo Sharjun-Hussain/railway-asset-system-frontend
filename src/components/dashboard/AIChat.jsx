@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import apiClient from "@/lib/api";
 
 const INITIAL_MESSAGES = [
@@ -31,10 +32,12 @@ const INITIAL_MESSAGES = [
 export function AIChat() {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const scrollRef = useRef(null);
 
   useEffect(() => {
     const loadHistory = async () => {
+      setIsHistoryLoading(true);
       try {
         const res = await apiClient.get("/rag/history");
         const history = res.data?.data || [];
@@ -49,6 +52,8 @@ export function AIChat() {
         }
       } catch (error) {
         console.error("Failed to load chat history:", error);
+      } finally {
+        setIsHistoryLoading(false);
       }
     };
     loadHistory();
@@ -139,7 +144,23 @@ export function AIChat() {
           ref={scrollRef}
           className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-tiny"
         >
-          {messages.map((msg) => (
+          {isHistoryLoading ? (
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <Skeleton className="w-8 h-8 rounded-xl shrink-0" />
+                <Skeleton className="h-16 w-3/4 rounded-2xl rounded-tl-none" />
+              </div>
+              <div className="flex gap-4 flex-row-reverse">
+                <Skeleton className="w-8 h-8 rounded-xl shrink-0" />
+                <Skeleton className="h-12 w-1/2 rounded-2xl rounded-tr-none" />
+              </div>
+              <div className="flex gap-4">
+                <Skeleton className="w-8 h-8 rounded-xl shrink-0" />
+                <Skeleton className="h-24 w-2/3 rounded-2xl rounded-tl-none" />
+              </div>
+            </div>
+          ) : (
+            messages.map((msg) => (
             <div 
               key={msg.id}
               className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
@@ -180,7 +201,8 @@ export function AIChat() {
                 </span>
               </div>
             </div>
-          ))}
+          ))
+          )}
         </div>
 
         {/* Quick Actions & Input Area */}

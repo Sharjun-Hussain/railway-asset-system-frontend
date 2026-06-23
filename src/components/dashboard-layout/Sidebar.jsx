@@ -61,8 +61,8 @@ export function Sidebar({ session }) {
       {/* Header / Logo */}
       <div className="h-20 flex items-center px-4 border-b shrink-0 overflow-hidden">
         <Link href="/" className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 shrink-0">
-            <Package className="h-6 w-6" />
+          <div className="shrink-0 flex items-center justify-center">
+            <img src="/logo.png" alt="SLR Logo" className="h-10 w-auto object-contain drop-shadow-sm" />
           </div>
           <div className="whitespace-nowrap">
             <span className="font-bold text-xl text-primary tracking-tight">

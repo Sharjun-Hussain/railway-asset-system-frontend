@@ -116,21 +116,8 @@ export default function LoginPage() {
           <div className="absolute inset-0 z-10 bg-primary/60 backdrop-blur-[1px]" />
 
           <div className="relative z-20">
-            <div className="p-3 w-fit rounded-xl bg-white/10 border border-white/20 mb-8">
-              <svg
-                className="w-10 h-10 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z"
-                ></path>
-              </svg>
+            <div className="mb-8">
+              <img src="/logo.png" alt="SLR Logo" className="h-20 w-auto object-contain drop-shadow-lg" />
             </div>
             <h1 className="text-3xl font-bold tracking-tight leading-tight">
               SL Railway Asset Management
@@ -151,11 +138,7 @@ export default function LoginPage() {
         <div className="w-full p-8 md:p-14 md:w-7/12 bg-card">
           <div className="max-w-sm mx-auto">
             <div className="md:hidden flex justify-center mb-8">
-              <div className="p-3 rounded-lg bg-primary/10 text-primary">
-                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 20.944a12.02 12.02 0 009 2.056c4.545 0 8.41-2.953 9-7.056a12.02 12.02 0 00-2.382-6.088z" />
-                </svg>
-              </div>
+              <img src="/logo.png" alt="SLR Logo" className="h-16 w-auto object-contain drop-shadow-md" />
             </div>
 
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">

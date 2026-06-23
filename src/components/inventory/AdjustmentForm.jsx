@@ -50,7 +50,8 @@ export function AdjustmentForm({ onSuccess }) {
       resetForm()
       
       // Auto-set constraints based on roles
-      if (isStationMaster) {
+      if (!isSuperAdmin) {
+        setSelectedDivisionId(user?.divisionId?._id || user?.divisionId || "")
         setSelectedStationId(user?.stationId?._id || user?.stationId || "")
       }
       if (isWarehouseStaff && user?.warehouseIds?.length > 0) {
@@ -69,16 +70,24 @@ export function AdjustmentForm({ onSuccess }) {
 
   const fetchData = async () => {
     try {
-      const [assetsRes, warehousesRes, divRes, statRes] = await Promise.all([
+      const results = await Promise.allSettled([
         apiClient.get("/assets"),
         apiClient.get("/warehouses"),
         apiClient.get("/divisions"),
         apiClient.get("/stations")
       ])
-      setAssets(assetsRes.data?.data || assetsRes.data || [])
-      setWarehouses(warehousesRes.data?.data || warehousesRes.data || [])
-      setDivisions(divRes.data?.data || divRes.data || [])
-      setStations(statRes.data?.data || statRes.data || [])
+
+      const getResultData = (result) => result.status === 'fulfilled' ? result.value.data : [];
+      
+      const assetsData = getResultData(results[0]);
+      const whData = getResultData(results[1]);
+      const divData = getResultData(results[2]);
+      const statData = getResultData(results[3]);
+
+      setAssets(assetsData?.data || assetsData || [])
+      setWarehouses(whData?.data || whData || [])
+      setDivisions(divData?.data || divData || [])
+      setStations(statData?.data || statData || [])
     } catch (error) {
       toast.error("Failed to fetch reference data")
     }
@@ -102,7 +111,11 @@ export function AdjustmentForm({ onSuccess }) {
 
     setLoading(true)
     try {
-      await apiClient.post("/transactions", formData)
+      const payload = {
+        ...formData,
+        referenceNo: `ADJ-${Date.now()}`
+      }
+      await apiClient.post("/transactions", payload)
       toast.success("Stock adjustment processed")
       setOpen(false)
       if (onSuccess) onSuccess()
@@ -178,38 +191,38 @@ export function AdjustmentForm({ onSuccess }) {
 
           <div className="grid gap-6 py-6">
             
-            {/* Super Admin Hierarchical Locators */}
-            {isSuperAdmin && (
-              <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
-                <div className="grid gap-2">
-                  <Label className="text-xs font-bold uppercase text-slate-500">Division Filter</Label>
-                  <Combobox
-                    options={divisionOptions}
-                    value={selectedDivisionId}
-                    onChange={(val) => {
-                      setSelectedDivisionId(val)
-                      setSelectedStationId("")
-                      setFormData({ ...formData, warehouseId: "" })
-                    }}
-                    placeholder="All Divisions"
-                    emptyText="No divisions."
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label className="text-xs font-bold uppercase text-slate-500">Station Filter</Label>
-                  <Combobox
-                    options={stationOptions}
-                    value={selectedStationId}
-                    onChange={(val) => {
-                      setSelectedStationId(val)
-                      setFormData({ ...formData, warehouseId: "" })
-                    }}
-                    placeholder={selectedDivisionId ? "All Stations" : "Select division first..."}
-                    emptyText="No stations."
-                  />
-                </div>
+            {/* Hierarchical Locators - Disabled for non-admins */}
+            <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+              <div className="grid gap-2">
+                <Label className="text-xs font-bold uppercase text-slate-500">Division Filter</Label>
+                <Combobox
+                  options={divisionOptions}
+                  value={selectedDivisionId}
+                  onChange={(val) => {
+                    setSelectedDivisionId(val)
+                    setSelectedStationId("")
+                    setFormData({ ...formData, warehouseId: "" })
+                  }}
+                  placeholder="All Divisions"
+                  emptyText="No divisions."
+                  disabled={!isSuperAdmin}
+                />
               </div>
-            )}
+              <div className="grid gap-2">
+                <Label className="text-xs font-bold uppercase text-slate-500">Station Filter</Label>
+                <Combobox
+                  options={stationOptions}
+                  value={selectedStationId}
+                  onChange={(val) => {
+                    setSelectedStationId(val)
+                    setFormData({ ...formData, warehouseId: "" })
+                  }}
+                  placeholder={selectedDivisionId ? "All Stations" : "Select division first..."}
+                  emptyText="No stations."
+                  disabled={!isSuperAdmin}
+                />
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">

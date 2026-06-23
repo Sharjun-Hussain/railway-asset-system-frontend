@@ -113,7 +113,7 @@ export default function StockInventoryPage() {
       </div>
 
       {/* Ultra-Compact Premium Stats Dashboard Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
 
         {/* Card 1 */}
         {/* Card 1 - Total SKU */}
@@ -130,7 +130,7 @@ export default function StockInventoryPage() {
           </div>
         </Card>
 
-        {/* Card 2 - Low Alerts */}
+        {/* Card 2 - Low Alerts (Commented out per request) 
         <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
           <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rose-50/30 group-hover:bg-rose-50/50 transition-all duration-300" />
           <div className="relative flex items-start justify-between">
@@ -143,6 +143,7 @@ export default function StockInventoryPage() {
             </div>
           </div>
         </Card>
+        */}
 
         {/* Card 3 - Active Qty */}
         <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
@@ -154,20 +155,6 @@ export default function StockInventoryPage() {
             </div>
             <div className="rounded-2xl bg-emerald-50 p-3 text-emerald-500">
               <TrendingUp className="h-6 w-6" />
-            </div>
-          </div>
-        </Card>
-
-        {/* Card 4 - Activity */}
-        <Card className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white p-6 shadow-sm hover:shadow-md transition-all duration-300">
-          <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-slate-50/30 group-hover:bg-slate-100/50 transition-all duration-300" />
-          <div className="relative flex items-start justify-between">
-            <div>
-              <p className="mb-2 text-sm font-medium text-slate-400">Activity</p>
-              <p className="text-4xl font-semibold text-slate-800">24h</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 p-3 text-slate-500">
-              <History className="h-6 w-6" />
             </div>
           </div>
         </Card>

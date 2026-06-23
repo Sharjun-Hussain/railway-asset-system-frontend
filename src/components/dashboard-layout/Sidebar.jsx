@@ -37,9 +37,9 @@ const navigationGroups = [
   {
     name: "INFRASTRUCTURE",
     items: [
-      { name: "Divisions", href: "/divisions", icon: Building, permission: { module: 'division', action: 'view' }, excludeRoles: ['Station Master'] },
-      { name: "Stations", href: "/stations", icon: Building, permission: { module: 'station', action: 'view' }, excludeRoles: ['Station Master'] },
-      { name: "Warehouses", href: "/warehouses", icon: Warehouse, permission: { module: 'warehouse', action: 'view' } },
+      { name: "Divisions", href: "/divisions", icon: Building, permission: { module: 'division', action: 'view' }, excludeRoles: ['Station Master', 'Staff', 'Warehouse Manager'] },
+      { name: "Stations", href: "/stations", icon: Building, permission: { module: 'station', action: 'view' }, excludeRoles: ['Staff', 'Warehouse Manager'] },
+      { name: "Warehouses", href: "/warehouses", icon: Warehouse, permission: { module: 'warehouse', action: 'view' }, excludeRoles: ['Staff'] },
     ]
   },
   {

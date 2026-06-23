@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
 import { 
   Send, 
   Bot, 
@@ -136,7 +137,22 @@ export function AIChat() {
                     ? 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 rounded-tl-none border border-border/50'
                     : 'bg-primary text-white rounded-tr-none font-medium'
                 }`}>
-                  {msg.content}
+                  {msg.role === 'assistant' ? (
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                        ol: ({ children }) => <ol className="list-decimal list-outside pl-4 space-y-3 my-1">{children}</ol>,
+                        ul: ({ children }) => <ul className="list-disc list-outside pl-4 space-y-1 my-1">{children}</ul>,
+                        li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                        strong: ({ children }) => <strong className="font-bold text-slate-900 dark:text-white">{children}</strong>,
+                        h3: ({ children }) => <h3 className="font-bold text-sm text-slate-800 dark:text-slate-200 mt-3 mb-1">{children}</h3>,
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  ) : (
+                    msg.content
+                  )}
                 </div>
                 <span className="text-[10px] font-bold text-muted-foreground/60 mt-1 px-1">
                   {msg.timestamp}

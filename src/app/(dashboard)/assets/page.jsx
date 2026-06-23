@@ -246,11 +246,11 @@ export default function AssetsPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-                <TableHead className="w-[380px] font-bold text-slate-500 text-xs uppercase tracking-wider pl-8 py-4">Asset Details</TableHead>
-                <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Category</TableHead>
-                <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4">Sub Category</TableHead>
-                <TableHead className="w-[120px] font-bold text-slate-500 text-xs uppercase tracking-wider text-center py-4">Unit</TableHead>
-                <TableHead className="w-[100px] font-bold text-slate-500 text-xs uppercase tracking-wider text-right pr-8 py-4">Actions</TableHead>
+                <TableHead className="w-[380px] font-bold text-slate-500 text-xs tracking-wider pl-8 py-4">Asset Details</TableHead>
+                <TableHead className="font-bold text-slate-500 text-xs tracking-wider py-4">Category</TableHead>
+                <TableHead className="font-bold text-slate-500 text-xs tracking-wider py-4">Sub Category</TableHead>
+                <TableHead className="w-[120px] font-bold text-slate-500 text-xs tracking-wider text-center py-4">Unit</TableHead>
+                <TableHead className="w-[100px] font-bold text-slate-500 text-xs tracking-wider text-right pr-8 py-4">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -391,53 +391,88 @@ export default function AssetsPage() {
         onSuccess={fetchData}
       />
 
-      {/* Unified QR Preview Sheet */}
+      {/* Unified Compact Premium QR Preview Sheet */}
       <Sheet open={!!qrAsset} onOpenChange={(open) => !open && setQrAsset(null)}>
-        <SheetContent side="right" className="sm:max-w-sm border-l border-slate-200 shadow-2xl p-0 flex flex-col bg-slate-50/50">
+        <SheetContent side="right" className="sm:max-w-[340px] border-l border-slate-200 shadow-2xl p-0 flex flex-col bg-white text-slate-900 overflow-hidden [&>button]:text-slate-400 [&>button]:hover:text-slate-900 [&>button]:hover:bg-slate-100 [&>button]:right-4 [&>button]:top-5 [&>button]:z-50 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:transition-all">
 
-          <SheetHeader className="p-6 bg-white border-b border-slate-200">
-            <SheetTitle className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <QrCode className="h-5 w-5 text-primary" />
-              Asset Master View
-            </SheetTitle>
-            <SheetDescription className="text-slate-500 font-medium pt-1 line-clamp-1">
-              QR & Reference Details
-            </SheetDescription>
+          {/* Header */}
+          <SheetHeader className="p-5 pb-4 bg-gradient-to-b from-indigo-50/50 via-white to-transparent relative border-b border-slate-100">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white rounded-xl ring-1 ring-slate-200 shadow-sm">
+                <QrCode className="h-5 w-5 text-primary" />
+              </div>
+              <div className="text-left">
+                <SheetTitle className="text-lg font-bold text-slate-900 tracking-tight leading-tight">Asset Passport</SheetTitle>
+                <SheetDescription className="text-slate-500 font-medium text-xs">
+                  Digital Identity Label
+                </SheetDescription>
+              </div>
+            </div>
           </SheetHeader>
 
-          <div className="flex-1 flex flex-col items-center justify-center p-8 overflow-y-auto">
-            {/* Main QR Display */}
-            <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm mb-8 w-full max-w-[280px] aspect-square flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-primary/5 rounded-[2rem] m-2 pointer-events-none" />
-              <AssetQRCode value={qrAsset?.qr_code} size={220} className="border-none p-0 relative z-10" />
-            </div>
-
-            <div className="text-center px-4 w-full">
-              <h3 className="text-slate-900 font-bold text-lg tracking-tight mb-2 line-clamp-2">
+          {/* Body */}
+          <div className="flex-1 flex flex-col items-center px-5 py-4 overflow-y-auto relative z-10 bg-slate-50/30">
+            
+            {/* Title & Badge */}
+            <div className="w-full text-center mb-6">
+              <h3 className="text-xl font-bold text-slate-800 tracking-tight mb-2.5 line-clamp-2">
                 {qrAsset?.asset_name}
               </h3>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-200/50 rounded-lg">
-                <span className="text-slate-500 text-xs font-semibold">REF:</span>
-                <span className="text-slate-700 font-mono text-sm uppercase tracking-widest font-bold">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded-full shadow-sm">
+                <span className="text-slate-400 text-[10px] font-bold tracking-widest uppercase">ID Ref</span>
+                <div className="h-3 w-px bg-slate-200"></div>
+                <span className="text-primary font-mono text-sm tracking-widest font-bold">
                   {qrAsset?.qr_code || "N/A"}
                 </span>
               </div>
             </div>
+
+            {/* Glowing QR Card */}
+            <div className="relative group w-full max-w-[200px] mx-auto perspective-1000 mb-6">
+              <div className="absolute -inset-1 bg-gradient-to-tr from-primary/20 via-indigo-500/20 to-purple-500/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+              <div className="relative bg-white p-4 rounded-3xl ring-1 ring-slate-200 shadow-md flex items-center justify-center transform transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-lg">
+                <div className="relative z-10 bg-white rounded-2xl w-full aspect-square flex items-center justify-center">
+                  <AssetQRCode value={qrAsset?.qr_code} size={150} className="border-none w-full h-full" />
+                </div>
+              </div>
+            </div>
+
+            {/* Info Metrics Grid */}
+            <div className="grid grid-cols-2 gap-2.5 w-full">
+              <div className="flex flex-col items-center justify-center bg-white border border-slate-200 shadow-sm p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                <span className="text-slate-400 text-[9px] uppercase font-bold tracking-widest mb-1 flex items-center gap-1"><Layers className="h-2.5 w-2.5" /> Unit</span>
+                <span className="text-slate-700 font-semibold text-xs bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">{qrAsset?.unit || "N/A"}</span>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-white border border-slate-200 shadow-sm p-3 rounded-2xl hover:bg-slate-50 transition-colors">
+                <span className="text-slate-400 text-[9px] uppercase font-bold tracking-widest mb-1 flex items-center gap-1"><LayoutDashboard className="h-2.5 w-2.5" /> Category</span>
+                <span className="text-slate-700 font-semibold text-xs truncate max-w-[100px]">{qrAsset?.categoryId?.category_name || "N/A"}</span>
+              </div>
+            </div>
+            
+            {/* Description if available */}
+            {qrAsset?.description && (
+               <div className="mt-3 w-full bg-white border border-slate-200 shadow-sm p-3 rounded-xl text-center">
+                 <p className="text-xs text-slate-500 font-medium leading-relaxed italic line-clamp-3">
+                   "{qrAsset.description}"
+                 </p>
+               </div>
+            )}
           </div>
 
-          <SheetFooter className="p-6 bg-white border-t border-slate-200 mt-auto gap-3 flex-col sm:flex-row">
+          {/* Footer Action */}
+          <SheetFooter className="p-4 bg-white border-t border-slate-200 relative z-10 flex flex-row gap-2.5 items-center justify-between">
             <Button
               variant="outline"
-              className="w-full sm:w-1/3 rounded-xl border-slate-200 font-semibold"
+              className="w-1/3 rounded-xl border-slate-200 font-semibold h-10 hover:bg-slate-50 text-xs"
               onClick={() => setQrAsset(null)}
             >
               Close
             </Button>
             <Button
-              className="w-full sm:w-2/3 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-sm"
+              className="w-2/3 h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-xl shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] text-xs"
               onClick={() => window.print()}
             >
-              <Printer className="w-4 h-4 mr-2" />
+              <Printer className="w-3.5 h-3.5 mr-2" />
               Print Label
             </Button>
           </SheetFooter>

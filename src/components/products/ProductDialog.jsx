@@ -120,7 +120,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             <div className="space-y-4">
               <div className="grid gap-2">
-                <Label htmlFor="asset_name" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                <Label htmlFor="asset_name">
                   Asset Name / Title
                 </Label>
                 <Input
@@ -128,27 +128,25 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                   placeholder="e.g. 50kg Rail Piece, Signal Relay X"
                   value={formData.asset_name}
                   onChange={(e) => setFormData({ ...formData, asset_name: e.target.value })}
-                  className="h-11 bg-slate-50/50 border-slate-200 focus:ring-primary rounded-xl"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="qr_code" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
-                    Master Code (QR)
+                  <Label htmlFor="qr_code">
+                    QR Code
                   </Label>
                   <Input
                     id="qr_code"
                     placeholder="e.g. QR-MECH-001"
                     value={formData.qr_code}
                     onChange={(e) => setFormData({ ...formData, qr_code: e.target.value })}
-                    className="h-11 bg-slate-50/50 border-slate-200 focus:ring-primary rounded-xl font-mono"
                     required
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="unit" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                  <Label htmlFor="unit">
                     Unit of Measure
                   </Label>
                   <Select 
@@ -156,12 +154,12 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                     onValueChange={(value) => setFormData({ ...formData, unit: value })}
                     required
                   >
-                    <SelectTrigger className="w-full h-11 bg-slate-50/50 border-slate-200 rounded-xl">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select unit" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl">
+                    <SelectContent>
                       {UNITS.map((unit) => (
-                        <SelectItem key={unit} value={unit} className="rounded-lg">
+                        <SelectItem key={unit} value={unit}>
                           {unit}
                         </SelectItem>
                       ))}
@@ -172,7 +170,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="categoryId" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                  <Label htmlFor="categoryId">
                     Main Category
                   </Label>
                   <Select 
@@ -180,12 +178,12 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                     onValueChange={(value) => setFormData({ ...formData, categoryId: value, subCategoryId: "" })}
                     required
                   >
-                    <SelectTrigger className="w-full h-11 bg-slate-50/50 border-slate-200 rounded-xl font-semibold text-slate-700">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl">
+                    <SelectContent>
                       {categories.map((cat) => (
-                        <SelectItem key={cat._id} value={cat._id} className="rounded-lg font-medium">
+                        <SelectItem key={cat._id} value={cat._id}>
                           {cat.category_name}
                         </SelectItem>
                       ))}
@@ -193,7 +191,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                   </Select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="subCategoryId" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                  <Label htmlFor="subCategoryId">
                     Sub-Category
                   </Label>
                   <Select 
@@ -201,12 +199,12 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                     onValueChange={(value) => setFormData({ ...formData, subCategoryId: value })}
                     disabled={!formData.categoryId}
                   >
-                    <SelectTrigger className="w-full h-11 bg-slate-50/50 border-slate-200 rounded-xl font-semibold text-slate-700">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select sub-category" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl">
+                    <SelectContent>
                       {subCategories.map((sub) => (
-                        <SelectItem key={sub._id} value={sub._id} className="rounded-lg font-medium">
+                        <SelectItem key={sub._id} value={sub._id}>
                           {sub.sub_category_name}
                         </SelectItem>
                       ))}
@@ -216,7 +214,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
               </div>
 
               <div className="grid gap-2 pt-2">
-                <Label htmlFor="description" className="text-slate-700 font-bold text-xs uppercase tracking-wider">
+                <Label htmlFor="description">
                   Technical Specifications
                 </Label>
                 <Textarea
@@ -224,7 +222,7 @@ export function ProductDialog({ open, onOpenChange, asset, categories, onSuccess
                   placeholder="Optional specifications, dimensions, or usage notes..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="min-h-[120px] bg-slate-50/50 border-slate-200 focus:ring-primary rounded-xl p-4"
+                  className=""
                 />
               </div>
             </div>

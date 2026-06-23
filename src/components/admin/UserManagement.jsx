@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { UserPlus, Mail, User as UserIcon, Shield, Trash2 } from "lucide-react"
+import { UserPlus, Mail, User as UserIcon, Shield, UserX, UserCheck } from "lucide-react"
 
 export function UserManagement() {
   const [users, setUsers] = useState([])
@@ -45,8 +45,9 @@ export function UserManagement() {
   const [warehouses, setWarehouses] = useState([])
   const [loading, setLoading] = useState(true)
   const [isInviteOpen, setIsInviteOpen] = useState(false)
-  const [deleteUserId, setDeleteUserId] = useState(null)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [actionType, setActionType] = useState(null) // 'ACTIVATE' or 'DEACTIVATE'
+  const [isProcessing, setIsProcessing] = useState(false)
   
   // Form State
   const [formData, setFormData] = useState({
@@ -97,18 +98,20 @@ export function UserManagement() {
     }
   }
 
-  const handleDeleteUser = async () => {
-    if (!deleteUserId) return
-    setIsDeleting(true)
+  const handleUserStatusChange = async () => {
+    if (!selectedUser) return
+    setIsProcessing(true)
+    const newStatus = actionType === 'ACTIVATE'
     try {
-      await apiClient.put(`/users/${deleteUserId}`, { isActive: false })
-      toast.success("User access deactivated successfully")
-      setDeleteUserId(null)
+      await apiClient.put(`/users/${selectedUser._id}`, { isActive: newStatus })
+      toast.success(`User access ${newStatus ? 'activated' : 'deactivated'} successfully`)
+      setSelectedUser(null)
+      setActionType(null)
       fetchInitialData() // refresh list
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to remove user")
+      toast.error(error.response?.data?.message || `Failed to ${newStatus ? 'activate' : 'deactivate'} user`)
     } finally {
-      setIsDeleting(false)
+      setIsProcessing(false)
     }
   }
 
@@ -136,50 +139,42 @@ export function UserManagement() {
                 </DialogTitle>
               </DialogHeader>
               
-              <div className="grid gap-5 py-6">
+              <div className="grid gap-4 py-4">
                 {/* Row 1: Full Name & Email */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="full_name" className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Full Name</Label>
-                    <div className="relative">
-                      <UserIcon className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                      <Input 
-                        id="full_name" 
-                        placeholder="e.g. John Doe" 
-                        className="pl-10 h-10 rounded-xl" 
-                        required 
-                        value={formData.full_name}
-                        onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                      />
-                    </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="full_name">Full Name</Label>
+                    <Input 
+                      id="full_name" 
+                      placeholder="e.g. John Doe" 
+                      required 
+                      value={formData.full_name}
+                      onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                    />
                   </div>
 
-                  <div className="grid gap-1.5">
-                    <Label htmlFor="email" className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Official Email address</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="user@slrail.lk" 
-                        className="pl-10 h-10 rounded-xl" 
-                        required 
-                        value={formData.email}
-                        onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      />
-                    </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Official Email address</Label>
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="user@slrail.lk" 
+                      required 
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    />
                   </div>
                 </div>
 
                 {/* Row 2: Role & Division */}
                 <div className="grid grid-cols-2 gap-4">
-                   <div className="grid gap-1.5">
-                      <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Primary Role</Label>
+                   <div className="grid gap-2">
+                      <Label>Primary Role</Label>
                       <Select 
                         onValueChange={(val) => setFormData({...formData, roleIds: [val]})}
                         required
                       >
-                        <SelectTrigger className="h-10 rounded-xl">
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Role" />
                         </SelectTrigger>
                         <SelectContent>
@@ -190,10 +185,10 @@ export function UserManagement() {
                       </Select>
                    </div>
                    
-                   <div className="grid gap-1.5">
-                      <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Division</Label>
+                   <div className="grid gap-2">
+                      <Label>Division</Label>
                       <Select onValueChange={(val) => setFormData({...formData, divisionId: val, stationId: "", warehouseIds: []})}>
-                        <SelectTrigger className="h-10 rounded-xl">
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Division" />
                         </SelectTrigger>
                         <SelectContent>
@@ -206,31 +201,34 @@ export function UserManagement() {
                 </div>
 
                 {/* Row 3: Station */}
-                <div className="grid gap-1.5">
-                  <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Station</Label>
+                <div className="grid gap-2">
+                  <Label>Station</Label>
                   <Select onValueChange={(val) => setFormData({...formData, stationId: val, warehouseIds: []})}>
-                    <SelectTrigger className="h-10 rounded-xl">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select Station" />
                     </SelectTrigger>
                     <SelectContent>
-                      {stations
-                        .filter(s => !formData.divisionId || (s.divisionId?._id === formData.divisionId || s.divisionId === formData.divisionId))
-                        .map(s => (
-                          <SelectItem key={s._id} value={s._id}>{s.station_name}</SelectItem>
-                        ))
-                      }
+                      {formData.divisionId ? (
+                        stations
+                          .filter(s => s.divisionId?._id === formData.divisionId || s.divisionId === formData.divisionId)
+                          .map(s => (
+                            <SelectItem key={s._id} value={s._id}>{s.station_name}</SelectItem>
+                          ))
+                      ) : (
+                        <div className="p-2 text-xs text-slate-400 italic text-center">Select a division first</div>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
 
                 {/* Row 4: Warehouses (Full Width) */}
-                <div className="grid gap-1.5">
-                  <Label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Assign Warehouses</Label>
-                  <div className="border border-slate-200 rounded-xl p-3 max-h-[160px] overflow-y-auto bg-slate-50/50 scrollbar-tiny">
-                    {warehouses.filter(w => !formData.stationId || (w.stationId?._id === formData.stationId || w.stationId === formData.stationId)).length > 0 ? (
+                <div className="grid gap-2">
+                  <Label>Assign Warehouses</Label>
+                  <div className="border border-slate-200 rounded-md p-3 max-h-[160px] overflow-y-auto bg-slate-50/50 scrollbar-tiny">
+                    {formData.stationId && warehouses.filter(w => w.stationId?._id === formData.stationId || w.stationId === formData.stationId).length > 0 ? (
                       <div className="grid grid-cols-2 gap-2">
                         {warehouses
-                          .filter(w => !formData.stationId || (w.stationId?._id === formData.stationId || w.stationId === formData.stationId))
+                          .filter(w => w.stationId?._id === formData.stationId || w.stationId === formData.stationId)
                           .map(w => {
                             const isSelected = formData.warehouseIds.includes(w._id);
                             return (
@@ -275,10 +273,12 @@ export function UserManagement() {
                 </div>
               </div>
 
-              <DialogFooter className="border-t border-slate-100 pt-4">
-                <Button type="button" variant="ghost" onClick={() => setIsInviteOpen(false)} className="rounded-xl">Cancel</Button>
-                <Button type="submit" className="rounded-xl bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20">
-                  <Mail className="w-4 h-4 mr-2" /> Send Invitation Link
+              <DialogFooter className="gap-2">
+                <Button type="button" variant="ghost" onClick={() => setIsInviteOpen(false)} className="font-bold">
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isProcessing} className="bg-primary hover:bg-primary/90 font-bold px-6 shadow-lg shadow-primary/20">
+                  Send Invitation Link
                 </Button>
               </DialogFooter>
             </form>
@@ -344,24 +344,37 @@ export function UserManagement() {
                 </TableCell>
                 <TableCell className="text-center">
                   {user.isPending ? (
-                    <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none rounded-full px-3">
+                    <Badge className="bg-amber-50 text-amber-600 hover:bg-amber-50 border-amber-100 font-bold text-[10px] uppercase">
                       Pending Invite
                     </Badge>
+                  ) : user.isActive ? (
+                    <Badge className="bg-emerald-50 text-emerald-600 hover:bg-emerald-50 border-emerald-100 font-bold text-[10px] uppercase">
+                      Active
+                    </Badge>
                   ) : (
-                    <Badge variant={user.isActive ? "success" : "destructive"} className="rounded-full px-3">
-                      {user.isActive ? "Active" : "Inactive"}
+                    <Badge className="bg-slate-50 text-slate-400 hover:bg-slate-50 border-slate-200 font-bold text-[10px] uppercase">
+                      Inactive
                     </Badge>
                   )}
                 </TableCell>
                 <TableCell className="text-right pr-4">
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="text-slate-400 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-lg"
-                    onClick={() => setDeleteUserId(user._id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  {!user.isPending && (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className={user.isActive 
+                        ? "text-slate-400 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-lg"
+                        : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 h-8 w-8 rounded-lg"
+                      }
+                      title={user.isActive ? "Deactivate User" : "Activate User"}
+                      onClick={() => {
+                        setSelectedUser(user)
+                        setActionType(user.isActive ? 'DEACTIVATE' : 'ACTIVATE')
+                      }}
+                    >
+                      {user.isActive ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -369,27 +382,38 @@ export function UserManagement() {
         </Table>
       </div>
 
-      <AlertDialog open={!!deleteUserId} onOpenChange={(open) => !open && setDeleteUserId(null)}>
+      <AlertDialog open={!!selectedUser} onOpenChange={(open) => !open && setSelectedUser(null)}>
         <AlertDialogContent className="rounded-2xl border-none shadow-xl max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-xl font-bold text-slate-900">Deactivate User?</AlertDialogTitle>
+            <AlertDialogTitle className="text-xl font-bold text-slate-900">
+              {actionType === 'ACTIVATE' ? 'Activate User?' : 'Deactivate User?'}
+            </AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 pt-2 leading-relaxed">
-              Are you sure you want to remove this user's access from the platform? This will deactivate their account and prevent them from logging in.
+              {actionType === 'ACTIVATE' 
+                ? "Are you sure you want to restore this user's access? They will be able to log in and use the platform again."
+                : "Are you sure you want to remove this user's access from the platform? This will deactivate their account and prevent them from logging in."
+              }
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="pt-4 gap-2 sm:gap-0">
-            <AlertDialogCancel disabled={isDeleting} className="rounded-xl border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 mt-0">
+            <AlertDialogCancel disabled={isProcessing} className="rounded-xl border-slate-200 font-semibold text-slate-600 hover:bg-slate-50 mt-0">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(e) => {
                 e.preventDefault()
-                handleDeleteUser()
+                handleUserStatusChange()
               }}
-              className="bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold shadow-sm"
-              disabled={isDeleting}
+              className={actionType === 'ACTIVATE' 
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold shadow-sm"
+                : "bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold shadow-sm"
+              }
+              disabled={isProcessing}
             >
-              {isDeleting ? "Deactivating..." : "Confirm Deactivation"}
+              {isProcessing 
+                ? "Processing..." 
+                : actionType === 'ACTIVATE' ? "Confirm Activation" : "Confirm Deactivation"
+              }
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

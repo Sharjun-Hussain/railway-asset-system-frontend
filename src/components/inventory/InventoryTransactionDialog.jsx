@@ -67,9 +67,9 @@ export function InventoryTransactionDialog({
       setSelectedDivisionId("");
       setSelectedStationId("");
 
-      if (isStationMaster) {
-        const uStationId = user?.stationId?._id || user?.stationId || "";
-        setSelectedStationId(uStationId);
+      if (!isSuperAdmin) {
+        setSelectedDivisionId(user?.divisionId?._id || user?.divisionId || "");
+        setSelectedStationId(user?.stationId?._id || user?.stationId || "");
       }
       if (isWarehouseStaff && user?.warehouseIds?.length > 0) {
         const defaultWhId = user.warehouseIds[0]?._id || user.warehouseIds[0] || "";
@@ -158,7 +158,7 @@ export function InventoryTransactionDialog({
           </DialogHeader>
           <div className="grid gap-5 py-4">
             <div className="grid gap-2">
-              <Label>Transaction Type</Label>
+              <Label>Transaction Type <span className="text-rose-500">*</span></Label>
               <Select
                 value={formData.type}
                 onValueChange={(value) =>
@@ -181,7 +181,7 @@ export function InventoryTransactionDialog({
             </div>
 
             <div className="grid gap-2">
-              <Label>Asset Item</Label>
+              <Label>Asset Item <span className="text-rose-500">*</span></Label>
               <Combobox
                 options={productOptions}
                 value={formData.assetId}
@@ -191,45 +191,45 @@ export function InventoryTransactionDialog({
               />
             </div>
 
-            {/* Hierarchical Location Selection for Super Admin */}
-            {isSuperAdmin && (
-              <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
-                <div className="grid gap-2">
-                  <Label>Division Filter</Label>
-                  <Combobox
-                    options={divisionOptions}
-                    value={selectedDivisionId}
-                    onChange={(val) => {
-                      setSelectedDivisionId(val);
-                      setSelectedStationId("");
-                      setFormData({ ...formData, warehouseId: "" });
-                    }}
-                    placeholder="All Divisions"
-                    emptyText="No divisions."
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label>Station Filter</Label>
-                  <Combobox
-                    options={stationOptions}
-                    value={selectedStationId}
-                    onChange={(val) => {
-                      setSelectedStationId(val);
-                      setFormData({ ...formData, warehouseId: "" });
-                    }}
-                    placeholder={selectedDivisionId ? "All Stations" : "Select division first..."}
-                    emptyText="No stations."
-                  />
-                </div>
+            {/* Hierarchical Location Selection - Disabled for non-admins */}
+            <div className="grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+              <div className="grid gap-2">
+                <Label>Division Filter</Label>
+                <Combobox
+                  options={divisionOptions}
+                  value={selectedDivisionId}
+                  onChange={(val) => {
+                    setSelectedDivisionId(val);
+                    setSelectedStationId("");
+                    setFormData({ ...formData, warehouseId: "" });
+                  }}
+                  placeholder="All Divisions"
+                  emptyText="No divisions."
+                  disabled={!isSuperAdmin}
+                />
               </div>
-            )}
+              <div className="grid gap-2">
+                <Label>Station Filter</Label>
+                <Combobox
+                  options={stationOptions}
+                  value={selectedStationId}
+                  onChange={(val) => {
+                    setSelectedStationId(val);
+                    setFormData({ ...formData, warehouseId: "" });
+                  }}
+                  placeholder={selectedDivisionId ? "All Stations" : "Select division first..."}
+                  emptyText="No stations."
+                  disabled={!isSuperAdmin}
+                />
+              </div>
+            </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label>
                   {formData.type === "TRANSFER"
                     ? "Source Location"
-                    : "Location"}
+                    : "Location"} <span className="text-rose-500">*</span>
                 </Label>
                 <Combobox
                   options={warehouseOptions}
@@ -242,7 +242,7 @@ export function InventoryTransactionDialog({
 
               {formData.type === "TRANSFER" && (
                 <div className="grid gap-2 animate-in slide-in-from-right-2 duration-300">
-                  <Label>Target Location</Label>
+                  <Label>Target Location <span className="text-rose-500">*</span></Label>
                   <Combobox
                     options={warehouses.map(w => ({ value: w._id, label: w.warehouse_name }))} // Internal transfers can typically go to any warehouse globally
                     value={formData.toWarehouseId}
@@ -256,17 +256,24 @@ export function InventoryTransactionDialog({
               <div
                 className={`grid gap-2 ${formData.type !== "TRANSFER" ? "col-span-1" : "col-span-2"}`}
               >
-                <Label>Quantity</Label>
+                <Label>Quantity <span className="text-rose-500">*</span></Label>
                 <Input
                   type="number"
                   placeholder="0"
-                  value={formData.quantity}
-                  onChange={(e) =>
+                  step="1"
+                  value={formData.quantity === 0 ? "" : formData.quantity}
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "+" || e.key === "e" || e.key === ".") {
+                      e.preventDefault();
+                    }
+                  }}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10);
                     setFormData({
                       ...formData,
-                      quantity: parseFloat(e.target.value) || 0,
-                    })
-                  }
+                      quantity: isNaN(val) ? 0 : Math.max(0, val),
+                    });
+                  }}
                   required
                   min={1}
                 />
@@ -274,7 +281,7 @@ export function InventoryTransactionDialog({
             </div>
 
             <div className="grid gap-2">
-              <Label>Reference No. / PO / MRN</Label>
+              <Label>Reference No. / PO / MRN <span className="text-rose-500">*</span></Label>
               <Input
                 placeholder="e.g. PO-2024-001"
                 value={formData.referenceNo}

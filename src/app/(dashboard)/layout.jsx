@@ -1,4 +1,5 @@
 import { Sidebar } from "@/components/dashboard-layout/Sidebar"
+import { Header } from "@/components/dashboard-layout/Header"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 
@@ -12,6 +13,7 @@ export default async function DashboardLayout({ children }) {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col ml-64 transition-all">
+        <Header />
         <main className="flex-1 p-6 md:p-8 lg:p-10">
           <div className="max-w-[1400px] mx-auto min-h-full">
             {children}

@@ -94,10 +94,10 @@ export default function AuditLogsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-200">
-              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider pl-8 py-4 w-[180px]">Timestamp</TableHead>
-              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4 w-[200px]">Event Type</TableHead>
-              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider py-4 w-[220px]">User / IP</TableHead>
-              <TableHead className="font-bold text-slate-500 text-xs uppercase tracking-wider pr-8 py-4">Activity Details</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs tracking-wider pl-8 py-4 w-[180px]">Timestamp</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs tracking-wider py-4 w-[200px]">Event Type</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs tracking-wider py-4 w-[220px]">User / IP</TableHead>
+              <TableHead className="font-bold text-slate-500 text-xs tracking-wider pr-8 py-4">Activity Details</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

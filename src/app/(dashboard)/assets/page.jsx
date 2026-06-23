@@ -397,8 +397,35 @@ export default function AssetsPage() {
       />
 
       {/* Unified Compact Premium QR Preview Sheet */}
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #printable-qr, #printable-qr * {
+            visibility: visible;
+          }
+          #printable-qr {
+            position: fixed !important;
+            left: 50% !important;
+            top: 50px !important;
+            transform: translateX(-50%) !important;
+            width: 200px !important;
+            height: 200px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+            box-shadow: none !important;
+            border: none !important;
+          }
+          .print-hide {
+            display: none !important;
+          }
+        }
+      `}</style>
+
       <Sheet open={!!qrAsset} onOpenChange={(open) => !open && setQrAsset(null)}>
-        <SheetContent side="right" className="sm:max-w-[340px] border-l border-slate-200 shadow-2xl p-0 flex flex-col bg-white text-slate-900 overflow-hidden [&>button]:text-slate-400 [&>button]:hover:text-slate-900 [&>button]:hover:bg-slate-100 [&>button]:right-4 [&>button]:top-5 [&>button]:z-50 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:transition-all">
+        <SheetContent side="right" className="sm:max-w-[340px] border-l border-slate-200 shadow-2xl p-0 flex flex-col bg-white text-slate-900 overflow-hidden print-hide-close-btn [&>button]:text-slate-400 [&>button]:hover:text-slate-900 [&>button]:hover:bg-slate-100 [&>button]:right-4 [&>button]:top-5 [&>button]:z-50 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:transition-all [&>button]:print:hidden">
 
           {/* Header */}
           <SheetHeader className="p-5 pb-4 bg-gradient-to-b from-indigo-50/50 via-white to-transparent relative border-b border-slate-100">
@@ -436,7 +463,7 @@ export default function AssetsPage() {
             <div className="relative group w-full max-w-[200px] mx-auto perspective-1000 mb-6">
               <div className="absolute -inset-1 bg-gradient-to-tr from-primary/20 via-indigo-500/20 to-purple-500/20 rounded-3xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
               <div className="relative bg-white p-4 rounded-3xl ring-1 ring-slate-200 shadow-md flex items-center justify-center transform transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-lg">
-                <div className="relative z-10 bg-white rounded-2xl w-full aspect-square flex items-center justify-center">
+                <div id="printable-qr" className="relative z-10 bg-white rounded-2xl w-full aspect-square flex items-center justify-center">
                   <AssetQRCode value={qrAsset?.qr_code} size={150} className="border-none w-full h-full" />
                 </div>
               </div>
@@ -465,7 +492,7 @@ export default function AssetsPage() {
           </div>
 
           {/* Footer Action */}
-          <SheetFooter className="p-4 bg-white border-t border-slate-200 relative z-10 flex flex-row gap-2.5 items-center justify-between">
+          <SheetFooter className="print-hide p-4 bg-white border-t border-slate-200 relative z-10 flex flex-row gap-2.5 items-center justify-between">
             <Button
               variant="outline"
               className="w-1/3 rounded-xl border-slate-200 font-semibold h-10 hover:bg-slate-50 text-xs"

@@ -34,6 +34,27 @@ export function AIChat() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const res = await apiClient.get("/rag/history");
+        const history = res.data?.data || [];
+        if (history.length > 0) {
+          const formattedHistory = history.map((msg, idx) => ({
+            id: msg._id || "hist-" + idx,
+            role: msg.role,
+            content: msg.content,
+            timestamp: new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }));
+          setMessages([...INITIAL_MESSAGES, ...formattedHistory]);
+        }
+      } catch (error) {
+        console.error("Failed to load chat history:", error);
+      }
+    };
+    loadHistory();
+  }, []);
+
+  useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }

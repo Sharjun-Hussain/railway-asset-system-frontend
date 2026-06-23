@@ -40,6 +40,34 @@ export function ChatInterface() {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    const loadHistory = async () => {
+      try {
+        const res = await apiClient.get("/rag/history");
+        const history = res.data?.data || [];
+        if (history.length > 0) {
+          const formattedHistory = history.map((msg, idx) => ({
+            id: msg._id || "hist-" + idx,
+            role: msg.role === "assistant" ? "bot" : msg.role,
+            content: msg.content,
+          }));
+          setMessages([
+            {
+              id: 1,
+              role: "bot",
+              content:
+                "Welcome to the SLR Asset Assistant. How can I help you today? You can ask about asset locations, warehouse inventory, or user roles.",
+            },
+            ...formattedHistory
+          ]);
+        }
+      } catch (error) {
+        console.error("Failed to load chat history:", error);
+      }
+    };
+    loadHistory();
+  }, []);
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -173,7 +201,7 @@ export function ChatInterface() {
           <Textarea
             placeholder="e.g., 'List all locomotive engines in the Maradana warehouse...'"
             value={input}
-            onChange={(e) => setInput(e.T.value)}
+            onChange={(e) => setInput(e.target.value)}
             disabled={isLoading}
             className="flex-1 resize-none"
             onKeyDown={(e) => {

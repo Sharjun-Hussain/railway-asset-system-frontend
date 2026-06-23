@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PermissionGate } from "@/components/auth/PermissionGate";
 
 export default function WarehousesPage() {
   const [warehouses, setWarehouses] = useState([]);
@@ -98,12 +99,14 @@ export default function WarehousesPage() {
             </p>
           </div>
         </div>
-        <Button
-          onClick={handleAdd}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
-        >
-          <Plus className="mr-2 h-4 w-4" /> Register Warehouse
-        </Button>
+        <PermissionGate module="warehouse" action="manage">
+          <Button
+            onClick={handleAdd}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
+          >
+            <Plus className="mr-2 h-4 w-4" /> Register Warehouse
+          </Button>
+        </PermissionGate>
       </div>
 
       {/* Ultra-Compact Premium Stats Dashboard Grid */}

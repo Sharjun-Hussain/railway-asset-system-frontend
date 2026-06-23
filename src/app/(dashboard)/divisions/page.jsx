@@ -17,6 +17,7 @@ import { DivisionDialog } from "@/components/divisions/DivisionDialog"
 import { Card, CardContent } from "@/components/ui/card"
 import apiClient from "@/lib/api"
 import { toast } from "sonner"
+import { PermissionGate } from "@/components/auth/PermissionGate"
 
 export default function DivisionsPage() {
   const [divisions, setDivisions] = useState([])
@@ -74,12 +75,14 @@ export default function DivisionsPage() {
             </p>
           </div>
         </div>
-        <Button
-          onClick={handleAdd}
-          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add New Division
-        </Button>
+        <PermissionGate module="division" action="manage">
+          <Button
+            onClick={handleAdd}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add New Division
+          </Button>
+        </PermissionGate>
       </div>
 
       {/* Ultra-Compact Premium Stats Dashboard Grid */}

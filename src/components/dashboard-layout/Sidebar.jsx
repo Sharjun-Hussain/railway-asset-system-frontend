@@ -22,7 +22,7 @@ const navigationGroups = [
     name: "CORE",
     items: [
       { name: "Dashboard", href: "/", icon: LayoutDashboard },
-      { name: "Transactions", href: "/transactions", icon: History, permission: { module: 'stock', action: 'view' } },
+      { name: "Transactions", href: "/transactions", icon: History, permission: { module: 'stock', action: 'view' }, excludeRoles: ['Division Manager', 'Station Master', 'Warehouse Manager', 'Staff'] },
     ]
   },
   {
@@ -30,8 +30,8 @@ const navigationGroups = [
     items: [
       { name: "Assets", href: "/assets", icon: Package, permission: { module: 'product', action: 'view' } },
       { name: " Categories", href: "/categories", icon: LayoutDashboard, permission: { module: 'product', action: 'view' } },
-      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' }, exact: true },
-      { name: "Adjustments", href: "/inventory/adjustments", icon: History, permission: { module: 'stock', action: 'view' } },
+      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' }, exact: true, excludeRoles: ['Auditor'] },
+      { name: "Adjustments", href: "/inventory/adjustments", icon: History, permission: { module: 'stock', action: 'view' }, excludeRoles: ['Auditor'] },
     ]
   },
   {
@@ -45,7 +45,7 @@ const navigationGroups = [
   {
     name: "SYSTEM",
     items: [
-      { name: "RBAC Admin", href: "/admin/rbac", icon: ShieldCheck, permission: { module: 'rbac', action: 'view' } },
+      { name: "RBAC Admin", href: "/admin/rbac", icon: ShieldCheck, permission: { module: 'rbac', action: 'view' }, excludeRoles: ['Auditor'] },
       { name: "Audit Logs", href: "/admin/audit-logs", icon: History, permission: { module: 'audit', action: 'view' } },
       // { name: "Settings", href: "/settings", icon: Settings },
     ]

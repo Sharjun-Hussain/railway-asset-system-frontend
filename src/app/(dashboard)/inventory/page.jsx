@@ -28,6 +28,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import apiClient from "@/lib/api"
 import { InventoryTransactionDialog } from "@/components/inventory/InventoryTransactionDialog"
+import { PermissionGate } from "@/components/auth/PermissionGate"
 
 export default function StockInventoryPage() {
   const [stocks, setStocks] = useState([])
@@ -103,12 +104,14 @@ export default function StockInventoryPage() {
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all w-full sm:w-auto"
-            onClick={() => setTransactionOpen(true)}
-          >
-            <Plus className="mr-2 h-4 w-4" /> Stock In (Receive)
-          </Button>
+          <PermissionGate module="stock" action="receive">
+            <Button
+              className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all w-full sm:w-auto"
+              onClick={() => setTransactionOpen(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" /> Stock In (Receive)
+            </Button>
+          </PermissionGate>
         </div>
       </div>
 

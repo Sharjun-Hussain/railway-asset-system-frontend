@@ -4,9 +4,33 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { UserManagement } from "@/components/admin/UserManagement"
 import { RoleManagement } from "@/components/admin/RoleManagement"
 import { PermissionList } from "@/components/admin/PermissionList"
-import { ShieldCheck, Users, Key, Lock, ShieldAlert } from "lucide-react"
+import { ShieldCheck, Users, Key, Lock, ShieldAlert, DownloadCloud } from "lucide-react"
+import { useRBAC } from "@/hooks/useRBAC"
+import { Button } from "@/components/ui/button"
+import apiClient from "@/lib/api"
+import { toast } from "sonner"
 
 export default function RBACPage() {
+  const { isSuperAdmin } = useRBAC()
+
+  const handleBackup = async () => {
+    try {
+      toast.loading("Generating system backup...", { id: "backup-toast" })
+      const response = await apiClient.get('/backup/export', { responseType: 'blob' })
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `railway_csams_backup_${new Date().toISOString().split('T')[0]}.json`)
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+      toast.success("System backup downloaded successfully.", { id: "backup-toast" })
+    } catch (error) {
+      console.error("Backup failed", error)
+      toast.error("Failed to download system backup.", { id: "backup-toast" })
+    }
+  }
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-10 animate-in fade-in duration-500">
 
@@ -23,6 +47,14 @@ export default function RBACPage() {
             </p>
           </div>
         </div>
+        {isSuperAdmin && (
+          <Button
+            onClick={handleBackup}
+            className="bg-slate-900 hover:bg-slate-800 text-white shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
+          >
+            <DownloadCloud className="mr-2 h-4 w-4 text-slate-300" /> Download Full Backup
+          </Button>
+        )}
       </div>
 
       {/* Main Content Sections */}

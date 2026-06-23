@@ -23,6 +23,7 @@ import { SubCategoryTable } from "@/components/categories/SubCategoryTable"
 import { SubCategoryDialog } from "@/components/categories/SubCategoryDialog"
 import { Card, CardContent } from "@/components/ui/card"
 import apiClient from "@/lib/api"
+import { PermissionGate } from "@/components/auth/PermissionGate"
 
 export default function CategoriesPage() {
   const [activeTab, setActiveTab] = useState("categories")
@@ -86,21 +87,23 @@ export default function CategoriesPage() {
             </p>
           </div>
         </div>
-        <Button
-          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
-          onClick={() => {
-            if (activeTab === "categories") {
-              setSelectedCategory(null)
-              setCatDialogOpen(true)
-            } else {
-              setSelectedSubCategory(null)
-              setSubDialogOpen(true)
-            }
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add {activeTab === "categories" ? "Category" : "Sub-Category"}
-        </Button>
+        <PermissionGate module="product" action="manage">
+          <Button
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
+            onClick={() => {
+              if (activeTab === "categories") {
+                setSelectedCategory(null)
+                setCatDialogOpen(true)
+              } else {
+                setSelectedSubCategory(null)
+                setSubDialogOpen(true)
+              }
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add {activeTab === "categories" ? "Category" : "Sub-Category"}
+          </Button>
+        </PermissionGate>
       </div>
 
       {/* Ultra-Compact Premium Stats Dashboard */}

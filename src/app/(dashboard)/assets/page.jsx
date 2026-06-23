@@ -63,6 +63,7 @@ import {
   SheetTitle
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
+import { PermissionGate } from "@/components/auth/PermissionGate"
 
 
 export default function AssetsPage() {
@@ -147,15 +148,17 @@ export default function AssetsPage() {
             </p>
           </div>
         </div>
-        <Button
-          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-5 h-10 rounded-lg transition-all"
-          onClick={() => {
-            setSelectedAsset(null)
-            setDialogOpen(true)
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Register New Asset
-        </Button>
+        <PermissionGate module="product" action="manage">
+          <Button
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-5 h-10 rounded-lg transition-all"
+            onClick={() => {
+              setSelectedAsset(null)
+              setDialogOpen(true)
+            }}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Register New Asset
+          </Button>
+        </PermissionGate>
       </div>
 
       {/* Ultra-Compact Premium Stats Dashboard Grid */}
@@ -327,21 +330,23 @@ export default function AssetsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 rounded-2xl shadow-xl border-slate-100 p-1.5">
-                          <DropdownMenuItem
-                            className="cursor-pointer text-sm font-semibold rounded-xl mb-1 py-2.5 focus:bg-primary/5 focus:text-primary transition-colors"
-                            onClick={() => {
-                              setSelectedAsset(asset)
-                              setDialogOpen(true)
-                            }}
-                          >
-                            <FileEdit className="mr-2.5 h-4 w-4" /> Edit Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer text-sm font-semibold text-rose-600 focus:bg-rose-50 focus:text-rose-700 rounded-xl py-2.5 transition-colors"
-                            onClick={() => setDeleteId(asset._id)}
-                          >
-                            <Trash2 className="mr-2.5 h-4 w-4" /> Delete Asset
-                          </DropdownMenuItem>
+                          <PermissionGate module="product" action="manage">
+                            <DropdownMenuItem
+                              className="cursor-pointer text-sm font-semibold rounded-xl mb-1 py-2.5 focus:bg-primary/5 focus:text-primary transition-colors"
+                              onClick={() => {
+                                setSelectedAsset(asset)
+                                setDialogOpen(true)
+                              }}
+                            >
+                              <FileEdit className="mr-2.5 h-4 w-4" /> Edit Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="cursor-pointer text-sm font-semibold text-rose-600 focus:bg-rose-50 focus:text-rose-700 rounded-xl py-2.5 transition-colors"
+                              onClick={() => setDeleteId(asset._id)}
+                            >
+                              <Trash2 className="mr-2.5 h-4 w-4" /> Delete Asset
+                            </DropdownMenuItem>
+                          </PermissionGate>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

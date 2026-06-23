@@ -25,6 +25,7 @@ import { AdjustmentForm } from "@/components/inventory/AdjustmentForm"
 import { Input } from "@/components/ui/input"
 import { format } from "date-fns"
 import { cn } from "@/lib/utils"
+import { PermissionGate } from "@/components/auth/PermissionGate"
 
 export default function AdjustmentsPage() {
   const [adjustments, setAdjustments] = useState([])
@@ -73,7 +74,9 @@ export default function AdjustmentsPage() {
         </div>
         <div className="flex-shrink-0">
           {/* Note: Ensure AdjustmentForm internally styles its trigger button to match the premium look (e.g. h-11, rounded-xl, font-semibold) */}
-          <AdjustmentForm onSuccess={fetchAdjustments} />
+          <PermissionGate module="stock" action="audit">
+            <AdjustmentForm onSuccess={fetchAdjustments} />
+          </PermissionGate>
         </div>
       </div>
 

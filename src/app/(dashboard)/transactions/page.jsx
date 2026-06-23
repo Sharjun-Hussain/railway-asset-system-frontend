@@ -157,9 +157,9 @@ export default function TransactionsPage() {
             <TableRow className="bg-slate-50/80 hover:bg-slate-50/80 border-b border-slate-200">
               <TableHead className="w-[180px] font-semibold text-slate-600">Date & Type</TableHead>
               <TableHead className="font-semibold text-slate-600">Asset Details</TableHead>
-              <TableHead className="font-semibold text-slate-600">Movement</TableHead>
+              <TableHead className="font-semibold text-slate-600">Movement Location</TableHead>
               <TableHead className="text-right font-semibold text-slate-600">Quantity</TableHead>
-              <TableHead className="w-[200px] font-semibold text-slate-600">Audit Info</TableHead>
+              <TableHead className="w-[150px] font-semibold text-slate-600">Audit Info</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -212,16 +212,26 @@ export default function TransactionsPage() {
 
                     {/* Movement (Locations) */}
                     <TableCell>
-                      <div className="flex flex-col gap-1.5 justify-center">
-                        <div className="flex items-center gap-1.5 text-sm text-slate-700 font-medium">
-                          <MapPin className="h-3.5 w-3.5 text-slate-400" />
-                          {t.warehouseId?.warehouse_name}
+                      <div className="flex flex-col gap-1.5 justify-center py-1">
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
+                            {t.warehouseId?.stationId?.divisionId?.division_name} • {t.warehouseId?.stationId?.station_name}
+                          </span>
+                          <div className="flex items-center gap-1.5 text-[13px] text-slate-700 font-bold">
+                            <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                            {t.warehouseId?.warehouse_name}
+                          </div>
                         </div>
 
                         {t.type === "TRANSFER" && t.toWarehouseId && (
-                          <div className="flex items-center gap-1.5 text-sm text-primary font-semibold pl-[2px]">
-                            <ArrowRight className="h-3 w-3 text-primary/70" />
-                            {t.toWarehouseId?.warehouse_name}
+                          <div className="flex flex-col gap-0.5 mt-1 border-l-2 border-primary/20 pl-2">
+                             <span className="text-[10px] uppercase font-bold tracking-widest text-slate-400">
+                              {t.toWarehouseId?.stationId?.divisionId?.division_name} • {t.toWarehouseId?.stationId?.station_name}
+                            </span>
+                            <div className="flex items-center gap-1.5 text-[13px] text-primary font-bold">
+                              <ArrowRight className="h-3 w-3 text-primary/70" />
+                              {t.toWarehouseId?.warehouse_name}
+                            </div>
                           </div>
                         )}
                       </div>

@@ -3,8 +3,11 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import apiClient from "@/lib/api";
-import { Shield, Building, Warehouse, MapPin, UserCheck } from "lucide-react";
+import { Shield, Building, Warehouse, MapPin, UserCheck, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sidebar } from "./Sidebar";
 
 export function Header() {
   const { data: session } = useSession();
@@ -29,7 +32,17 @@ export function Header() {
 
   return (
     <header className="bg-white border-b border-slate-200/60 sticky top-0 z-40 px-6 md:px-8 lg:px-10 h-16 flex items-center justify-between shrink-0 shadow-sm/50">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden shrink-0 -ml-2">
+              <Menu className="h-5 w-5 text-slate-700" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="p-0 w-64">
+            <Sidebar session={{ user: user || session?.user }} className="h-full w-full border-r-0" />
+          </SheetContent>
+        </Sheet>
         <h2 className="text-[13px] font-bold text-slate-800 hidden lg:flex items-center gap-2">
           <UserCheck className="h-4 w-4 text-primary" />
           Access Scope

@@ -52,12 +52,12 @@ const navigationGroups = [
   }
 ]
 
-export function Sidebar({ session }) {
+export function Sidebar({ session, className }) {
   const pathname = usePathname()
   const { hasPermission, hasRole } = useRBAC()
 
   return (
-    <aside className="fixed left-0 top-0 h-screen bg-white border-r z-50 flex flex-col w-64 shadow-sm overflow-x-hidden">
+    <aside className={cn("bg-white border-r z-50 flex flex-col shadow-sm overflow-x-hidden", className)}>
       {/* Header / Logo */}
       <div className="h-20 flex items-center px-4 border-b shrink-0 overflow-hidden">
         <Link href="/" className="flex items-center gap-3">

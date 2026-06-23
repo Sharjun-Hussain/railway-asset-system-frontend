@@ -119,7 +119,7 @@ export function UserManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h2 className="text-xl font-bold text-slate-800">System Users</h2>
         
         <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>

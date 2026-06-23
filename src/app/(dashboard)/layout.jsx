@@ -8,14 +8,14 @@ export default async function DashboardLayout({ children }) {
 
   return (
     <div className="flex min-h-screen w-full bg-[#FAFBFF]">
-      {/* Unified Sidebar (Fixed) */}
-      <Sidebar session={session} />
+      {/* Unified Sidebar (Fixed Desktop) */}
+      <Sidebar session={session} className="fixed left-0 top-0 h-screen w-64 hidden lg:flex" />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col ml-64 transition-all">
+      <div className="flex-1 flex flex-col lg:ml-64 transition-all w-full min-w-0 overflow-x-hidden">
         <Header />
-        <main className="flex-1 p-6 md:p-8 lg:p-10">
-          <div className="max-w-[1400px] mx-auto min-h-full">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 w-full">
+          <div className="max-w-[1400px] mx-auto min-h-full w-full">
             {children}
           </div>
         </main>

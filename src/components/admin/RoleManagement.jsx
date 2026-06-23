@@ -39,7 +39,7 @@ export function RoleManagement() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <h2 className="text-xl font-bold">Roles & Permissions Map</h2>
       </div>
 

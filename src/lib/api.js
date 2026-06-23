@@ -10,9 +10,19 @@ const apiClient = axios.create({
   },
 });
 
+let sessionPromise = null;
+let lastSessionFetch = 0;
+
 apiClient.interceptors.request.use(
   async (config) => {
-    const session = await getSession();
+    // Cache the session promise for 2 seconds to prevent massive spam of /api/auth/session
+    // when multiple API calls are fired simultaneously on page load.
+    if (!sessionPromise || Date.now() - lastSessionFetch > 2000) {
+      sessionPromise = getSession();
+      lastSessionFetch = Date.now();
+    }
+    
+    const session = await sessionPromise;
     if (session?.accessToken) {
       config.headers.Authorization = `Bearer ${session.accessToken}`;
     }

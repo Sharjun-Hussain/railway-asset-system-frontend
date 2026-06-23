@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { TableSkeleton } from "@/components/ui/table-skeleton"
 import { CategoryTable } from "@/components/categories/CategoryTable"
 import { CategoryDialog } from "@/components/categories/CategoryDialog"
 import { SubCategoryTable } from "@/components/categories/SubCategoryTable"
@@ -187,10 +188,7 @@ export default function CategoriesPage() {
         <div className="bg-white rounded-[1.5rem] border border-slate-200/80 shadow-sm overflow-hidden min-h-[400px]">
           <TabsContent value="categories" className="mt-0 outline-none">
             {loading ? (
-              <div className="flex flex-col items-center justify-center h-[400px] gap-4">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
-                <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing Categories...</p>
-              </div>
+              <TableSkeleton rows={8} columns={4} />
             ) : (
               <CategoryTable
                 categories={filteredCategories}
@@ -205,10 +203,7 @@ export default function CategoriesPage() {
 
           <TabsContent value="subcategories" className="mt-0 outline-none">
             {loading ? (
-              <div className="flex flex-col items-center justify-center h-[400px] gap-4">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary/20 border-t-primary" />
-                <p className="text-sm text-slate-500 font-semibold animate-pulse tracking-wide">Syncing Sub-Categories...</p>
-              </div>
+              <TableSkeleton rows={8} columns={5} />
             ) : (
               <SubCategoryTable
                 subCategories={filteredSubCategories}

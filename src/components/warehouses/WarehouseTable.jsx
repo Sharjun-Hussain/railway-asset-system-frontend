@@ -24,6 +24,7 @@ import {
   MapPin,
   Tag
 } from "lucide-react"
+import { TableSkeleton } from "@/components/ui/table-skeleton"
 import { toast } from "sonner"
 import apiClient from "@/lib/api"
 import { 
@@ -57,14 +58,7 @@ export function WarehouseTable({ warehouses, onEdit, onDeleteSuccess, loading })
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-12 w-full min-h-[300px]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-          <p className="text-sm text-muted-foreground font-medium">Loading warehouses...</p>
-        </div>
-      </div>
-    )
+    return <div className="mt-4"><TableSkeleton rows={5} columns={5} /></div>
   }
 
   if (!warehouses || warehouses.length === 0) {

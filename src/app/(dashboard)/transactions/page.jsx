@@ -11,7 +11,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Spinner } from "@/components/ui/spinner"
+import { TableSkeleton } from "@/components/ui/table-skeleton"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
@@ -102,9 +102,8 @@ export default function TransactionsPage() {
   )
 
   if (loading) return (
-    <div className="flex flex-col items-center justify-center h-[60vh] gap-4">
-      <Spinner size="lg" />
-      <p className="text-slate-500 font-medium animate-pulse">Loading transaction history...</p>
+    <div className="space-y-6 max-w-7xl mx-auto pb-10 mt-6">
+      <TableSkeleton rows={8} columns={6} />
     </div>
   )
 

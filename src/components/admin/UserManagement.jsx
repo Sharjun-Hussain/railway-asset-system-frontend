@@ -11,7 +11,7 @@ import {
   TableRow 
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Spinner } from "@/components/ui/spinner"
+import { TableSkeleton } from "@/components/ui/table-skeleton"
 import { Button } from "@/components/ui/button"
 import { 
   Dialog, 
@@ -115,7 +115,7 @@ export function UserManagement() {
     }
   }
 
-  if (loading) return <div className="flex justify-center p-12"><Spinner /></div>
+  if (loading) return <div className="mt-4"><TableSkeleton rows={5} columns={5} /></div>
 
   return (
     <div className="space-y-4">

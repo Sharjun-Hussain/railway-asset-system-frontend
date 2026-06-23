@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import apiClient from "@/lib/api"
-import { Spinner } from "@/components/ui/spinner"
+import { TableSkeleton } from "@/components/ui/table-skeleton"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { Lock } from "lucide-react"
@@ -27,7 +27,7 @@ export function PermissionList() {
     }
   }
 
-  if (loading) return <div className="flex justify-center p-12"><Spinner /></div>
+  if (loading) return <div className="mt-4"><TableSkeleton rows={8} columns={3} /></div>
 
   // Group by module
   const groupedPermissions = permissions.reduce((acc, perm) => {

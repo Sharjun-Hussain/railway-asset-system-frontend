@@ -21,8 +21,10 @@ import {
 } from "@/components/ui/select";
 import { Combobox } from "@/components/ui/combobox";
 import { toast } from "sonner";
+import { ScanLine, X } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRBAC } from "@/hooks/useRBAC";
+import { Scanner } from "@yudiel/react-qr-scanner";
 
 export function InventoryTransactionDialog({
   open,
@@ -34,6 +36,7 @@ export function InventoryTransactionDialog({
   onSuccess,
 }) {
   const [loading, setLoading] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
   const { user, isSuperAdmin, hasRole } = useRBAC();
 
   const [formData, setFormData] = useState({
@@ -122,7 +125,7 @@ export function InventoryTransactionDialog({
       const divStations = stations?.filter((s) => s.divisionId === selectedDivisionId || s.divisionId?._id === selectedDivisionId).map((s) => s._id) || [];
       return divStations.includes(w.stationId?._id || w.stationId);
     }
-    return true; 
+    return true;
   }) || [];
 
   // Options mapping
@@ -182,13 +185,26 @@ export function InventoryTransactionDialog({
 
             <div className="grid gap-2">
               <Label>Asset Item <span className="text-rose-500">*</span></Label>
-              <Combobox
-                options={productOptions}
-                value={formData.assetId}
-                onChange={(val) => setFormData({ ...formData, assetId: val })}
-                placeholder="Search and select asset..."
-                emptyText="No asset found."
-              />
+              <div className="flex items-center gap-2">
+                <div className="flex-1">
+                  <Combobox
+                    options={productOptions}
+                    value={formData.assetId}
+                    onChange={(val) => setFormData({ ...formData, assetId: val })}
+                    placeholder="Search and select asset..."
+                    emptyText="No asset found."
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                  onClick={() => setIsScanning(true)}
+                >
+                  <ScanLine className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Hierarchical Location Selection - Disabled for non-admins */}
@@ -252,7 +268,7 @@ export function InventoryTransactionDialog({
                   />
                 </div>
               )}
-              
+
               <div
                 className={`grid gap-2 ${formData.type !== "TRANSFER" ? "col-span-1" : "col-span-2"}`}
               >
@@ -316,6 +332,60 @@ export function InventoryTransactionDialog({
             </Button>
           </DialogFooter>
         </form>
+
+        {isScanning && (
+          <div className="fixed inset-0 z-[100] flex flex-col bg-black/95">
+            <div className="flex items-center justify-between p-4 bg-black/50 text-white">
+              <h3 className="font-semibold text-lg">Scan Asset QR Code</h3>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/20"
+                onClick={() => setIsScanning(false)}
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+            <div className="flex-1 flex items-center justify-center p-4">
+              <div className="w-full max-w-sm aspect-square overflow-hidden rounded-2xl border-4 border-primary/50 relative">
+                <Scanner
+                  onScan={(result) => {
+                    if (result && result.length > 0) {
+                      const scannedValue = result[0].rawValue;
+                      const matchedAsset = products.find(
+                        (a) => a.qr_code === scannedValue,
+                      );
+                      if (matchedAsset) {
+                        setFormData({ ...formData, assetId: matchedAsset._id });
+                        toast.success(
+                          `Asset identified: ${matchedAsset.asset_name}`,
+                        );
+                        setIsScanning(false);
+                      } else {
+                        toast.error(`No asset found for QR: ${scannedValue}`);
+                      }
+                    }
+                  }}
+                  onError={(error) => {
+                    console.error("Scanner Error:", error);
+                  }}
+                  formats={[
+                    "qr_code",
+                    "code_128",
+                    "code_39",
+                    "ean_13",
+                    "ean_8",
+                  ]}
+                  styles={{
+                    container: { width: "100%", height: "100%" },
+                    video: { objectFit: "cover" },
+                  }}
+                />
+              </div>
+            </div>
+
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

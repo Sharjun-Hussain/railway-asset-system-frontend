@@ -109,7 +109,7 @@ function AcceptInvitationForm() {
 
 export default function AcceptInvitationPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-slate-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
       <Suspense fallback={<div>Loading...</div>}>
         <AcceptInvitationForm />
       </Suspense>

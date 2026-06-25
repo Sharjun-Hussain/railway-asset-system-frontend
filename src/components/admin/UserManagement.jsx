@@ -88,7 +88,12 @@ export function UserManagement() {
   const handleInvite = async (e) => {
     e.preventDefault()
     try {
-      await apiClient.post("/users", formData)
+      const payload = { ...formData }
+      if (!payload.divisionId) delete payload.divisionId
+      if (!payload.stationId) delete payload.stationId
+      if (payload.warehouseIds.length === 0) delete payload.warehouseIds
+
+      await apiClient.post("/users", payload)
       toast.success("Invitation sent successfully")
       setIsInviteOpen(false)
       fetchInitialData() // refresh list

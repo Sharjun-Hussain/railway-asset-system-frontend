@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { UserPlus, Mail, User as UserIcon, Shield, UserX, UserCheck } from "lucide-react"
+import { UserPlus, Mail, User as UserIcon, Shield, UserX, UserCheck, Trash2 } from "lucide-react"
 
 export function UserManagement() {
   const [users, setUsers] = useState([])
@@ -106,15 +106,21 @@ export function UserManagement() {
   const handleUserStatusChange = async () => {
     if (!selectedUser) return
     setIsProcessing(true)
-    const newStatus = actionType === 'ACTIVATE'
+    
     try {
-      await apiClient.put(`/users/${selectedUser._id}`, { isActive: newStatus })
-      toast.success(`User access ${newStatus ? 'activated' : 'deactivated'} successfully`)
+      if (actionType === 'DELETE') {
+        await apiClient.delete(`/users/${selectedUser._id}`)
+        toast.success("User deleted successfully")
+      } else {
+        const newStatus = actionType === 'ACTIVATE'
+        await apiClient.put(`/users/${selectedUser._id}`, { isActive: newStatus })
+        toast.success(`User access ${newStatus ? 'activated' : 'deactivated'} successfully`)
+      }
       setSelectedUser(null)
       setActionType(null)
       fetchInitialData() // refresh list
     } catch (error) {
-      toast.error(error.response?.data?.message || `Failed to ${newStatus ? 'activate' : 'deactivate'} user`)
+      toast.error(error.response?.data?.message || "Action failed")
     } finally {
       setIsProcessing(false)
     }
@@ -363,23 +369,37 @@ export function UserManagement() {
                   )}
                 </TableCell>
                 <TableCell className="text-right pr-4">
-                  {!user.isPending && (
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className={user.isActive 
-                        ? "text-slate-400 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-lg"
-                        : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 h-8 w-8 rounded-lg"
-                      }
-                      title={user.isActive ? "Deactivate User" : "Activate User"}
+                  <div className="flex items-center justify-end gap-1">
+                    {!user.isPending && (
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className={user.isActive 
+                          ? "text-slate-400 hover:text-rose-600 hover:bg-rose-50 h-8 w-8 rounded-lg"
+                          : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 h-8 w-8 rounded-lg"
+                        }
+                        title={user.isActive ? "Deactivate User" : "Activate User"}
+                        onClick={() => {
+                          setSelectedUser(user)
+                          setActionType(user.isActive ? 'DEACTIVATE' : 'ACTIVATE')
+                        }}
+                      >
+                        {user.isActive ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-slate-400 hover:text-red-600 hover:bg-red-50 h-8 w-8 rounded-lg"
+                      title="Delete User"
                       onClick={() => {
                         setSelectedUser(user)
-                        setActionType(user.isActive ? 'DEACTIVATE' : 'ACTIVATE')
+                        setActionType('DELETE')
                       }}
                     >
-                      {user.isActive ? <UserX className="h-4 w-4" /> : <UserCheck className="h-4 w-4" />}
+                      <Trash2 className="h-4 w-4" />
                     </Button>
-                  )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -391,11 +411,13 @@ export function UserManagement() {
         <AlertDialogContent className="rounded-2xl border-none shadow-xl max-w-md">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-xl font-bold text-slate-900">
-              {actionType === 'ACTIVATE' ? 'Activate User?' : 'Deactivate User?'}
+              {actionType === 'ACTIVATE' ? 'Activate User?' : actionType === 'DELETE' ? 'Delete User?' : 'Deactivate User?'}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-slate-500 pt-2 leading-relaxed">
               {actionType === 'ACTIVATE' 
                 ? "Are you sure you want to restore this user's access? They will be able to log in and use the platform again."
+                : actionType === 'DELETE'
+                ? "Are you sure you want to permanently delete this user? This action cannot be undone."
                 : "Are you sure you want to remove this user's access from the platform? This will deactivate their account and prevent them from logging in."
               }
             </AlertDialogDescription>
@@ -411,13 +433,15 @@ export function UserManagement() {
               }}
               className={actionType === 'ACTIVATE' 
                 ? "bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold shadow-sm"
+                : actionType === 'DELETE'
+                ? "bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold shadow-sm"
                 : "bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold shadow-sm"
               }
               disabled={isProcessing}
             >
               {isProcessing 
                 ? "Processing..." 
-                : actionType === 'ACTIVATE' ? "Confirm Activation" : "Confirm Deactivation"
+                : actionType === 'ACTIVATE' ? "Confirm Activation" : actionType === 'DELETE' ? "Confirm Deletion" : "Confirm Deactivation"
               }
             </AlertDialogAction>
           </AlertDialogFooter>

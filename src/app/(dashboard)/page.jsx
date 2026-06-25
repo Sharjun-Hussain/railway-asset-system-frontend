@@ -43,7 +43,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-8 min-h-screen bg-background/50">
+    <div className="space-y-6 min-h-screen bg-background/50">
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2 border-b border-border/50">
         <div className="flex items-center gap-4">

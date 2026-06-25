@@ -120,7 +120,7 @@ export function AIChat() {
 
   return (
     <Card className="flex flex-col h-[600px] border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
-      <CardHeader className="border-b border-border/50 bg-secondary/5 px-4 py-3">
+      <CardHeader className="border-b border-border/50 bg-secondary/5 px-4 py-3 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
@@ -128,15 +128,11 @@ export function AIChat() {
             </div>
             <div>
               <CardTitle className="text-lg font-bold tracking-tight">Railway AI Assistant</CardTitle>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                {/* <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-bold text-muted-foreground/70">Neural Engine Online</span> */}
-              </div>
             </div>
           </div>
-         
         </div>
       </CardHeader>
+
 
       <CardContent className="flex-1 flex flex-col p-0 overflow-hidden relative">
         {/* Messages Container */}
@@ -206,20 +202,7 @@ export function AIChat() {
         </div>
 
         {/* Quick Actions & Input Area */}
-        <div className="p-4 border-t border-border/50 bg-secondary/5 space-y-3">
-          <div className="flex gap-2 p-1 overflow-x-auto scrollbar-tiny">
-            {QUICK_ACTIONS.map((action) => (
-              <Button 
-                key={action.label}
-                variant="outline" 
-                size="sm" 
-                className="h-8 rounded-lg bg-white/80 dark:bg-slate-950 border-border font-semibold text-xs whitespace-nowrap hover:bg-primary hover:text-white transition-all shadow-sm"
-              >
-                <action.icon size={12} className="mr-1.5" />
-                {action.label}
-              </Button>
-            ))}
-          </div>
+        <div className="p-4 border-t border-border/50 bg-secondary/5">
 
           <form onSubmit={handleSendMessage} className="relative group">
             <Input 

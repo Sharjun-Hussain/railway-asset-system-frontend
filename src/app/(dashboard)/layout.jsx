@@ -3,6 +3,10 @@ import { Header } from "@/components/dashboard-layout/Header"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 
+export const metadata = {
+  title: 'Dashboard | SL Railway Asset Management',
+}
+
 export default async function DashboardLayout({ children }) {
   const session = await getServerSession(authOptions)
 

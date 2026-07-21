@@ -120,15 +120,18 @@ export function AIChat() {
 
   return (
     <Card className="flex flex-col h-[calc(100vh-180px)] min-h-[500px] border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md">
-      <CardHeader className="border-b border-border/50 bg-secondary/5 px-4 py-3 shrink-0">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-primary text-white shadow-lg shadow-primary/20">
-              <Bot size={20} />
-            </div>
-            <div>
-              <CardTitle className="text-lg font-bold tracking-tight">Railway AI Assistant</CardTitle>
-            </div>
+      <CardHeader className="p-4 border-b border-border/50 shrink-0 bg-secondary/5">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+            <Bot className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex flex-col">
+            <CardTitle className="text-lg font-bold">
+              Railway AI Assistant
+            </CardTitle>
+            <p className="text-xs text-muted-foreground font-medium mt-0.5">
+              Intelligent asset management and support
+            </p>
           </div>
         </div>
       </CardHeader>

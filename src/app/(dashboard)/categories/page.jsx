@@ -119,7 +119,6 @@ export default function CategoriesPage() {
                 <p className="text-4xl font-semibold text-slate-800">
                   {categories.filter(c => c.is_active !== false).length}
                 </p>
-                <span className="text-slate-400 text-sm font-bold">/ {categories.length}</span>
               </div>
             </div>
             <div className="rounded-2xl bg-indigo-50 p-3 text-indigo-500">
@@ -138,7 +137,6 @@ export default function CategoriesPage() {
                 <p className="text-4xl font-semibold text-slate-800">
                   {subCategories.filter(s => s.is_active !== false).length}
                 </p>
-                <span className="text-slate-400 text-sm font-bold">/ {subCategories.length}</span>
               </div>
             </div>
             <div className="rounded-2xl bg-emerald-50 p-3 text-emerald-500">

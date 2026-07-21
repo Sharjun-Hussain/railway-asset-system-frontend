@@ -68,17 +68,23 @@ export default function DashboardPage() {
 
         <div className="lg:col-span-2 space-y-6">
           {/* Quick Reports Card */}
-          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md h-full">
-            <CardHeader className="px-4 py-3 border-b border-border/50">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-bold flex items-center gap-2">
-                  <History className="h-4 w-4 text-primary" />
-                  Live Activity
-                </CardTitle>
-
+          <Card className="border-none shadow-xl rounded-2xl overflow-hidden bg-card/80 backdrop-blur-md h-full py-0 gap-0 flex flex-col">
+            <CardHeader className="p-4 border-b border-border/50 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg shrink-0">
+                  <History className="h-5 w-5 text-primary" />
+                </div>
+                <div className="flex flex-col">
+                  <CardTitle className="text-lg font-bold">
+                    Live Activity
+                  </CardTitle>
+                  <p className="text-xs text-muted-foreground font-medium ">
+                    Real-time system transactions
+                  </p>
+                </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4 space-y-4">
+            <CardContent className="p-3 space-y-3 flex-1 overflow-y-auto scrollbar-tiny">
               {loading ? (
                 <div className="flex justify-center p-4"><div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>
               ) : recentTransactions.length === 0 ? (
@@ -86,24 +92,24 @@ export default function DashboardPage() {
               ) : recentTransactions.map((t) => {
                 const style = getTypeStyle(t.type);
                 return (
-                  <div key={t._id} className="p-4 rounded-xl border border-border/50 bg-white/50 dark:bg-slate-900/50 hover:border-primary/30 transition-all cursor-pointer group">
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge className={`text-xs font-bold py-0.5 px-2 rounded border ${style.badge}`}>
+                  <div key={t._id} className="p-3 rounded-lg border border-border/50 bg-white/50 dark:bg-slate-900/50 hover:border-primary/30 transition-all cursor-pointer group flex flex-col gap-1.5">
+                    <div className="flex items-center justify-between">
+                      <Badge className={`text-[10px] font-bold py-0 px-1.5 rounded-md border ${style.badge}`}>
                         {t.type}
                       </Badge>
-                      <span className="text-[11px] font-medium text-muted-foreground">{format(new Date(t.createdAt), "MMM d, h:mm a")}</span>
+                      <span className="text-[10px] font-medium text-muted-foreground">{format(new Date(t.createdAt), "MMM d, HH:mm")}</span>
                     </div>
-                    <h4 className="text-sm font-bold text-foreground mb-1 group-hover:text-primary transition-colors line-clamp-1">{t.assetId?.asset_name || 'Unknown Asset'}</h4>
-                    <div className="flex items-center gap-1.5 pt-1">
+                    <h4 className="text-[13px] font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">{t.assetId?.asset_name || 'Unknown Asset'}</h4>
+                    <div className="flex items-center gap-1.5">
                       <div className={`h-1.5 w-1.5 rounded-full ${style.dot}`} />
-                      <span className="text-xs font-bold text-muted-foreground/70 truncate">{t.warehouseId?.warehouse_name || 'Unknown Location'}</span>
+                      <span className="text-[11px] font-medium text-muted-foreground/70 truncate">{t.warehouseId?.warehouse_name || 'Unknown Location'}</span>
                     </div>
                   </div>
                 )
               })}
-              <Link href="/transactions">
-                <Button variant="ghost" className="w-full h-10 rounded-xl font-bold text-xs gap-2 group">
-                  View Full Activity Logs
+              <Link href="/transactions" className="block pt-2">
+                <Button variant="ghost" className="w-full h-8 rounded-lg font-bold text-xs gap-2 group">
+                  View Full Logs
                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>

@@ -48,6 +48,7 @@ export function UserManagement() {
   const [selectedUser, setSelectedUser] = useState(null)
   const [actionType, setActionType] = useState(null) // 'ACTIVATE' or 'DEACTIVATE'
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isInviting, setIsInviting] = useState(false)
   
   // Form State
   const [formData, setFormData] = useState({
@@ -87,6 +88,7 @@ export function UserManagement() {
 
   const handleInvite = async (e) => {
     e.preventDefault()
+    setIsInviting(true)
     try {
       const payload = { ...formData }
       if (!payload.divisionId) delete payload.divisionId
@@ -100,6 +102,8 @@ export function UserManagement() {
       setFormData({ full_name: "", email: "", roleIds: [], divisionId: "", stationId: "", warehouseIds: [] })
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to send invitation")
+    } finally {
+      setIsInviting(false)
     }
   }
 
@@ -288,8 +292,8 @@ export function UserManagement() {
                 <Button type="button" variant="ghost" onClick={() => setIsInviteOpen(false)} className="font-bold">
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isProcessing} className="bg-primary hover:bg-primary/90 font-bold px-6 shadow-lg shadow-primary/20">
-                  Send Invitation Link
+                <Button type="submit" disabled={isInviting} className="bg-primary hover:bg-primary/90 font-bold px-6 shadow-lg shadow-primary/20">
+                  {isInviting ? "Sending..." : "Send Invitation Link"}
                 </Button>
               </DialogFooter>
             </form>

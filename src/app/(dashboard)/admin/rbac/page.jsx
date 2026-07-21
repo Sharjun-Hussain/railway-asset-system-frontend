@@ -50,9 +50,9 @@ export default function RBACPage() {
         {isSuperAdmin && (
           <Button
             onClick={handleBackup}
-            className="bg-slate-900 hover:bg-slate-800 text-white shadow-sm font-semibold px-6 h-11 rounded-xl transition-all"
+            className="bg-primary hover:bg-primary/90 font-bold px-6 shadow-lg shadow-primary/20 h-11 rounded-xl transition-all text-white"
           >
-            <DownloadCloud className="mr-2 h-4 w-4 text-slate-300" /> Download Full Backup
+            <DownloadCloud className="mr-2 h-4 w-4" /> Download Full Backup
           </Button>
         )}
       </div>
@@ -65,19 +65,19 @@ export default function RBACPage() {
           <TabsList className="flex w-max min-w-full justify-start h-14 bg-transparent p-0">
             <TabsTrigger
               value="users"
-              className="relative h-14 flex items-center gap-2 rounded-none border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
+              className="relative h-14 flex items-center gap-2 rounded-none border-0 border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
             >
               <Users className="h-4 w-4" /> Users
             </TabsTrigger>
             <TabsTrigger
               value="roles"
-              className="relative h-14 flex items-center gap-2 rounded-none border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
+              className="relative h-14 flex items-center gap-2 rounded-none border-0 border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
             >
               <Key className="h-4 w-4" /> Roles
             </TabsTrigger>
             <TabsTrigger
               value="permissions"
-              className="relative h-14 flex items-center gap-2 rounded-none border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
+              className="relative h-14 flex items-center gap-2 rounded-none border-0 border-b-2 border-transparent px-6 font-semibold text-slate-500 hover:text-slate-800 data-[state=active]:border-primary data-[state=active]:text-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors"
             >
               <Lock className="h-4 w-4" /> Permissions
             </TabsTrigger>

@@ -11,7 +11,8 @@ import {
   AlertTriangle,
   History,
   PackageCheck,
-  PackageOpen
+  PackageOpen,
+  Eye
 } from "lucide-react"
 import {
   Table,
@@ -28,6 +29,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "sonner"
 import apiClient from "@/lib/api"
 import { InventoryTransactionDialog } from "@/components/inventory/InventoryTransactionDialog"
+import { WarehouseSummaryDialog } from "@/components/inventory/WarehouseSummaryDialog"
 import { PermissionGate } from "@/components/auth/PermissionGate"
 
 export default function StockInventoryPage() {
@@ -41,6 +43,7 @@ export default function StockInventoryPage() {
 
   // Dialog States
   const [transactionOpen, setTransactionOpen] = useState(false)
+  const [summaryOpen, setSummaryOpen] = useState(false)
 
   const fetchData = useCallback(async () => {
     setLoading(true)
@@ -104,6 +107,13 @@ export default function StockInventoryPage() {
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            variant="outline"
+            className="border-primary/20 text-primary hover:bg-primary/5 shadow-sm font-semibold px-5 h-11 rounded-xl transition-all w-full sm:w-auto"
+            onClick={() => setSummaryOpen(true)}
+          >
+            <Eye className="mr-2 h-4 w-4" /> Global Overview
+          </Button>
           <PermissionGate module="stock" action="receive">
             <Button
               className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm font-semibold px-6 h-11 rounded-xl transition-all w-full sm:w-auto"
@@ -296,6 +306,15 @@ export default function StockInventoryPage() {
         divisions={divisions}
         stations={stations}
         onSuccess={fetchData}
+      />
+      
+      <WarehouseSummaryDialog
+        open={summaryOpen}
+        onOpenChange={setSummaryOpen}
+        stocks={stocks}
+        warehouses={warehouses}
+        stations={stations}
+        divisions={divisions}
       />
     </div>
   )

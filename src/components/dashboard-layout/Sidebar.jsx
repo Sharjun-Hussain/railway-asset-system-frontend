@@ -30,7 +30,7 @@ const navigationGroups = [
     items: [
       { name: "Assets", href: "/assets", icon: Package, permission: { module: 'product', action: 'view' } },
       { name: " Categories", href: "/categories", icon: LayoutDashboard, permission: { module: 'product', action: 'view' } },
-      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' }, exact: true, excludeRoles: ['Auditor'] },
+      { name: "Stock Inventory", href: "/inventory", icon: Warehouse, permission: { module: 'stock', action: 'view' }, exact: true },
       { name: "Adjustments", href: "/inventory/adjustments", icon: History, permission: { module: 'stock', action: 'view' }, excludeRoles: ['Auditor'] },
     ]
   },

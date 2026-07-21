@@ -43,9 +43,8 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="space-y-6 min-h-screen bg-background/50">
-
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2 border-b border-border/50">
+    <div className="flex flex-col h-full space-y-5 bg-transparent">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-border/50">
         <div className="flex items-center gap-4">
           <div className="p-3.5 h-12 w-12 rounded-2xl bg-primary/10 text-primary border border-primary/20 flex items-center justify-center">
             <LayoutDashboard size={24} />
@@ -61,9 +60,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-
-      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-        <div className="lg:col-span-4">
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-6 flex-1 pb-6">
+        <div className="lg:col-span-4 h-full">
           <AIChat />
         </div>
 

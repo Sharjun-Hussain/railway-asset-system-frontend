@@ -73,8 +73,7 @@ export default function AdjustmentsPage() {
           </div>
         </div>
         <div className="flex-shrink-0">
-          {/* Note: Ensure AdjustmentForm internally styles its trigger button to match the premium look (e.g. h-11, rounded-xl, font-semibold) */}
-          <PermissionGate module="stock" action="view">
+          <PermissionGate module="stock" action="audit">
             <AdjustmentForm onSuccess={fetchAdjustments} />
           </PermissionGate>
         </div>

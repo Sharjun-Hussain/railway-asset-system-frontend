@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
+import { Eye, EyeOff } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -23,6 +24,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [IsSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -192,14 +194,27 @@ export default function LoginPage() {
                     Forgot Password?
                   </Link>
                 </div>
-                <Input
-                  id="password"
-                  placeholder="••••••••"
-                  type="password"
-                  className={`h-11 px-4 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${errors.password ? "border-red-500 focus:ring-red-500" : ""
-                    }`}
-                  {...register("password")}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    placeholder="••••••••"
+                    type={showPassword ? "text" : "password"}
+                    className={`h-11 px-4 pr-10 rounded-xl border-slate-200 focus:ring-primary focus:border-primary transition-all duration-100 ${errors.password ? "border-red-500 focus:ring-red-500" : ""
+                      }`}
+                    {...register("password")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="text-xs font-medium text-red-500 ml-0.5">
                     {errors.password.message}

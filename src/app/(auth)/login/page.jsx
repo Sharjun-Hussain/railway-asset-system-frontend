@@ -106,9 +106,9 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-background p-4 sm:p-6 md:p-8">
       <div className="flex w-full max-w-5xl mx-auto overflow-hidden bg-card rounded-2xl shadow-xl border border-border">
-        {/* Left Panel: Branding & Visual */}
+
         <div className="hidden md:flex md:w-5/12 relative bg-primary p-12 text-white flex-col justify-between overflow-hidden">
-          {/* Background Image with Overlay */}
+
           <div
             className="absolute inset-0 z-0 bg-cover bg-center brightness-[0.4]"
             style={{
@@ -136,7 +136,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Right Panel: Login Form */}
+   
         <div className="w-full p-8 md:p-14 md:w-7/12 bg-card">
           <div className="max-w-sm mx-auto">
             <div className="md:hidden flex justify-center mb-8">
